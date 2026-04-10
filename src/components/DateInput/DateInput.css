@@ -1,0 +1,72 @@
+.date-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-family);
+}
+
+.date-input__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.date-input__fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.date-input__segment {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.date-input__segment-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.date-input__field {
+  width: 64px;
+  padding: 6px 4px;
+  font-size: 16px;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--color-border);
+  border-radius: 0;
+  outline: none;
+  text-align: center;
+  transition: border-color var(--transition);
+  -moz-appearance: textfield;
+}
+
+.date-input__field::-webkit-inner-spin-button,
+.date-input__field::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.date-input__field:focus {
+  border-bottom-color: var(--color-primary);
+}
+
+.date-input__field:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.date-input__hint {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.date-input__error {
+  font-size: 13px;
+  color: #cc0000;
+  margin-top: 4px;
+}
