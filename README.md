@@ -1,6 +1,8 @@
 # demo-ui-lib
 
-React UI-Komponentenbibliothek mit konfigurierbarem Theming. Komponenten orientieren sich am ERGO Corporate Design und sind per `initTheme()` für beliebige Primär- und Sekundärfarben anpassbar.
+React UI component library with Tesla-inspired design and configurable theming. All components are styled to match Tesla's clean, minimal aesthetic and can be rebranded via `initTheme()`.
+
+**Design tokens:** `#E31937` primary red · `#171A20` near-black · `#D0D1D2` borders · `4px` border-radius · Helvetica Neue / system sans-serif
 
 ## Installation
 
@@ -8,34 +10,34 @@ React UI-Komponentenbibliothek mit konfigurierbarem Theming. Komponenten orienti
 npm install demo-ui-lib
 ```
 
-React ≥ 18 ist als Peer Dependency erforderlich.
+React ≥ 18 is required as a peer dependency.
 
-## Einrichtung
+## Setup
 
-### 1. CSS importieren
+### 1. Import CSS
 
-Einmalig im Einstiegspunkt der Anwendung (z. B. `main.tsx` / `index.tsx`):
+Once at your application entry point (`main.tsx` / `index.tsx`):
 
 ```ts
 import "demo-ui-lib/dist/index.css";
 ```
 
-### 2. Theme konfigurieren
+### 2. Configure theme
 
 ```ts
 import { initTheme } from "demo-ui-lib";
 
 initTheme({
-  primary: "#8c003c",   // Primärfarbe (Standard: ERGO Weinrot)
-  secondary: "#6b6b6b", // Sekundärfarbe (Standard: Warm Grey)
+  primary: "#e31937",   // default: Tesla Red
+  secondary: "#171a20", // default: Tesla near-black
 });
 ```
 
-Beide Parameter sind optional — ohne Aufruf gelten die ERGO-Defaults. `initTheme()` kann jederzeit erneut aufgerufen werden, um das Theme zur Laufzeit zu wechseln.
+Both parameters are optional — defaults apply without calling `initTheme()`. Call it at any time to switch themes at runtime.
 
-### 3. Toast-Provider (nur wenn Toast genutzt wird)
+### 3. Toast Provider (only if using Toast)
 
-`ToastProvider` muss einmalig die App umschließen:
+`ToastProvider` must wrap your app once:
 
 ```tsx
 import { ToastProvider } from "demo-ui-lib";
@@ -49,37 +51,37 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 ---
 
-## Komponenten
+## Components
 
 ### Button
 
 ```tsx
 <Button variant="primary" size="md" fullWidth={false} onClick={...}>
-  weiter
+  Order Now
 </Button>
 ```
 
-| Prop | Typ | Default |
+| Prop | Type | Default |
 |---|---|---|
 | `variant` | `"primary" \| "secondary" \| "ghost"` | `"primary"` |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` |
 | `fullWidth` | `boolean` | `false` |
 
-Alle nativen `<button>`-Attribute werden durchgereicht.
+All native `<button>` attributes are forwarded.
 
 ---
 
 ### Link
 
 ```tsx
-<Link href="/datenschutz" variant="muted">Datenschutz</Link>
+<Link href="/privacy" variant="muted">Privacy Policy</Link>
 ```
 
-| Prop | Typ | Default |
+| Prop | Type | Default |
 |---|---|---|
 | `variant` | `"default" \| "muted"` | `"default"` |
 
-Alle nativen `<a>`-Attribute werden durchgereicht.
+All native `<a>` attributes are forwarded.
 
 ---
 
@@ -87,20 +89,20 @@ Alle nativen `<a>`-Attribute werden durchgereicht.
 
 ```tsx
 <TextInput
-  label="Vorname"
-  placeholder="Max"
-  hint="Wie auf dem Personalausweis."
-  error="Dieses Feld ist erforderlich."
+  label="First Name"
+  placeholder="Jane"
+  hint="As it appears on your ID."
+  error="This field is required."
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
 | `label` | `string` |
 | `hint` | `string` |
 | `error` | `string` |
 
-Alle nativen `<input>`-Attribute werden durchgereicht.
+All native `<input>` attributes are forwarded.
 
 ---
 
@@ -108,19 +110,19 @@ Alle nativen `<input>`-Attribute werden durchgereicht.
 
 ```tsx
 <Textarea
-  label="Anmerkungen"
-  placeholder="Haben Sie weitere Hinweise?"
+  label="Delivery Instructions"
+  placeholder="Any special notes?"
   rows={4}
-  error="Dieses Feld ist erforderlich."
+  error="This field is required."
 />
 ```
 
-| Prop | Typ |
-|---|---|
-| `label` | `string` |
-| `hint` | `string` |
-| `error` | `string` |
-| `rows` | `number` (Default: `4`) |
+| Prop | Type | Default |
+|---|---|---|
+| `label` | `string` | — |
+| `hint` | `string` | — |
+| `error` | `string` | — |
+| `rows` | `number` | `4` |
 
 ---
 
@@ -128,17 +130,17 @@ Alle nativen `<input>`-Attribute werden durchgereicht.
 
 ```tsx
 <Select
-  label="Versicherungsart"
-  placeholder="Bitte wählen"
+  label="Model"
+  placeholder="Select a model"
   options={[
-    { value: "kfz", label: "KFZ-Versicherung" },
-    { value: "haftpflicht", label: "Haftpflichtversicherung" },
+    { value: "model-s", label: "Model S" },
+    { value: "model-3", label: "Model 3" },
   ]}
-  error="Bitte treffen Sie eine Auswahl."
+  error="Please make a selection."
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
 | `options` | `{ value: string; label: string }[]` |
 | `label` | `string` |
@@ -152,39 +154,39 @@ Alle nativen `<input>`-Attribute werden durchgereicht.
 
 ```tsx
 <Checkbox
-  label="Ich stimme den AGB zu"
+  label="I agree to the Terms of Service"
   checked={checked}
   onChange={(e) => setChecked(e.target.checked)}
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
-| `label` | `string` (erforderlich) |
+| `label` | `string` (required) |
 
-Alle nativen `<input type="checkbox">`-Attribute werden durchgereicht.
+All native `<input type="checkbox">` attributes are forwarded.
 
 ---
 
 ### RadioButton
 
-Rendert als klickbare Karte mit Umrandung. Für Gruppen denselben `name` verwenden.
+Renders as a selectable card with border. Use the same `name` for grouped options.
 
 ```tsx
 <RadioButton
-  name="tarif"
-  value="basis"
-  label="Basis-Tarif"
-  checked={selected === "basis"}
-  onChange={() => setSelected("basis")}
+  name="model"
+  value="model-s"
+  label="Model S — Long Range"
+  checked={selected === "model-s"}
+  onChange={() => setSelected("model-s")}
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
-| `label` | `string` (erforderlich) |
+| `label` | `string` (required) |
 
-Alle nativen `<input type="radio">`-Attribute werden durchgereicht.
+All native `<input type="radio">` attributes are forwarded.
 
 ---
 
@@ -192,17 +194,17 @@ Alle nativen `<input type="radio">`-Attribute werden durchgereicht.
 
 ```tsx
 <Toggle
-  label="Benachrichtigungen aktivieren"
+  label="Autopilot Enabled"
   checked={enabled}
   onChange={(e) => setEnabled(e.target.checked)}
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
-| `label` | `string` (erforderlich) |
+| `label` | `string` (required) |
 
-Alle nativen `<input type="checkbox">`-Attribute werden durchgereicht.
+All native `<input type="checkbox">` attributes are forwarded.
 
 ---
 
@@ -210,18 +212,18 @@ Alle nativen `<input type="checkbox">`-Attribute werden durchgereicht.
 
 ```tsx
 <Slider
-  min={1000}
-  max={20000}
-  step={500}
+  min={40000}
+  max={150000}
+  step={5000}
   value={value}
   onChange={setValue}
-  label="Versicherungssumme"
-  unit="€"
-  formatLabel={(v) => `${v.toLocaleString("de-DE")} €`}
+  label="Your Budget"
+  unit="$"
+  formatLabel={(v) => `$${v.toLocaleString("en-US")}`}
 />
 ```
 
-| Prop | Typ | Default |
+| Prop | Type | Default |
 |---|---|---|
 | `min` | `number` | — |
 | `max` | `number` | — |
@@ -230,27 +232,27 @@ Alle nativen `<input type="checkbox">`-Attribute werden durchgereicht.
 | `onChange` | `(value: number) => void` | — |
 | `label` | `string` | — |
 | `unit` | `string` | — |
-| `formatLabel` | `(value: number) => string` | `toLocaleString("de-DE")` |
+| `formatLabel` | `(value: number) => string` | `toLocaleString` |
 
 ---
 
 ### DateInput
 
-Drei separate Felder für Tag, Monat und Jahr mit Underline-Stil.
+Three separate fields for day, month, and year with underline style.
 
 ```tsx
 const [date, setDate] = useState({ day: "", month: "", year: "" });
 
 <DateInput
-  label="Geburtsdatum"
+  label="Date of Birth"
   value={date}
   onChange={setDate}
-  hint="Format: TT MM JJJJ"
-  error="Bitte geben Sie ein gültiges Datum ein."
+  hint="Must be 18 or older to place an order."
+  error="Please enter a valid date."
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
 | `value` | `{ day: string; month: string; year: string }` |
 | `onChange` | `(value: DateValue) => void` |
@@ -265,31 +267,31 @@ const [date, setDate] = useState({ day: "", month: "", year: "" });
 ```tsx
 <Stepper
   steps={[
-    { label: "Tarifdaten" },
-    { label: "Beitrag" },
-    { label: "Persönliches" },
-    { label: "Zusammenfassung" },
+    { label: "Model" },
+    { label: "Configuration" },
+    { label: "Details" },
+    { label: "Review" },
   ]}
   currentStep={2}
 />
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
 | `steps` | `{ label: string }[]` |
-| `currentStep` | `number` (1-basiert) |
+| `currentStep` | `number` (1-based) |
 
 ---
 
 ### Tooltip
 
 ```tsx
-<Tooltip content="Hinweistext" position="top">
-  <button>ⓘ</button>
+<Tooltip content="Full Self-Driving enables automatic city and highway driving." position="top">
+  <button>FSD Info</button>
 </Tooltip>
 ```
 
-| Prop | Typ | Default |
+| Prop | Type | Default |
 |---|---|---|
 | `content` | `string` | — |
 | `position` | `"top" \| "bottom" \| "left" \| "right"` | `"top"` |
@@ -302,26 +304,26 @@ const [date, setDate] = useState({ day: "", month: "", year: "" });
 <Modal
   open={open}
   onClose={() => setOpen(false)}
-  title="Datenschutzhinweis"
+  title="Terms & Conditions"
   footer={
     <>
-      <Button variant="ghost" onClick={() => setOpen(false)}>Ablehnen</Button>
-      <Button onClick={() => setOpen(false)}>Akzeptieren</Button>
+      <Button variant="ghost" onClick={() => setOpen(false)}>Decline</Button>
+      <Button onClick={() => setOpen(false)}>Accept & Continue</Button>
     </>
   }
 >
-  <p>Inhalt des Modals...</p>
+  <p>Modal content...</p>
 </Modal>
 ```
 
-| Prop | Typ |
+| Prop | Type |
 |---|---|
 | `open` | `boolean` |
 | `onClose` | `() => void` |
 | `title` | `string` |
 | `footer` | `React.ReactNode` |
 
-Schließt sich bei ESC-Taste und Klick auf den Backdrop. Scrollt das Hintergrund-Dokument nicht mit.
+Closes on ESC key and backdrop click. Prevents background scrolling while open.
 
 ---
 
@@ -330,28 +332,29 @@ Schließt sich bei ESC-Taste und Klick auf den Backdrop. Scrollt das Hintergrund
 ```tsx
 import { useToast } from "demo-ui-lib";
 
-function MeineKomponente() {
+function MyComponent() {
   const { show } = useToast();
 
   return (
-    <button onClick={() => show("Gespeichert!", "success")}>
-      Speichern
+    <button onClick={() => show("Order confirmed!", "success")}>
+      Place Order
     </button>
   );
 }
 ```
 
-`show(message, variant?)` — verfügbare Varianten: `"success"` `"error"` `"warning"` `"info"` (Default: `"info"`)
+`show(message, variant?)` — variants: `"success"` `"error"` `"warning"` `"info"` (default: `"info"`)
 
-Toasts verschwinden automatisch nach 4 Sekunden und können manuell geschlossen werden.
+Toasts auto-dismiss after 4 seconds and can be manually closed.
 
 ---
 
-## Lokale Entwicklung
+## Development
 
 ```bash
-npm run build   # Library bauen (dist/)
-npm run demo    # Demo-App starten (http://localhost:5173)
-npm run test    # Tests ausführen
-npm run lint    # Linting
+npm run build       # Build library (dist/)
+npm run demo        # Start demo app (http://localhost:5173)
+npm run screenshots # Capture component screenshots
+npm run test        # Run tests
+npm run lint        # Lint
 ```

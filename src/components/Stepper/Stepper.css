@@ -67,7 +67,7 @@
 
 .stepper__connector {
   flex: 1;
-  height: 1px;
+  height: 2px;
   background-color: var(--color-border);
   margin: 0 8px;
   min-width: 12px;

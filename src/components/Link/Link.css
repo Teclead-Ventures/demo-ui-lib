@@ -1,26 +1,26 @@
 .link {
   color: var(--color-primary);
   font-family: var(--font-family);
-  font-weight: 500;
+  font-weight: 400;
   text-decoration: underline;
-  text-decoration-color: transparent;
   text-underline-offset: 3px;
-  transition: text-decoration-color var(--transition), color var(--transition);
+  transition: color var(--transition);
   cursor: pointer;
 }
 
 .link:hover {
-  text-decoration-color: currentColor;
+  color: color-mix(in srgb, var(--color-primary) 82%, #000000);
 }
 
 .link:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
+  outline: 3px solid var(--color-focus);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 .link[data-variant="muted"] {
   color: var(--color-text-muted);
+  text-decoration: underline;
 }
 
 .link[data-variant="muted"]:hover {

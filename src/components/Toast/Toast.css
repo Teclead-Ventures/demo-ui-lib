@@ -14,13 +14,13 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: 8px;
-  background-color: #1a1a1a;
+  border-radius: var(--border-radius-large);
+  background-color: var(--color-text);
   color: #ffffff;
   font-family: var(--font-family);
   font-size: 14px;
   line-height: 1.5;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow-medium);
   min-width: 280px;
   max-width: 400px;
   pointer-events: all;
@@ -37,7 +37,7 @@
 }
 
 .toast[data-variant="error"] {
-  background-color: #9b1c1c;
+  background-color: #e80c26;
 }
 
 .toast[data-variant="warning"] {
@@ -45,7 +45,7 @@
 }
 
 .toast[data-variant="info"] {
-  background-color: #1e3a5f;
+  background-color: var(--color-primary);
 }
 
 .toast__icon {

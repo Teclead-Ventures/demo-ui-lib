@@ -5,7 +5,14 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(npx vite:*)",
-      "Bash(npx playwright:*)"
+      "Bash(npx playwright:*)",
+      "WebSearch",
+      "WebFetch(domain:brandpalettes.com)",
+      "WebFetch(domain:www.codeofcolors.com)",
+      "WebFetch(domain:www.tesla.com)",
+      "WebFetch(domain:www.schemecolor.com)",
+      "WebFetch(domain:brandfetch.com)",
+      "Bash(node:*)"
     ]
   }
 }

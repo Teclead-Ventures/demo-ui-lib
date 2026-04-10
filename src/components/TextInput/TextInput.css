@@ -7,7 +7,7 @@
 
 .text-input__label {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
 }
 
@@ -17,7 +17,7 @@
   font-family: var(--font-family);
   color: var(--color-text);
   background-color: #ffffff;
-  border: 1.5px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
   outline: none;
   transition: border-color var(--transition), box-shadow var(--transition);
@@ -30,26 +30,27 @@
 }
 
 .text-input__field:hover:not(:disabled) {
-  border-color: var(--color-secondary);
+  border-color: var(--color-text-muted);
 }
 
 .text-input__field:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 20%, transparent);
 }
 
 .text-input__field[data-error="true"] {
-  border-color: #cc0000;
+  border-color: #e80c26;
 }
 
 .text-input__field[data-error="true"]:focus {
-  box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.2);
+  box-shadow: 0 0 0 3px rgba(232, 12, 38, 0.2);
 }
 
 .text-input__field:disabled {
   background-color: var(--color-bg-disabled);
   color: var(--color-text-disabled);
   cursor: not-allowed;
+  border-color: var(--color-border);
 }
 
 .text-input__hint {
@@ -59,5 +60,5 @@
 
 .text-input__error {
   font-size: 13px;
-  color: #cc0000;
+  color: #e80c26;
 }

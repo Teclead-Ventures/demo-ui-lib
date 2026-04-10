@@ -5,21 +5,21 @@
 
 .tooltip__bubble {
   position: absolute;
-  z-index: 100;
-  background-color: #1a1a1a;
+  z-index: 1001;
+  background-color: var(--color-text);
   color: #ffffff;
   font-family: var(--font-family);
   font-size: 13px;
   line-height: 1.5;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-large);
   white-space: nowrap;
   max-width: 240px;
   white-space: normal;
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--transition);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow-medium);
 }
 
 .tooltip:hover .tooltip__bubble,
@@ -44,7 +44,7 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border-top-color: #1a1a1a;
+  border-top-color: var(--color-text);
 }
 
 /* Bottom */
@@ -57,7 +57,7 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border-bottom-color: #1a1a1a;
+  border-bottom-color: var(--color-text);
 }
 
 /* Left */
@@ -70,7 +70,7 @@
   left: 100%;
   top: 50%;
   transform: translateY(-50%);
-  border-left-color: #1a1a1a;
+  border-left-color: var(--color-text);
 }
 
 /* Right */
@@ -83,5 +83,5 @@
   right: 100%;
   top: 50%;
   transform: translateY(-50%);
-  border-right-color: #1a1a1a;
+  border-right-color: var(--color-text);
 }

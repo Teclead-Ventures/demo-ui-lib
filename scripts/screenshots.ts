@@ -14,12 +14,25 @@ import * as path from "path";
 import * as http from "http";
 
 const DEMO_URL = "http://localhost:5174";
-const REF_URL = "https://www.ergo.de";
 const OUT_DIR = path.resolve(__dirname, "../screenshots");
 
 const args = process.argv.slice(2);
 const onlyDemo = args.includes("--demo");
 const onlyRef = args.includes("--ref");
+
+const urlArg = args.find((a) => a.startsWith("--url="))?.replace("--url=", "")
+  ?? args[args.indexOf("--url") + 1];
+
+if (!onlyDemo && !urlArg) {
+  console.error(
+    "Fehler: Bitte eine Referenz-URL angeben.\n" +
+    "Beispiel: npm run screenshots -- --url=https://www.example.de\n" +
+    "Nur Demo:  npm run screenshots -- --demo"
+  );
+  process.exit(1);
+}
+
+const REF_URL = urlArg ?? "";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -97,11 +110,7 @@ async function screenshotDemo() {
 // ── Referenzseite Screenshots ─────────────────────────────────────────────────
 
 const REF_PAGES = [
-  {
-    name: "home",
-    url: REF_URL,
-    clip: undefined,
-  },
+  { name: "home", url: REF_URL },
 ];
 
 async function screenshotRef() {

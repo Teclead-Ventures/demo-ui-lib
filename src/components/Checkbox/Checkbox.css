@@ -1,7 +1,7 @@
 .checkbox {
   display: inline-flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
   cursor: pointer;
   font-family: var(--font-family);
   font-size: 16px;
@@ -25,8 +25,8 @@
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  border: 1.5px solid var(--color-border);
-  border-radius: 3px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -41,8 +41,8 @@
 }
 
 .checkbox__input:focus-visible ~ .checkbox__control {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
-  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 30%, transparent);
+  border-color: var(--color-focus);
 }
 
 .checkbox__input:checked ~ .checkbox__control {
@@ -66,5 +66,5 @@
 }
 
 .checkbox__label {
-  line-height: 1.4;
+  line-height: 1.5;
 }

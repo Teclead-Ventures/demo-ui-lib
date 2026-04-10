@@ -7,7 +7,7 @@
 
 .date-input__label {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
 }
 
@@ -31,13 +31,13 @@
 
 .date-input__field {
   width: 64px;
-  padding: 6px 4px;
+  padding: 8px 4px;
   font-size: 16px;
   font-family: var(--font-family);
   color: var(--color-text);
   background-color: transparent;
   border: none;
-  border-bottom: 1.5px solid var(--color-border);
+  border-bottom: 2px solid var(--color-border);
   border-radius: 0;
   outline: none;
   text-align: center;
@@ -51,7 +51,7 @@
 }
 
 .date-input__field:focus {
-  border-bottom-color: var(--color-primary);
+  border-bottom-color: var(--color-focus);
 }
 
 .date-input__field:disabled {
@@ -67,6 +67,6 @@
 
 .date-input__error {
   font-size: 13px;
-  color: #cc0000;
+  color: #e80c26;
   margin-top: 4px;
 }

@@ -6,7 +6,7 @@ export interface ThemeConfig {
 }
 
 export function initTheme(config: ThemeConfig = {}): void {
-  const { primary = "#8c003c", secondary = "#6b6b6b" } = config;
+  const { primary = "#8e0038", secondary = "#bf1528" } = config;
   const id = "demo-ui-lib-theme";
 
   const css = `:root{--color-primary:${primary};--color-secondary:${secondary};}`;

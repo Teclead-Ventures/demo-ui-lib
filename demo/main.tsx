@@ -17,7 +17,7 @@ import { Tooltip } from "../src/components/Tooltip";
 import { Modal } from "../src/components/Modal";
 import { ToastProvider, useToast } from "../src/components/Toast";
 
-initTheme();
+initTheme({ primary: "#8e0038", secondary: "#bf1528" });
 
 const STEPS = [
   { label: "Tarifdaten" },
@@ -28,7 +28,7 @@ const STEPS = [
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section style={{ marginBottom: 56 }}>
-    <h2 style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#767676", marginBottom: 24, borderBottom: "1px solid #e5e5e5", paddingBottom: 10 }}>
+    <h2 style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#737373", marginBottom: 24, borderBottom: "1px solid #e1e1e1", paddingBottom: 10, fontFamily: '"FS Me", Arial, Helvetica, sans-serif' }}>
       {title}
     </h2>
     {children}
@@ -57,36 +57,46 @@ function App() {
   const [radioDate, setRadioDate] = useState("01.06.2026");
   const [stepperStep, setStepperStep] = useState(1);
   const [dateValue, setDateValue] = useState<DateValue>({ day: "23", month: "06", year: "1982" });
-  const [sliderValue, setSliderValue] = useState(8000);
+  const [sliderValue, setSliderValue] = useState(300000);
   const [modalOpen, setModalOpen] = useState(false);
-  const [primaryColor, setPrimaryColor] = useState("#8c003c");
-  const [secondaryColor, setSecondaryColor] = useState("#6b6b6b");
+  const [primaryColor, setPrimaryColor] = useState("#8e0038");
+  const [secondaryColor, setSecondaryColor] = useState("#bf1528");
 
   return (
-    <div style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", maxWidth: 680, margin: "0 auto", padding: "48px 24px", color: "#1a1a1a" }}>
-      <h1 style={{ fontSize: 26, fontWeight: 700, marginBottom: 4 }}>demo-ui-lib</h1>
-      <p style={{ color: "#767676", marginBottom: 48, fontSize: 14 }}>Komponentenübersicht</p>
+    <div style={{ fontFamily: '"FS Me", Arial, Helvetica, sans-serif', maxWidth: 680, margin: "0 auto", padding: "48px 24px", color: "#333333" }}>
+
+      {/* ERGO Header */}
+      <div style={{ marginBottom: 48, display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ background: "#8e0038", color: "#fff", fontWeight: 900, fontSize: 22, padding: "4px 10px", letterSpacing: "-0.5px", borderRadius: 2 }}>ERGO</div>
+        <span style={{ color: "#8e0038", fontSize: 13, fontStyle: "italic" }}>Einfach, weil's wichtig ist.</span>
+      </div>
+      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 4, fontFamily: '"Fedra Serif", Georgia, serif', lineHeight: 1.3 }}>Komponentenübersicht</h1>
+      <p style={{ color: "#737373", marginBottom: 48, fontSize: 14 }}>ERGO Design System — Versicherungsantrags-UI</p>
 
       {/* Theme */}
-      <section style={{ marginBottom: 56, background: "#f7f7f7", padding: 20, borderRadius: 8 }}>
-        <h2 style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#767676", marginBottom: 16 }}>Theme</h2>
+      <section style={{ marginBottom: 56, background: "#f2f2f2", padding: 20, borderRadius: 8 }}>
+        <h2 style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#737373", marginBottom: 16, fontFamily: '"FS Me", Arial, Helvetica, sans-serif' }}>Theme</h2>
         <div style={{ display: "flex", gap: 16, alignItems: "flex-end", flexWrap: "wrap" }}>
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Primary</label>
-            <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} style={{ width: 48, height: 32, cursor: "pointer", border: "1px solid #ccc", borderRadius: 4 }} />
-            <span style={{ marginLeft: 8, fontSize: 12, color: "#767676" }}>{primaryColor}</span>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6 }}>Primärfarbe</label>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} style={{ width: 40, height: 32, cursor: "pointer", border: "1px solid #d9d9d9", borderRadius: 4, padding: 2 }} />
+              <span style={{ fontSize: 12, color: "#737373", fontFamily: "monospace" }}>{primaryColor}</span>
+            </div>
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Secondary</label>
-            <input type="color" value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} style={{ width: 48, height: 32, cursor: "pointer", border: "1px solid #ccc", borderRadius: 4 }} />
-            <span style={{ marginLeft: 8, fontSize: 12, color: "#767676" }}>{secondaryColor}</span>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6 }}>Sekundärfarbe</label>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input type="color" value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} style={{ width: 40, height: 32, cursor: "pointer", border: "1px solid #d9d9d9", borderRadius: 4, padding: 2 }} />
+              <span style={{ fontSize: 12, color: "#737373", fontFamily: "monospace" }}>{secondaryColor}</span>
+            </div>
           </div>
           <Button size="sm" onClick={() => initTheme({ primary: primaryColor, secondary: secondaryColor })}>Anwenden</Button>
-          <Button size="sm" variant="ghost" onClick={() => { setPrimaryColor("#8c003c"); setSecondaryColor("#6b6b6b"); initTheme(); }}>Reset</Button>
+          <Button size="sm" variant="ghost" onClick={() => { setPrimaryColor("#8e0038"); setSecondaryColor("#bf1528"); initTheme({ primary: "#8e0038", secondary: "#bf1528" }); }}>Reset</Button>
         </div>
       </section>
 
-      <Section title="Stepper">
+      <Section title="Stepper — Antragsfortschritt">
         <div style={{ marginBottom: 16 }}>
           <Stepper steps={STEPS} currentStep={stepperStep} />
         </div>
@@ -99,13 +109,13 @@ function App() {
 
       <Section title="Button">
         <Row>
-          <Button variant="primary">weiter</Button>
-          <Button variant="secondary">Berechnen</Button>
+          <Button variant="primary">Beitrag berechnen</Button>
+          <Button variant="secondary">Mehr erfahren</Button>
           <Button variant="ghost">Zurück</Button>
-          <Button disabled>Deaktiviert</Button>
+          <Button disabled>Nicht verfügbar</Button>
         </Row>
         <div style={{ marginTop: 12 }}>
-          <Button fullWidth>weiter (full width)</Button>
+          <Button fullWidth>Jetzt abschließen</Button>
         </div>
         <div style={{ marginTop: 12 }}>
           <Row>
@@ -119,20 +129,20 @@ function App() {
       <Section title="Link">
         <Row>
           <Link href="#">Mehr erfahren</Link>
-          <Link href="#" variant="muted">Datenschutz</Link>
+          <Link href="#" variant="muted">Datenschutzhinweise</Link>
         </Row>
       </Section>
 
       <Section title="Tooltip">
         <Row>
           <Tooltip content="Die Versicherungssumme bestimmt die Auszahlung im Leistungsfall." position="top">
-            <Button variant="secondary" size="sm">ⓘ Oben</Button>
+            <Button variant="secondary" size="sm">ⓘ Versicherungssumme</Button>
           </Tooltip>
           <Tooltip content="Hinweis unten" position="bottom">
             <Button variant="secondary" size="sm">ⓘ Unten</Button>
           </Tooltip>
-          <Tooltip content="Hinweis rechts" position="right">
-            <Button variant="secondary" size="sm">ⓘ Rechts</Button>
+          <Tooltip content="Laufzeit von 5 bis 40 Jahren wählbar." position="right">
+            <Button variant="secondary" size="sm">ⓘ Laufzeit</Button>
           </Tooltip>
         </Row>
       </Section>
@@ -140,7 +150,7 @@ function App() {
       <Section title="TextInput">
         <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 400 }}>
           <TextInput label="Vorname" placeholder="Max" />
-          <TextInput label="E-Mail" type="email" placeholder="max@beispiel.de" hint="Wir geben Ihre Daten nicht weiter." />
+          <TextInput label="E-Mail-Adresse" type="email" placeholder="max@beispiel.de" hint="Wir senden Ihre Unterlagen an diese Adresse." />
           <TextInput label="Fehlerstate" placeholder="..." error="Bitte geben Sie einen gültigen Wert ein." />
           <TextInput label="Deaktiviert" value="Nicht editierbar" disabled />
         </div>
@@ -156,76 +166,81 @@ function App() {
       <Section title="Select">
         <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 400 }}>
           <Select label="Versicherungsart" placeholder="Bitte wählen" options={[
-            { value: "kfz", label: "KFZ-Versicherung" },
-            { value: "haftpflicht", label: "Haftpflichtversicherung" },
+            { value: "risikoleben", label: "Risikolebensversicherung" },
             { value: "hausrat", label: "Hausratversicherung" },
+            { value: "haftpflicht", label: "Haftpflichtversicherung" },
+            { value: "kfz", label: "KFZ-Versicherung" },
           ]} />
           <Select label="Mit Fehler" options={[{ value: "a", label: "Option A" }]} error="Bitte treffen Sie eine Auswahl." />
         </div>
       </Section>
 
-      <Section title="Slider">
+      <Section title="Slider — Versicherungssumme">
         <div style={{ maxWidth: 480 }}>
           <Slider
-            min={1000} max={20000} step={500}
+            min={50000} max={1000000} step={50000}
             value={sliderValue} onChange={setSliderValue}
-            label="Wie viel Geld soll verfügbar sein?"
+            label="Gewünschte Versicherungssumme"
             unit="€"
             formatLabel={(v) => `${v.toLocaleString("de-DE")} €`}
           />
         </div>
       </Section>
 
-      <Section title="DateInput">
+      <Section title="DateInput — Geburtsdatum">
         <DateInput
           label="Geburtsdatum"
           value={dateValue}
           onChange={setDateValue}
-          hint="Die versicherte Person muss zwischen 40 und 85 Jahre alt sein."
+          hint="Die versicherte Person muss zwischen 18 und 69 Jahren alt sein."
         />
       </Section>
 
-      <Section title="RadioButton — Karten-Style">
+      <Section title="RadioButton — Vertragsbeginn">
         <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 400 }}>
-          {["01.05.2026", "01.06.2026", "01.07.2026"].map((date) => (
-            <RadioButton key={date} name="startdatum" value={date} label={date}
-              checked={radioDate === date} onChange={() => setRadioDate(date)} />
+          {[
+            { value: "01.05.2026", label: "01.05.2026", description: "Nächstmöglicher Termin" },
+            { value: "01.06.2026", label: "01.06.2026", description: "In ca. 4 Wochen" },
+            { value: "01.07.2026", label: "01.07.2026", description: "In ca. 8 Wochen" },
+          ].map(({ value, label, description }) => (
+            <RadioButton key={value} name="startdatum" value={value} label={label} description={description}
+              checked={radioDate === value} onChange={() => setRadioDate(value)} />
           ))}
-          <RadioButton name="startdatum" value="disabled" label="Nicht verfügbar" disabled />
+          <RadioButton name="startdatum" value="disabled" label="Individuelles Datum" description="Derzeit nicht verfügbar" disabled />
         </div>
       </Section>
 
       <Section title="Checkbox">
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <Checkbox label="Ich stimme den AGB zu" />
-          <Checkbox label="Newsletter abonnieren" defaultChecked />
-          <Checkbox label="Deaktiviert" disabled />
+          <Checkbox label="Ich stimme den Allgemeinen Versicherungsbedingungen zu." />
+          <Checkbox label="Ich möchte den ERGO-Newsletter erhalten." defaultChecked />
+          <Checkbox label="Deaktivierte Option" disabled />
         </div>
       </Section>
 
       <Section title="Toggle">
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <Toggle label="Benachrichtigungen aktivieren" defaultChecked />
-          <Toggle label="Dunkelmodus" />
-          <Toggle label="Deaktiviert" disabled />
+          <Toggle label="Dynamikerhöhung aktivieren" defaultChecked />
+          <Toggle label="Beitragsrückgewähr einschließen" />
+          <Toggle label="Option gesperrt" disabled />
         </div>
       </Section>
 
       <Section title="Modal">
-        <Button variant="secondary" onClick={() => setModalOpen(true)}>Modal öffnen</Button>
+        <Button variant="secondary" onClick={() => setModalOpen(true)}>Datenschutzhinweis anzeigen</Button>
         <Modal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          title="Datenschutzhinweis"
+          title="Einstellungen zum Datenschutz"
           footer={
             <>
-              <Button variant="ghost" onClick={() => setModalOpen(false)}>Ablehnen</Button>
-              <Button onClick={() => setModalOpen(false)}>Akzeptieren</Button>
+              <Button variant="secondary" onClick={() => setModalOpen(false)}>Tool-Einstellungen</Button>
+              <Button onClick={() => setModalOpen(false)}>Alle akzeptieren</Button>
             </>
           }
         >
-          <p>Ihre personenbezogenen Daten werden gemäß unserer Datenschutzerklärung verarbeitet. Mit dem Abschluss des Vertrages stimmen Sie der Verarbeitung Ihrer Daten zu den genannten Zwecken zu.</p>
-          <p style={{ marginTop: 12 }}>Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.</p>
+          <p>Wenn Sie auf „Alle akzeptieren" klicken, stimmen Sie der Speicherung von Cookies und ähnlichen Technologien auf Ihrem Gerät zu. Sie helfen uns damit, die Nutzung der Website zu analysieren.</p>
+          <p style={{ marginTop: 12 }}>Näheres finden Sie unter <Link href="#">Datenschutzhinweise</Link> und <Link href="#">Impressum</Link>.</p>
         </Modal>
       </Section>
 
