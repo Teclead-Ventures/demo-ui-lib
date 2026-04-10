@@ -1,8 +1,8 @@
 # demo-ui-lib
 
-React UI component library with Tesla-inspired design and configurable theming. All components are styled to match Tesla's clean, minimal aesthetic and can be rebranded via `initTheme()`.
+Theming-fähige React UI component library. Alle Komponenten nutzen CSS Custom Properties und lassen sich per `initTheme()` auf jedes Brand anpassen.
 
-**Design tokens:** `#E31937` primary red · `#171A20` near-black · `#D0D1D2` borders · `4px` border-radius · Helvetica Neue / system sans-serif
+**Design-Tokens (ERGO-Default):** `#8e0038` Primär (Weinrot) · `#bf1528` Sekundär · `#333333` Text · `4px` Border-Radius · FS Me / Arial
 
 ## Installation
 
@@ -10,34 +10,34 @@ React UI component library with Tesla-inspired design and configurable theming. 
 npm install demo-ui-lib
 ```
 
-React ≥ 18 is required as a peer dependency.
+React ≥ 18 ist als Peer Dependency erforderlich.
 
 ## Setup
 
-### 1. Import CSS
+### 1. CSS importieren
 
-Once at your application entry point (`main.tsx` / `index.tsx`):
+Einmalig im App-Einstiegspunkt (`main.tsx` / `index.tsx`):
 
 ```ts
 import "demo-ui-lib/dist/index.css";
 ```
 
-### 2. Configure theme
+### 2. Theme konfigurieren
 
 ```ts
 import { initTheme } from "demo-ui-lib";
 
 initTheme({
-  primary: "#e31937",   // default: Tesla Red
-  secondary: "#171a20", // default: Tesla near-black
+  primary: "#8e0038",   // Primärfarbe (Buttons, aktive States)
+  secondary: "#bf1528", // Sekundärfarbe
 });
 ```
 
-Both parameters are optional — defaults apply without calling `initTheme()`. Call it at any time to switch themes at runtime.
+Beide Parameter sind optional — ohne Aufruf gelten die Defaults. `initTheme()` kann jederzeit aufgerufen werden um das Theme zur Laufzeit zu wechseln.
 
-### 3. Toast Provider (only if using Toast)
+### 3. Toast Provider (nur bei Nutzung von Toast)
 
-`ToastProvider` must wrap your app once:
+`ToastProvider` muss einmalig die App umschließen:
 
 ```tsx
 import { ToastProvider } from "demo-ui-lib";
@@ -51,37 +51,37 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 ---
 
-## Components
+## Komponenten
 
 ### Button
 
 ```tsx
 <Button variant="primary" size="md" fullWidth={false} onClick={...}>
-  Order Now
+  Beitrag berechnen
 </Button>
 ```
 
-| Prop | Type | Default |
+| Prop | Typ | Default |
 |---|---|---|
 | `variant` | `"primary" \| "secondary" \| "ghost"` | `"primary"` |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` |
 | `fullWidth` | `boolean` | `false` |
 
-All native `<button>` attributes are forwarded.
+Alle nativen `<button>`-Attribute werden weitergereicht.
 
 ---
 
 ### Link
 
 ```tsx
-<Link href="/privacy" variant="muted">Privacy Policy</Link>
+<Link href="/datenschutz" variant="muted">Datenschutzhinweise</Link>
 ```
 
-| Prop | Type | Default |
+| Prop | Typ | Default |
 |---|---|---|
 | `variant` | `"default" \| "muted"` | `"default"` |
 
-All native `<a>` attributes are forwarded.
+Alle nativen `<a>`-Attribute werden weitergereicht.
 
 ---
 
@@ -89,20 +89,20 @@ All native `<a>` attributes are forwarded.
 
 ```tsx
 <TextInput
-  label="First Name"
-  placeholder="Jane"
-  hint="As it appears on your ID."
-  error="This field is required."
+  label="Vorname"
+  placeholder="Max"
+  hint="Wie auf dem Personalausweis."
+  error="Bitte geben Sie einen gültigen Wert ein."
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `label` | `string` |
 | `hint` | `string` |
 | `error` | `string` |
 
-All native `<input>` attributes are forwarded.
+Alle nativen `<input>`-Attribute werden weitergereicht.
 
 ---
 
@@ -110,14 +110,14 @@ All native `<input>` attributes are forwarded.
 
 ```tsx
 <Textarea
-  label="Delivery Instructions"
-  placeholder="Any special notes?"
+  label="Anmerkungen"
+  placeholder="Haben Sie weitere Hinweise?"
   rows={4}
-  error="This field is required."
+  error="Dieses Feld ist erforderlich."
 />
 ```
 
-| Prop | Type | Default |
+| Prop | Typ | Default |
 |---|---|---|
 | `label` | `string` | — |
 | `hint` | `string` | — |
@@ -130,17 +130,17 @@ All native `<input>` attributes are forwarded.
 
 ```tsx
 <Select
-  label="Model"
-  placeholder="Select a model"
+  label="Versicherungsart"
+  placeholder="Bitte wählen"
   options={[
-    { value: "model-s", label: "Model S" },
-    { value: "model-3", label: "Model 3" },
+    { value: "risikoleben", label: "Risikolebensversicherung" },
+    { value: "hausrat", label: "Hausratversicherung" },
   ]}
-  error="Please make a selection."
+  error="Bitte treffen Sie eine Auswahl."
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `options` | `{ value: string; label: string }[]` |
 | `label` | `string` |
@@ -154,39 +154,68 @@ All native `<input>` attributes are forwarded.
 
 ```tsx
 <Checkbox
-  label="I agree to the Terms of Service"
+  label="Ich stimme den Allgemeinen Versicherungsbedingungen zu."
   checked={checked}
   onChange={(e) => setChecked(e.target.checked)}
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `label` | `string` (required) |
 
-All native `<input type="checkbox">` attributes are forwarded.
+Alle nativen `<input type="checkbox">`-Attribute werden weitergereicht.
 
 ---
 
 ### RadioButton
 
-Renders as a selectable card with border. Use the same `name` for grouped options.
+Rendert als auswählbare Karte mit Rand. Gleichen `name` für gruppierte Optionen verwenden.
 
 ```tsx
 <RadioButton
-  name="model"
-  value="model-s"
-  label="Model S — Long Range"
-  checked={selected === "model-s"}
-  onChange={() => setSelected("model-s")}
+  name="startdatum"
+  value="01.06.2026"
+  label="01.06.2026"
+  description="In ca. 4 Wochen"
+  checked={selected === "01.06.2026"}
+  onChange={() => setSelected("01.06.2026")}
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `label` | `string` (required) |
+| `description` | `string` |
 
-All native `<input type="radio">` attributes are forwarded.
+Alle nativen `<input type="radio">`-Attribute werden weitergereicht.
+
+---
+
+### InlineRadio
+
+Horizontale Radio-Gruppe für kurze Optionen wie Anrede oder Ja/Nein.
+
+```tsx
+<InlineRadio
+  label="Anrede"
+  value={anrede}
+  onChange={setAnrede}
+  options={[
+    { value: "herr", label: "Herr" },
+    { value: "frau", label: "Frau" },
+    { value: "divers", label: "Divers" },
+  ]}
+/>
+```
+
+| Prop | Typ | Default |
+|---|---|---|
+| `label` | `string` | — |
+| `options` | `{ value: string; label: string }[]` | — |
+| `value` | `string` | — |
+| `onChange` | `(value: string) => void` | — |
+| `disabled` | `boolean` | `false` |
 
 ---
 
@@ -194,17 +223,41 @@ All native `<input type="radio">` attributes are forwarded.
 
 ```tsx
 <Toggle
-  label="Autopilot Enabled"
+  label="Dynamikerhöhung aktivieren"
   checked={enabled}
   onChange={(e) => setEnabled(e.target.checked)}
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `label` | `string` (required) |
 
-All native `<input type="checkbox">` attributes are forwarded.
+Alle nativen `<input type="checkbox">`-Attribute werden weitergereicht.
+
+---
+
+### SegmentedControl
+
+Horizontaler Tab-Wechsler für exklusiv auswählbare Optionen.
+
+```tsx
+<SegmentedControl
+  value={tarif}
+  onChange={setTarif}
+  options={[
+    { value: "basis", label: "Basis" },
+    { value: "komfort", label: "Komfort" },
+    { value: "premium", label: "Premium" },
+  ]}
+/>
+```
+
+| Prop | Typ |
+|---|---|
+| `options` | `{ value: string; label: string }[]` |
+| `value` | `string` |
+| `onChange` | `(value: string) => void` |
 
 ---
 
@@ -212,18 +265,18 @@ All native `<input type="checkbox">` attributes are forwarded.
 
 ```tsx
 <Slider
-  min={40000}
-  max={150000}
-  step={5000}
+  min={50000}
+  max={1000000}
+  step={50000}
   value={value}
   onChange={setValue}
-  label="Your Budget"
-  unit="$"
-  formatLabel={(v) => `$${v.toLocaleString("en-US")}`}
+  label="Gewünschte Versicherungssumme"
+  unit="€"
+  formatLabel={(v) => `${v.toLocaleString("de-DE")} €`}
 />
 ```
 
-| Prop | Type | Default |
+| Prop | Typ | Default |
 |---|---|---|
 | `min` | `number` | — |
 | `max` | `number` | — |
@@ -238,21 +291,21 @@ All native `<input type="checkbox">` attributes are forwarded.
 
 ### DateInput
 
-Three separate fields for day, month, and year with underline style.
+Drei separate Felder für Tag, Monat und Jahr.
 
 ```tsx
 const [date, setDate] = useState({ day: "", month: "", year: "" });
 
 <DateInput
-  label="Date of Birth"
+  label="Geburtsdatum"
   value={date}
   onChange={setDate}
-  hint="Must be 18 or older to place an order."
-  error="Please enter a valid date."
+  hint="Die versicherte Person muss zwischen 18 und 69 Jahren alt sein."
+  error="Bitte geben Sie ein gültiges Datum ein."
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `value` | `{ day: string; month: string; year: string }` |
 | `onChange` | `(value: DateValue) => void` |
@@ -267,34 +320,76 @@ const [date, setDate] = useState({ day: "", month: "", year: "" });
 ```tsx
 <Stepper
   steps={[
-    { label: "Model" },
-    { label: "Configuration" },
-    { label: "Details" },
-    { label: "Review" },
+    { label: "Tarifdaten" },
+    { label: "Beitrag" },
+    { label: "Persönliches" },
+    { label: "Zusammenfassung" },
   ]}
   currentStep={2}
 />
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `steps` | `{ label: string }[]` |
-| `currentStep` | `number` (1-based) |
+| `currentStep` | `number` (1-basiert) |
 
 ---
 
 ### Tooltip
 
 ```tsx
-<Tooltip content="Full Self-Driving enables automatic city and highway driving." position="top">
-  <button>FSD Info</button>
+<Tooltip
+  content="Die Versicherungssumme bestimmt die Auszahlung im Leistungsfall."
+  position="top"
+>
+  <button>ⓘ Versicherungssumme</button>
 </Tooltip>
 ```
 
-| Prop | Type | Default |
+| Prop | Typ | Default |
 |---|---|---|
 | `content` | `string` | — |
 | `position` | `"top" \| "bottom" \| "left" \| "right"` | `"top"` |
+
+---
+
+### Card
+
+Inhaltskarte mit optionalem CTA-Link.
+
+```tsx
+<Card
+  title="Risikolebensversicherung"
+  cta="Mehr erfahren"
+  onCta={() => navigate("/risikoleben")}
+>
+  Schützen Sie Ihre Familie finanziell — auch wenn Sie nicht mehr da sind.
+</Card>
+```
+
+| Prop | Typ |
+|---|---|
+| `title` | `string` |
+| `cta` | `string` |
+| `onCta` | `() => void` |
+| `className` | `string` |
+
+---
+
+### Alert
+
+Hinweisbox mit vier Varianten.
+
+```tsx
+<Alert variant="info">
+  Ihre Sitzung läuft in 10 Minuten ab.
+</Alert>
+```
+
+| Prop | Typ | Default |
+|---|---|---|
+| `variant` | `"info" \| "success" \| "warning" \| "error"` | `"info"` |
 
 ---
 
@@ -304,26 +399,26 @@ const [date, setDate] = useState({ day: "", month: "", year: "" });
 <Modal
   open={open}
   onClose={() => setOpen(false)}
-  title="Terms & Conditions"
+  title="Einstellungen zum Datenschutz"
   footer={
     <>
-      <Button variant="ghost" onClick={() => setOpen(false)}>Decline</Button>
-      <Button onClick={() => setOpen(false)}>Accept & Continue</Button>
+      <Button variant="secondary" onClick={() => setOpen(false)}>Ablehnen</Button>
+      <Button onClick={() => setOpen(false)}>Alle akzeptieren</Button>
     </>
   }
 >
-  <p>Modal content...</p>
+  <p>Modalinhalt...</p>
 </Modal>
 ```
 
-| Prop | Type |
+| Prop | Typ |
 |---|---|
 | `open` | `boolean` |
 | `onClose` | `() => void` |
 | `title` | `string` |
 | `footer` | `React.ReactNode` |
 
-Closes on ESC key and backdrop click. Prevents background scrolling while open.
+Schließt per ESC-Taste und Klick auf den Hintergrund. Verhindert Hintergrundscrollen während des Öffnens.
 
 ---
 
@@ -332,29 +427,30 @@ Closes on ESC key and backdrop click. Prevents background scrolling while open.
 ```tsx
 import { useToast } from "demo-ui-lib";
 
-function MyComponent() {
+function MeineKomponente() {
   const { show } = useToast();
 
   return (
-    <button onClick={() => show("Order confirmed!", "success")}>
-      Place Order
+    <button onClick={() => show("Änderungen gespeichert.", "success")}>
+      Speichern
     </button>
   );
 }
 ```
 
-`show(message, variant?)` — variants: `"success"` `"error"` `"warning"` `"info"` (default: `"info"`)
+`show(message, variant?)` — Varianten: `"success"` `"error"` `"warning"` `"info"` (Default: `"info"`)
 
-Toasts auto-dismiss after 4 seconds and can be manually closed.
+Toasts verschwinden automatisch nach 4 Sekunden und können manuell geschlossen werden.
 
 ---
 
-## Development
+## Entwicklung
 
 ```bash
-npm run build       # Build library (dist/)
-npm run demo        # Start demo app (http://localhost:5173)
-npm run screenshots # Capture component screenshots
-npm run test        # Run tests
-npm run lint        # Lint
+npm run build                          # Library bauen (dist/)
+npm run demo                           # Demo-App starten (http://localhost:5173)
+npm run screenshots -- --demo          # Demo-Screenshots erstellen
+npm run screenshots -- --url=example.com  # Referenz-Screenshots einer Website erstellen
+npm run test                           # Tests ausführen
+npm run lint                           # Linting
 ```
