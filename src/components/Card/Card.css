@@ -1,0 +1,67 @@
+.card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+  border-color: var(--color-text-muted);
+  box-shadow: var(--box-shadow-small);
+}
+
+.card__body {
+  padding: 20px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
+
+.card__content {
+  font-size: 15px;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.card__footer {
+  padding: 0 24px 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card__cta {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color var(--transition);
+}
+
+.card__cta:hover {
+  color: color-mix(in srgb, var(--color-primary) 82%, #000000);
+}
+
+.card__cta:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

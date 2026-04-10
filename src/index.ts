@@ -40,5 +40,17 @@ export type { ModalProps } from "./components/Modal";
 export { ToastProvider, useToast } from "./components/Toast";
 export type { ToastVariant } from "./components/Toast";
 
+export { SegmentedControl } from "./components/SegmentedControl";
+export type { SegmentedControlProps, SegmentedControlOption } from "./components/SegmentedControl";
+
+export { Card } from "./components/Card";
+export type { CardProps } from "./components/Card";
+
+export { Alert } from "./components/Alert";
+export type { AlertProps, AlertVariant } from "./components/Alert";
+
+export { InlineRadio } from "./components/InlineRadio";
+export type { InlineRadioProps, InlineRadioOption } from "./components/InlineRadio";
+
 export { initTheme } from "./theme";
 export type { ThemeConfig } from "./theme";

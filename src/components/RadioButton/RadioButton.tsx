@@ -20,6 +20,9 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   return (
     <label className={["radio", className].filter(Boolean).join(" ")} htmlFor={inputId}>
       <input id={inputId} type="radio" className="radio__input" {...props} />
+      <span className="radio__control" aria-hidden="true">
+        <span className="radio__dot" />
+      </span>
       <span className="radio__text">
         <span className="radio__label">{label}</span>
         {description && <span className="radio__description">{description}</span>}

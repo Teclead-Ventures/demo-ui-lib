@@ -12,7 +12,8 @@
       "WebFetch(domain:www.tesla.com)",
       "WebFetch(domain:www.schemecolor.com)",
       "WebFetch(domain:brandfetch.com)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

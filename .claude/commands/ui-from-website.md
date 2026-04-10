@@ -2,8 +2,31 @@ Analysiere die Website **$ARGUMENTS** und baue ihre UI-Komponenten als React-Bib
 
 ## Ablauf
 
-### 1. Referenz-Screenshots erstellen
-Starte als erstes den Demo-Server falls noch nicht aktiv (`npm run demo`) und nimm dann Screenshots der Zielseite:
+### 1. Referenz-Screenshots ermitteln
+
+**Schritt 1a — Vorhandene Screenshots prüfen**
+
+Prüfe zuerst ob bereits Dateien in `screenshots/reference/` liegen:
+```bash
+ls screenshots/reference/
+```
+
+Wenn Dateien vorhanden sind: **zeige dem User die Dateinamen und frage explizit nach**, bevor du irgendetwas tust:
+
+> Ich habe folgende Dateien in `screenshots/reference/` gefunden:
+> - `datei1.png`
+> - `datei2.png`
+> - ...
+>
+> Soll ich diese Screenshots verwenden, oder soll ich sie löschen und neue automatisch erstellen?
+
+- **Wenn der User "verwenden" sagt**: alle Bilder lesen und analysieren, direkt zu Schritt 2 springen — keine neuen Screenshots erstellen, nichts löschen.
+- **Wenn der User "neu erstellen" sagt**: alle Dateien in `screenshots/reference/` löschen, dann mit Schritt 1b fortfahren.
+- **Wenn der Ordner leer ist**: direkt mit Schritt 1b fortfahren ohne zu fragen.
+
+**Schritt 1b — Automatische Screenshots erzeugen (nur wenn kein brauchbares Material vorhanden)**
+
+Starte den Demo-Server falls noch nicht aktiv (`npm run demo`) und nimm Screenshots der Zielseite:
 ```bash
 npm run screenshots -- --url=$ARGUMENTS
 ```
@@ -22,7 +45,7 @@ Teile dem User mit, dass die Seite automatisierte Screenshots blockiert, und bit
 >
 > Ziehe die Screenshots einfach in den Chat. Du kannst diesen Schritt auch überspringen — dann basiert das Theme nur auf öffentlichen Brand-Quellen und kann von der echten UI abweichen.
 
-- Wenn der User Screenshots liefert: analysiere sie sorgfältig (Farben per Augenschein, Schriftschnitt, Abstände, Eckenradien, Schatten) bevor du mit Schritt 2 weitermachst.
+- Wenn der User Screenshots liefert: alle Bilder lesen und sorgfältig analysieren (Farben per Augenschein, Schriftschnitt, Abstände, Eckenradien, Schatten) bevor du mit Schritt 2 weitermachst.
 - Wenn der User überspringt: fahre mit Schritt 2 fort, weise aber am Ende der Arbeit darauf hin, dass ein manueller Abgleich mit der echten Site empfohlen wird.
 
 **Wichtig — so nah wie möglich an der Referenz bleiben:**

@@ -15,7 +15,7 @@
 }
 
 .stepper__step:last-child {
-  flex: 0 0 auto;
+  flex: 1;
 }
 
 .stepper__circle {
@@ -54,11 +54,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .stepper__step[data-status="active"] .stepper__label {
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .stepper__step[data-status="done"] .stepper__label {

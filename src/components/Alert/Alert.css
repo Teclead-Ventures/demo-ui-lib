@@ -1,0 +1,35 @@
+.alert {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text);
+  border-radius: var(--border-radius-large);
+  padding: 16px 20px;
+}
+
+/* info — neutral gray, as seen in ERGO personal data form */
+.alert[data-variant="info"] {
+  background-color: var(--color-bg-disabled);
+  color: var(--color-text);
+}
+
+/* success — ERGO --theme-additional-2 teal */
+.alert[data-variant="success"] {
+  background-color: #e3f0e6;
+  color: #005a50;
+  border-left: 3px solid #009284;
+}
+
+/* warning — ERGO --theme-additional-4 yellow */
+.alert[data-variant="warning"] {
+  background-color: #fff4b0;
+  color: #7a6000;
+  border-left: 3px solid #f6cb00;
+}
+
+/* error — ERGO --theme-error-color */
+.alert[data-variant="error"] {
+  background-color: #fde8ea;
+  color: #9b0016;
+  border-left: 3px solid #e80c26;
+}
