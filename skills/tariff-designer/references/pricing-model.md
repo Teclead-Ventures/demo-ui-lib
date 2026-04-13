@@ -1,10 +1,12 @@
 # Pricing Engine Model
 
-This document defines the pricing formulas used across insurance products. There are **3 pricing templates** depending on the product type:
+This document defines the pricing formulas used across insurance products. There are **5 pricing templates** depending on the product type:
 
-- **Template A** (polynomial): Most person products — `baseRate × units × ageFactor × riskClass × (1+loading)`
-- **Template B** (lookup table): Products with exponential age curves (Risikoleben) — lookup + interpolation
+- **Template A** (polynomial): Person products with moderate age curves — `baseRate × units × ageFactor × riskClass × (1+loading)`
+- **Template A+step**: Variant of A with step-function age bands instead of polynomial — Unfall (binary 1.0×/2.0× at age 65)
+- **Template B** (lookup table): Products with exponential age curves — lookup + interpolation
 - **Template C** (property/additive): Property products (Hausrat) — `(rate × m² + tierFixedBase) × regionMult × factors`
+- **Template D** (flat-rate configurator): Products with no age curve and additive module pricing — Rechtsschutz
 
 ## Template A: The Standard Formula
 
@@ -22,11 +24,15 @@ Where:
 - **paymentModeDiscount**: Monthly=1.0, Quarterly=0.98, Semi-annual=0.96, Annual=0.95
 - **loading**: Insurer's margin covering acquisition costs, admin, safety, profit. Typically 0.20–0.30.
 
-Products using Template A: BU, Zahnzusatz (age-band approximation, R²=0.997), Haftpflicht, Rechtsschutz, Unfall, Pflege, Tierkranken, Reise, Kfz, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
+Products using Template A: BU, Zahnzusatz (age-band approximation, R²=0.997), Haftpflicht, Tierkranken, Reise, Kfz, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
 
-Products using Template B: Risikoleben, Sterbegeld (age-dependent tier multipliers + fixed fee make lookup table more accurate than polynomial). See "Lookup Table Pricing" section and TypeScript Template B below.
+Products using Template A+step: Unfall (binary 1.0×/2.0× at age 65).
 
-Products using Template C: Hausrat. See "Additive Tier Models" section and TypeScript Template C below.
+Products using Template B: Risikoleben, Sterbegeld, Pflegezusatz/PTG (exponential ~5.4%/year, 82 per-year rates).
+
+Products using Template C: Hausrat.
+
+Products using Template D: Rechtsschutz (Baustein toggles, no age curve, no coverage slider).
 
 ## Age Factor Calculation
 
@@ -52,9 +58,9 @@ function calculateAgeFactor(
 | BU | 0.70 | 0.50 | −0.15 | Bell curve ~45-50 | Disability risk peaks mid-career, drops near retirement |
 | Zahnzusatz | 0.13 | 3.08 | −0.52 | Steep near-linear | ERGO uses discrete age bands; polynomial is smooth approximation (R²=0.997) |
 | Risikoleben | N/A | N/A | N/A | **Lookup table required** (quadratic R²=0.958 inadequate) | 60yo pays 31× of 25yo; smoker multiplier is age-dependent (1.87-3.92×) — polynomial cannot model this |
-| Pflege | 0.50 | 0.25 | 0.65 | Steep growth | Care need rises sharply after 70 |
+| Pflege (PTG) | N/A | N/A | N/A | **Lookup table required** (exponential ~5.4%/year, quadratic R²=0.956) | 82 per-year rates ages 0-99; PZU/KFP are fixed-price separate products |
 | Tierkranken | 0.60 | 0.10 | 0.90 | Very steep after 7-8 | Pets age fast, vet costs spike |
-| Unfall | 0.85 | 0.10 | 0.15 | Moderate increase | Accident risk fairly constant, slight age effect |
+| Unfall | N/A | N/A | N/A | **Step function**: 1.0× (age <65), 2.0× (age ≥65) | Binary age band, not polynomial |
 | Krankentagegeld | 0.70 | 0.35 | 0.20 | Steady increase | Illness duration increases with age |
 | Hausrat | N/A | N/A | N/A | **Binary** (under-36: 0.87×, else 1.0) | ERGO uses 13% Startbonus for under-36, additive tier model, per-m² pricing |
 | Haftpflicht/Cyber | 1.00 | 0.00 | 0.00 | Flat | Not age-dependent |
@@ -306,6 +312,109 @@ export function getCoverageFromM2(m2: number): number {
 }
 ```
 
+### Template A+step: Step-function age bands (Unfall)
+
+Used by: Unfall (binary 1.0×/2.0× at age 65)
+
+Template A formula with age factor replaced by a step function instead of polynomial.
+
+```typescript
+// src/lib/data/pricing.ts — Template A+step (step-function age bands)
+
+const BASE_RATES: Record<"basic" | "smart" | "best", number> = {
+  basic: 0.754,  // EUR/month per 10k coverage, Gruppe A, under-65
+  smart: 1.524,
+  best: 1.954,
+};
+
+const COVERAGE_UNIT = 10000;
+
+// Step-function age bands (NOT polynomial)
+const AGE_BANDS: Array<{ maxAge: number; multiplier: number }> = [
+  { maxAge: 64, multiplier: 1.0 },
+  { maxAge: 75, multiplier: 2.0 },
+];
+
+function getAgeBandMultiplier(age: number): number {
+  const band = AGE_BANDS.find((b) => age <= b.maxAge);
+  return band?.multiplier ?? AGE_BANDS[AGE_BANDS.length - 1].multiplier;
+}
+
+// Occupation risk groups — mapped from autocomplete job titles
+const OCCUPATION_MULTIPLIERS: Record<string, number> = {
+  A: 1.0,   // Büro, Verwaltung, Lehrer
+  B: 1.55,  // Dachdecker, Maurer, Polizist
+  C: 3.10,  // Berufskraftfahrer (Güterverkehr)
+};
+
+export function calculateMonthlyPrice(
+  age: number,
+  coverageAmount: number,
+  plan: "basic" | "smart" | "best",
+  occupationGroup: "A" | "B" | "C" = "A",
+): number {
+  const units = coverageAmount / COVERAGE_UNIT;
+  const ageMult = getAgeBandMultiplier(age);
+  const occMult = OCCUPATION_MULTIPLIERS[occupationGroup];
+  const price = BASE_RATES[plan] * units * ageMult * occMult;
+  return Math.round(price * 100) / 100;
+}
+```
+
+### Template D: Flat-rate additive configurator (Rechtsschutz)
+
+Used by: Rechtsschutz (no age curve, no coverage slider, additive Baustein modules)
+
+```typescript
+// src/lib/data/pricing.ts — Template D (flat-rate additive configurator)
+
+type RechtsschutzPlan = "smart" | "best";
+type Baustein = "privat" | "beruf" | "wohnen" | "verkehr";
+
+// Baustein base rates (Single, SB €150, monthly)
+const BAUSTEIN_RATES: Record<RechtsschutzPlan, Record<Baustein, number>> = {
+  smart: { privat: 16.71, beruf: 7.83, wohnen: 1.31, verkehr: 8.30 },
+  best:  { privat: 24.84, beruf: 9.10, wohnen: 1.83, verkehr: 14.59 },
+};
+
+const FAMILY_MULTIPLIERS: Record<string, number> = {
+  single: 1.0,
+  alleinerziehend: 1.0,
+  paar: 1.12,
+  familie: 1.12,
+};
+
+const SB_DISCOUNTS: Record<string, number> = {
+  "150": 1.0,
+  "250": 0.911,
+  "500": 0.779,
+};
+
+const CONTRACT_DISCOUNTS: Record<string, number> = {
+  "1": 1.0,
+  "3": 0.90,
+};
+
+export function calculateMonthlyPrice(
+  plan: RechtsschutzPlan,
+  bausteine: Baustein[],
+  familyStatus: string = "single",
+  sb: string = "150",
+  contractYears: string = "1",
+  age: number = 30,
+  paymentModeDiscount: number = 1.0,
+): number {
+  // Sum selected Bausteine (additive, verified 0.00 error)
+  const bausteinSum = bausteine.reduce((sum, b) => sum + BAUSTEIN_RATES[plan][b], 0);
+  const familyMult = FAMILY_MULTIPLIERS[familyStatus] ?? 1.0;
+  const sbMult = SB_DISCOUNTS[sb] ?? 1.0;
+  const contractMult = CONTRACT_DISCOUNTS[contractYears] ?? 1.0;
+  const youthMult = age < 25 ? 0.90 : 1.0;
+  const price = bausteinSum * familyMult * sbMult * contractMult * youthMult * paymentModeDiscount;
+  return Math.round(price * 100) / 100;
+}
+```
+
 ### Common utilities (all templates)
 
 ```typescript
@@ -339,6 +448,9 @@ The base rates are calibrated so that a "typical" customer sees realistic-lookin
 | Risikoleben | 35yo NS 10+, €200k, 20yr | ~€9.54/mo | ✓ ERGO charges exactly €9.54 Komfort (researched 2026-04-13) |
 | Tierkranken | Dog age 3, €5k budget | ~€35/mo | ✓ Market range €25-60 |
 | Kfz | 35yo, midsize, SF 10 | ~€65/mo | ✓ Market range €40-100 |
+| Rechtsschutz | Single, all 4 Bausteine, Smart, SB €150 | €34.15/mo | ✓ ERGO exact (researched 2026-04-13, Template D) |
+| Unfall | 36yo, Büro (A), €50k, Smart | €7.62/mo | ✓ ERGO exact (researched 2026-04-13, step-function age) |
+| Pflegezusatz (PTG) | 30yo, €10/day | €9.03/mo | ✓ ERGO exact (researched 2026-04-13, Template B) |
 
 These are intentionally center-of-market. The risk class and age adjustments create variance around this center.
 

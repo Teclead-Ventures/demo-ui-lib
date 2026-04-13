@@ -1,0 +1,45 @@
+{
+  "product": "rechtsschutz",
+  "pricing_model": "flat_rate_additive_configurator",
+  "age_curve": "NONE (flat rate, no age dependence)",
+  "age_curve_r_squared": "N/A",
+  "tier_relationship": "NOT multiplicative - each tier has independent Baustein prices",
+  "baustein_model": "ADDITIVE - each Baustein adds a fixed amount",
+  "family_multiplier": {
+    "single": 1.0,
+    "alleinerziehend": 1.0,
+    "paar": {
+      "smart": 1.111,
+      "best": 1.123
+    },
+    "familie": {
+      "smart": 1.111,
+      "best": 1.123
+    }
+  },
+  "smart_baustein_rates": {
+    "privat": 16.71,
+    "beruf": 7.83,
+    "wohnen": 1.31,
+    "verkehr": 8.3,
+    "total_all4": 34.15
+  },
+  "best_baustein_rates": {
+    "privat": 24.84,
+    "beruf": 9.1,
+    "wohnen": 1.83,
+    "verkehr": 14.59,
+    "total_all4": 50.36
+  },
+  "discounts": {
+    "under_25_startbonus": -0.1,
+    "sb_250": -0.089,
+    "sb_500": -0.221,
+    "3year_contract": -0.1,
+    "quarterly_payment": -0.009,
+    "semiannual_payment": -0.028,
+    "annual_payment": -0.057
+  },
+  "recommended_template": "D (new: flat rate additive configurator)",
+  "confidence": "HIGH"
+}

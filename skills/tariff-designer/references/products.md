@@ -237,25 +237,51 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 | **ID** | rechtsschutz |
 | **Category** | liability |
 | **Insured event** | legal disputes (lawyer fees, court costs) |
-| **Age range** | 18–75 |
-| **Coverage** | €100.000–€1.000.000, step €100.000, default €300.000 |
-| **Coverage unit** | flat rate (coverage determines max payout) |
+| **Age range** | 18+ (no upper limit; under-25 gets 10% Startbonus) |
+| **Coverage** | Fixed by tier: Smart = €2M, Best = unlimited. No user-selectable coverage. |
+| **Coverage unit** | N/A (no coverage selection) |
 | **Risk class** | None |
-| **Payment duration** | Annual renewal |
-| **Waiting period** | 3 months for all tiers |
+| **Payment duration** | 1 year or 3 years (3yr = 10% Dauernachlass) |
+| **Waiting period** | None |
 
-**Base rates** (flat/month, coverageUnit=defaultCoverage so units=1): Grundschutz €12.50, Komfort €22.00, Premium €35.00
-**Age curve**: base=0.90, linear=0.15, quadratic=0.05 (slight increase with age)
-**Loading**: 23%
+**Note — Only 2 tiers**: ERGO Rechtsschutz has 2 tiers (Smart/Best), NOT 3.
 
-**Tiers**:
-- **Grundschutz**: Privatrechtsschutz only, Selbstbeteiligung €250
-- **Komfort**: + Berufsrechtsschutz, Verkehrsrechtsschutz, SB €150
-- **Premium**: + Mietrechtsschutz, Steuerrechtsschutz, Mediation, SB €0, Anwaltshotline 24/7
+**Note — Additive Bausteine**: Pricing is based on toggling legal area modules (Bausteine), NOT a coverage amount. Each Baustein has its own price and they sum additively (verified with 0.00 error). For the demo, simplify by including legal areas in the tier description rather than exposing individual toggles.
 
-**Wizard steps**: Legal areas (checkboxes) → Coverage sum → Plan selection → Personal data → Summary
+**Pricing model: Template D** (flat-rate additive configurator — no age curve, no coverage slider)
 
-**Form fields**: legalAreas (checkboxes: Privat/Beruf/Verkehr/Miete), coverageAmount (slider), plan, salutation, firstName, lastName, street, zip, city, occupation
+**Baustein base rates** (Single, SB €150, monthly):
+
+| Baustein | Smart | Best |
+|----------|-------|------|
+| Privat | €16.71 | €24.84 |
+| Beruf (add-on) | +€7.83 | +€9.10 |
+| Wohnen (add-on) | +€1.31 | +€1.83 |
+| Verkehr (add-on) | +€8.30 | +€14.59 |
+| **All 4 Bausteine** | **€34.15** | **€50.36** |
+
+**Pricing formula**: `monthlyPremium = bausteinSum × familyMult × sbDiscount × contractDiscount × youthDiscount`
+- familyMultiplier: Single/Alleinerziehend = 1.0, Paar/Familie = ~1.12
+- sbDiscount: SB €150 = 1.0, SB €250 = 0.911, SB €500 = 0.779
+- contractDiscount: 1yr = 1.0, 3yr = 0.90
+- youthDiscount: under 25 = 0.90, 25+ = 1.0
+
+**Age curve**: NONE. Flat rate. base=1.0, linear=0.0, quadratic=0.0
+**Loading**: Built into base rates
+**Calibration**: Single, all 4 Bausteine, Smart, SB €150, monthly → €34.15 ✓
+
+**Tiers** (ERGO names: Smart / Best):
+- **Smart** (→ grundschutz): Deckungssumme €2M, SB-Optionen €150/€250/€500, Privat-Baustein Pflicht
+- **Best** (→ komfort): Deckungssumme unbegrenzt, SB-Optionen €150/€250/€500, Privat-Baustein Pflicht, erweiterte Leistungen
+
+**Wizard steps**: Family status → Birth date → Employment status → Employment type → Baustein/tier selection (configurator page with toggles, SB, contract duration, payment mode) → Personal data → Summary
+
+**Form fields**: familyStatus (radio: Single/Alleinerziehend/Paar/Familie), birthDate (spinbutton: Tag/Monat/Jahr), isEmployed (radio: Ja/Nein), employmentType (dropdown, if employed), plan (tabs: Smart/Best), bausteine (toggles: Privat/Beruf/Wohnen/Verkehr), selbstbeteiligung (dropdown: €150/€250/€500), vertragslaufzeit (dropdown: 1/3 Jahre), zahlweise (dropdown), salutation, firstName, lastName, street, zip, city
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/rechtsschutz/screenshots/, research/rechtsschutz/price-matrix.json
+**Confidence**: HIGH (42 data points, Baustein additivity verified with 0.00 error)
+**Discrepancies from previous entry**: No age-based pricing (was quadratic). No coverage slider (was €100k-€1M). Only 2 tiers (was 3). Additive Baustein model (was fixed tier pricing). No waiting period (was 3 months). Family status and SB affect pricing (not modeled before).
 
 ---
 
@@ -266,23 +292,43 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 | **ID** | unfall |
 | **Category** | person |
 | **Insured event** | accident causing permanent disability |
-| **Age range** | 1–75 (covers children too) |
-| **Coverage** | €25.000–€500.000 Invaliditätssumme, step €25.000, default €100.000 |
-| **Coverage unit** | per €25.000 |
-| **Risk class** | Occupation: Büro (1.0), Handwerk (1.3), Risikobehaftet (1.7) |
-| **Payment duration** | Annual renewal |
+| **Age range** | 18–75 |
+| **Coverage** | €10.000–€300.000 Invaliditätssumme, step €5.000, default €50.000 |
+| **Coverage unit** | per €10.000 |
+| **Risk class** | Occupation (autocomplete): Gruppe A/Büro (1.0), Gruppe B/Handwerk (1.55), Gruppe C/Erhöhtes Risiko (3.10) |
+| **Payment duration** | Annual renewal (1-4 year contracts; Smart/Best get discounts for 3+ years) |
 | **Waiting period** | None |
 
-**Base rates** (per €25k/month): Grundschutz €1.80, Komfort €2.50, Premium €3.40
-**Age curve**: base=0.85, linear=0.10, quadratic=0.15 (moderate increase)
-**Loading**: 22%
+**Note — ERGO tier names**: Basic / Smart / Best (not Grundschutz/Komfort/Premium). Keep ERGO's names.
 
-**Tiers**:
-- **Grundschutz**: Invaliditätsleistung mit Grundsumme, Todesfallleistung €10.000
-- **Komfort**: + progressive Invaliditätsleistung (225%), Krankenhaustagegeld €25/Tag, Bergungskosten
-- **Premium**: + Progression 350%, Krankenhaustagegeld €50/Tag, Kosmetische Operationen, Knochenbruch-Sofortleistung
+**Base rates** (per €10k/month, Gruppe A, under-65): Basic €0.754, Smart €1.524, Best €1.954
+**Age curve**: Step function — NOT polynomial. 2 discrete bands:
+- Age 18-64: multiplier = 1.0
+- Age 65-75: multiplier = 2.0 (exact doubling)
 
-**Wizard steps**: Birth date → Occupation → Coverage amount → Plan selection → Personal data → Summary
+**Coverage scaling**: Perfectly linear (R²=1.0, no fixed fee)
+**Tier ratios**: Smart = 2.02× Basic, Best = 2.54× Basic (constant across ages)
+**Occupation multipliers**: Gruppe A = 1.0, Gruppe B = 1.55, Gruppe C = 3.10 (constant across ages, verified)
+**Loading**: Built into base rates
+**Calibration**: 36yo, Bürokaufmann (A), €50k, Smart → €7.62/month ✓ (1.524 × 5 × 1.0 × 1.0)
+
+**Pricing formula**: `price = baseRate × (coverage/10000) × ageBandMult × occupationMult`
+
+**Tiers** (ERGO names: Basic / Smart / Best):
+- **Basic**: Invaliditätsleistung mit Progression 300%, nur 1-Jahres-Vertrag
+- **Smart**: Progression 300%, erweiterter Schutz, 1-4 Jahre Vertrag (Rabatt ab 3 Jahre)
+- **Best**: Progression 600%, Topschutz, 1-4 Jahre Vertrag (Rabatt ab 3 Jahre)
+
+**Optional add-ons** (separate pricing): Unfall-Rente, Unfall-Hilfe, Verletzungsgeld, Krankenhaus-Tagegeld, Todesfallleistung, Unfall-Pflege, Gliedertaxe Plus
+
+**Wizard steps**: Who to insure (Ich/Jemand anders) → Birth date → Occupation (autocomplete) → Self-employed? (Ja/Nein) → Coverage slider → Tier selection (Basic/Smart/Best with add-ons, contract duration on same page)
+
+**Form fields**: versichertePerson (radio: Mich selbst/Jemand anders), birthDate (spinbutton: Tag/Monat/Jahr), occupation (autocomplete combobox), selfEmployed (radio: Ja/Nein), coverageAmount (slider, €10k-€300k), plan (tabs: Basic/Smart/Best), addOns (checkboxes), vertragslaufzeit (dropdown: 1-4 Jahre), zahlweise (dropdown)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/unfall/screenshots/, research/unfall/price-matrix.json
+**Confidence**: HIGH (16 data points, coverage linearity R²=1.0, occupation multipliers verified constant)
+**Discrepancies from previous entry**: Coverage range €10k-€300k (was €25k-€500k). Tier names Basic/Smart/Best (was Grundschutz/Komfort/Premium). Step-function age model with 2.0× at 65 (was quadratic polynomial). Risk multipliers 1.0/1.55/3.10 (was 1.0/1.3/1.7). Tier ratios 1.0/2.02/2.54 (was ~1.0/1.39/1.89). Occupation is autocomplete with specific job titles (was generic dropdown).
 
 ---
 
@@ -357,23 +403,56 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 | **ID** | pflegezusatz |
 | **Category** | person |
 | **Insured event** | need for long-term care (Pflegegrad 1-5) |
-| **Age range** | 20–65 |
-| **Coverage** | €250–€3.000/month Pflegegeld, step €250, default €1.000 |
-| **Coverage unit** | per €250/month |
+| **Age range** | 0–99 (age bands: 0-15, 16-19 flat; 20-99 per-year) |
+| **Coverage** | €5–€160/day Pflegetagegeld, step €5, default €10 |
+| **Coverage unit** | per €1/day (perfectly linear: price = ageRate × dailyBenefit) |
 | **Risk class** | None |
-| **Payment duration** | 67 − age |
-| **Waiting period** | Grundschutz: 5 years (!), Komfort: 3 years, Premium: 1 year |
+| **Payment duration** | Not specified in calculator |
+| **Waiting period** | None |
 
-**Base rates** (per €250/month): Grundschutz €4.50, Komfort €6.20, Premium €8.80
-**Age curve**: base=0.50, linear=0.25, quadratic=0.65 (steep growth — care risk rises sharply)
-**Loading**: 25%
+**Note — Not 3 tiers**: ERGO offers 3 **separate products**, not 3 tiers of one product:
+- **PTG** (Pflege Tagegeld) — age-dependent, "Bestseller", primary product for our demo
+- **PZU** (Pflege-Zuschuss 50%/100%) — fixed price €29.70/€59.40/month, no age dependency
+- **KFP** (KombiMed Förder-Pflege) — fixed price €25.72/month, state-subsidized (€5/month Zulage)
 
-**Tiers**:
-- **Grundschutz**: Pflegegeld ab Pflegegrad 2, 5 years waiting, nur stationäre Pflege
-- **Komfort**: Ab Pflegegrad 1, 3 years waiting, ambulant + stationär, Einmalzahlung bei Pflegegrad 4-5
-- **Premium**: Ab Pflegegrad 1, 1 year waiting, ambulant + stationär + häuslich, Assistance-Leistungen, dynamische Anpassung
+**Note — DKV brand**: Calculator is DKV-branded (ERGO Group subsidiary), not ERGO-branded.
 
-**Wizard steps**: Birth date → Health status → Coverage amount → Plan selection → Personal data → Summary
+**Pricing model: Template B** (lookup table — exponential age curve, quadratic R²=0.956 inadequate, exponential R²=0.999)
+
+**PTG rate table** (EUR/month per €1/day benefit):
+
+| Age | Rate | Age | Rate | Age | Rate | Age | Rate |
+|-----|------|-----|------|-----|------|-----|------|
+| 0-15 | 0.451 | 30 | 0.903 | 50 | 2.136 | 70 | 5.786 |
+| 16-19 | 0.462 | 35 | 1.117 | 55 | 2.694 | 75 | 7.884 |
+| 20 | 0.591 | 40 | 1.381 | 60 | 3.448 | 80 | 11.085 |
+| 25 | 0.731 | 45 | 1.711 | 65 | 4.332 | 90 | 22.230 |
+
+Full per-year rates for ages 20-99 available in research/pflegezusatz/products-entry.md.
+
+**Growth rate**: ~5.4%/year (exponential). Age 65 anomaly: only 1.48% growth (likely regulatory adjustment).
+
+**Fixed-price products**:
+
+| Product | Monthly price | Description |
+|---------|--------------|-------------|
+| PZU 50% | €29.70 | 50% Aufstockung der gesetzlichen Pflegeleistungen |
+| PZU 100% | €59.40 | Verdopplung der gesetzlichen Pflegeleistungen |
+| KFP | €25.72 | Staatlich gefördert (€5/Monat Zulage), keine Gesundheitsfragen |
+
+**Loading**: Built into rates
+**Calibration**: PTG, age 30, €10/day → €9.03/month ✓ (0.903 × 10)
+
+**Optional features**: Inflationsschutz (auto-increase every 3 years), Erhöhungsoption (increase on life events without health check), Pflege Schutz Paket (24h Versorgungsgarantie, €1.000 Einmalzahlung ab PG2)
+
+**Calculator**: Single-page configurator (NOT a wizard) — just Geburtsjahr dropdown + Tagegeldhöhe dropdown → instant price
+
+**Form fields**: birthYear (dropdown), dailyBenefit (dropdown: €5-€160 in €5 steps)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/pflegezusatz/screenshots/, research/pflegezusatz/price-matrix.json
+**Confidence**: HIGH (82 data points ages 0-99, coverage linearity verified at 3 ages, exponential R²=0.999)
+**Discrepancies from previous entry**: Not 3 tiers — 3 separate products (PTG/PZU/KFP). Age range 0-99 (was 20-65). Coverage in EUR/day (was EUR/month). No waiting period (was 5y/3y/1y). No tiers to select — single product (PTG) with coverage amount. PZU and KFP are fixed-price alternatives. Exponential age curve needs Template B. DKV-branded calculator. Single-page configurator, not wizard.
 
 ---
 

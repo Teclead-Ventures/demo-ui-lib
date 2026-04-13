@@ -1,0 +1,147 @@
+{
+  "product": "rechtsschutz",
+  "calculator_url": "https://www.ergo.de/de/Produkte/Rechtsschutzversicherung/abschluss",
+  "collected": "2026-04-13",
+  "methodology": "Manual collection via playwright-cli, single-page configurator at step 5 of 10-step wizard",
+  "notes": [
+    "Pricing is AGE-INDEPENDENT (verified at ages 20, 35, 60, 70 with identical results except under-25 Startbonus)",
+    "Under-25 gets 10% Startbonus discount (shown explicitly in UI)",
+    "Bausteine pricing is ADDITIVE (each Baustein adds a fixed amount)",
+    "Employment type (Arbeitnehmer/Beamter/Selbstständig) does NOT affect pricing, only default Baustein selection",
+    "Family status has TWO price tiers: Single (also Alleinerziehend) and Familie (also Paar)",
+    "Vital (senior/retired) variant has different base rates and no Beruf Baustein",
+    "Default SB is 150 EUR; SB 250 gives ~9% discount; SB 500 gives ~22% discount",
+    "3-year contract gives exactly 10% Dauernachlass"
+  ],
+  "default_settings": {
+    "zahlungsweise": "Monatlich",
+    "selbstbeteiligung": "150 €",
+    "vertragsdauer": "1 Jahr"
+  },
+  "pricing_data": {
+    "base_prices_monthly_sb150": {
+      "description": "Base monthly prices with SB 150, 1 year, Zahlungsweise Monatlich",
+      "single_arbeitnehmer": {
+        "smart": {
+          "privat": 16.71,
+          "privat_beruf": 24.54,
+          "privat_beruf_wohnen": 25.85,
+          "privat_beruf_wohnen_verkehr": 34.15,
+          "verkehr_only": 10.98
+        },
+        "best": {
+          "privat": 24.84,
+          "privat_beruf": 33.94,
+          "privat_beruf_wohnen": 35.77,
+          "privat_beruf_wohnen_verkehr": 50.36,
+          "verkehr_only": 16.83
+        }
+      },
+      "familie_arbeitnehmer": {
+        "smart": {
+          "privat_beruf": 27.27
+        },
+        "best": {
+          "privat_beruf": 38.12
+        }
+      },
+      "paar_arbeitnehmer": {
+        "smart": {
+          "privat_beruf": 27.27
+        },
+        "best": {
+          "privat_beruf": 38.12
+        }
+      },
+      "alleinerziehend_arbeitnehmer": {
+        "smart": {
+          "privat_beruf": 24.54
+        },
+        "best": {
+          "privat_beruf": 33.94
+        }
+      },
+      "vital_single_ruhestand": {
+        "smart": {
+          "privat": 15.77,
+          "privat_wohnen": 20.55,
+          "privat_wohnen_verkehr": 30.40
+        },
+        "best": {
+          "privat": 19.98
+        }
+      }
+    },
+    "baustein_increments_single": {
+      "description": "Price added by each Baustein (derived from single_arbeitnehmer data)",
+      "smart": {
+        "privat_base": 16.71,
+        "beruf_add": 7.83,
+        "wohnen_add": 1.31,
+        "verkehr_add": 8.30
+      },
+      "best": {
+        "privat_base": 24.84,
+        "beruf_add": 9.10,
+        "wohnen_add": 1.83,
+        "verkehr_add": 14.59
+      }
+    },
+    "baustein_increments_vital": {
+      "description": "Price added by each Baustein for Vital (senior) variant",
+      "smart": {
+        "privat_base": 15.77,
+        "wohnen_add": 4.78,
+        "verkehr_add": 9.85
+      }
+    },
+    "age_effect": {
+      "description": "Age does NOT affect base pricing. Only under-25 Startbonus applies.",
+      "under_25_startbonus": -0.10,
+      "verification": {
+        "age_20_best_pb": "30.55 (= 33.94 * 0.90)",
+        "age_35_best_pb": 33.94,
+        "age_60_best_pb": 33.94,
+        "age_20_smart_pb": "22.09 (= 24.54 * 0.90)",
+        "age_35_smart_pb": 24.54,
+        "age_60_smart_pb": 24.54
+      }
+    },
+    "family_status_effect": {
+      "single_and_alleinerziehend": 1.0,
+      "paar_and_familie": {
+        "smart_multiplier": 1.111,
+        "best_multiplier": 1.123,
+        "note": "Paar and Familie have identical pricing. Smart: 27.27/24.54=1.111, Best: 38.12/33.94=1.123"
+      }
+    },
+    "selbstbeteiligung_effect": {
+      "description": "Tested with Best Single P+B",
+      "sb_150": 33.94,
+      "sb_250": 30.92,
+      "sb_500": 26.45,
+      "sb_250_discount": -0.089,
+      "sb_500_discount": -0.221
+    },
+    "zahlungsweise_effect": {
+      "description": "Tested with Best Single P+B, SB 150",
+      "monatlich": 33.94,
+      "vierteljaehrlich": 100.85,
+      "halbjaehrlich": 197.86,
+      "jaehrlich": 384.19,
+      "vierteljaehrlich_monthly_equiv": 33.62,
+      "halbjaehrlich_monthly_equiv": 32.98,
+      "jaehrlich_monthly_equiv": 32.02,
+      "vierteljaehrlich_discount": -0.009,
+      "halbjaehrlich_discount": -0.028,
+      "jaehrlich_discount": -0.057
+    },
+    "vertragsdauer_effect": {
+      "description": "Tested with Best Single P+B, SB 150, Monatlich",
+      "ein_jahr": 33.94,
+      "drei_jahre": 30.55,
+      "drei_jahre_discount": -0.100
+    }
+  },
+  "total_data_points": 42
+}

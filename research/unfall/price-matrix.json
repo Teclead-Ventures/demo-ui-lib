@@ -1,0 +1,239 @@
+{
+  "product": "Unfallversicherung",
+  "calculator_url": "https://www.ergo.de/de/Produkte/Unfallversicherung/abschluss",
+  "collection_date": "2026-04-13",
+  "currency": "EUR",
+  "payment_mode": "monthly",
+  "coverage_unit": "EUR Invaliditätssumme",
+  "tiers": {
+    "Basic": "Basic mit Progression 300%",
+    "Smart": "Smart mit Progression 300%",
+    "Best": "Best mit Progression 600%"
+  },
+  "data_points": [
+    {
+      "id": 1,
+      "age": 20,
+      "birth_year": 2006,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": 3.77,
+      "smart": 7.62,
+      "best": 9.77
+    },
+    {
+      "id": 2,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": 3.77,
+      "smart": 7.62,
+      "best": 9.77
+    },
+    {
+      "id": 3,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 100000,
+      "basic": null,
+      "smart": null,
+      "best": 19.54
+    },
+    {
+      "id": 4,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 200000,
+      "basic": null,
+      "smart": null,
+      "best": 39.08
+    },
+    {
+      "id": 5,
+      "age": 60,
+      "birth_year": 1966,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": 3.77,
+      "smart": 7.62,
+      "best": 9.77
+    },
+    {
+      "id": 6,
+      "age": 62,
+      "birth_year": 1964,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": null,
+      "smart": 7.62,
+      "best": null
+    },
+    {
+      "id": 7,
+      "age": 63,
+      "birth_year": 1963,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": null,
+      "smart": 7.62,
+      "best": null
+    },
+    {
+      "id": 8,
+      "age": 64,
+      "birth_year": 1962,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": null,
+      "smart": 7.62,
+      "best": null
+    },
+    {
+      "id": 9,
+      "age": 65,
+      "birth_year": 1961,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": 7.54,
+      "smart": 15.22,
+      "best": 19.54
+    },
+    {
+      "id": 10,
+      "age": 70,
+      "birth_year": 1956,
+      "occupation": "Bürokaufmann",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": 7.54,
+      "smart": 15.22,
+      "best": 19.54
+    },
+    {
+      "id": 11,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Lehrer (ohne nähere Angabe)",
+      "occupation_group": "A",
+      "coverage": 50000,
+      "basic": 3.77,
+      "smart": 7.62,
+      "best": 9.77
+    },
+    {
+      "id": 12,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Dachdecker",
+      "occupation_group": "B",
+      "coverage": 50000,
+      "basic": 5.85,
+      "smart": 11.79,
+      "best": 14.61
+    },
+    {
+      "id": 13,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Maurer",
+      "occupation_group": "B",
+      "coverage": 50000,
+      "basic": 5.85,
+      "smart": 11.79,
+      "best": 14.61
+    },
+    {
+      "id": 14,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Polizist",
+      "occupation_group": "B",
+      "coverage": 50000,
+      "basic": 5.85,
+      "smart": 11.79,
+      "best": 14.61,
+      "notes": "Additional question: kaufmännisch/verwaltend? Answer: Nein"
+    },
+    {
+      "id": 15,
+      "age": 70,
+      "birth_year": 1956,
+      "occupation": "Dachdecker",
+      "occupation_group": "B",
+      "coverage": 50000,
+      "basic": 11.70,
+      "smart": 23.60,
+      "best": 29.23
+    },
+    {
+      "id": 16,
+      "age": 36,
+      "birth_year": 1990,
+      "occupation": "Berufskraftfahrer (Güterverkehr)",
+      "occupation_group": "C",
+      "coverage": 50000,
+      "basic": 11.70,
+      "smart": 23.60,
+      "best": 29.23
+    }
+  ],
+  "coverage_linearity_check": {
+    "occupation": "Bürokaufmann",
+    "age": 36,
+    "tier": "Best",
+    "data": [
+      {"coverage": 50000, "price": 9.77, "price_per_10k": 1.954},
+      {"coverage": 100000, "price": 19.54, "price_per_10k": 1.954},
+      {"coverage": 200000, "price": 39.08, "price_per_10k": 1.954}
+    ],
+    "result": "PERFECTLY LINEAR - no fixed fee component"
+  },
+  "age_band_boundary_check": {
+    "occupation": "Bürokaufmann",
+    "tier": "Smart",
+    "coverage": 50000,
+    "data": [
+      {"age": 60, "price": 7.62, "band": "under-65"},
+      {"age": 62, "price": 7.62, "band": "under-65"},
+      {"age": 63, "price": 7.62, "band": "under-65"},
+      {"age": 64, "price": 7.62, "band": "under-65"},
+      {"age": 65, "price": 15.22, "band": "65-plus"},
+      {"age": 70, "price": 15.22, "band": "65-plus"}
+    ],
+    "result": "TWO DISCRETE AGE BANDS: <65 = 1.0x, >=65 = 2.0x exactly"
+  },
+  "occupation_multiplier_check": {
+    "age": 36,
+    "coverage": 50000,
+    "multipliers": {
+      "group_A_to_B": {
+        "basic": {"A": 3.77, "B": 5.85, "ratio": 1.552},
+        "smart": {"A": 7.62, "B": 11.79, "ratio": 1.548},
+        "best": {"A": 9.77, "B": 14.61, "ratio": 1.495}
+      },
+      "group_A_to_C": {
+        "basic": {"A": 3.77, "C": 11.70, "ratio": 3.104},
+        "smart": {"A": 7.62, "C": 23.60, "ratio": 3.097},
+        "best": {"A": 9.77, "C": 29.23, "ratio": 2.992}
+      },
+      "group_B_to_C": {
+        "basic": {"B": 5.85, "C": 11.70, "ratio": 2.000},
+        "smart": {"B": 11.79, "C": 23.60, "ratio": 2.002},
+        "best": {"B": 14.61, "C": 29.23, "ratio": 2.001}
+      }
+    },
+    "result": "Occupation multipliers are AGE-INDEPENDENT (same ratio at ages 36 and 70)"
+  }
+}

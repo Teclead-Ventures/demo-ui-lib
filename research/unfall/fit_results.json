@@ -1,0 +1,54 @@
+{
+  "model_type": "discrete_age_bands_with_occupation_risk",
+  "age_bands": [
+    {
+      "range": "0-64",
+      "multiplier": 1.0
+    },
+    {
+      "range": "65+",
+      "multiplier": 2.0
+    }
+  ],
+  "base_rates_per_10k": {
+    "basic": 0.754,
+    "smart": 1.524,
+    "best": 1.954
+  },
+  "tier_ratios_to_basic": {
+    "smart": 2.0179,
+    "best": 2.5354
+  },
+  "occupation_risk_multipliers": {
+    "group_A": {
+      "multiplier": 1.0,
+      "examples": [
+        "Burokaufmann",
+        "Lehrer"
+      ]
+    },
+    "group_B": {
+      "multiplier": 1.531,
+      "examples": [
+        "Dachdecker",
+        "Maurer",
+        "Polizist"
+      ]
+    },
+    "group_C": {
+      "multiplier": 3.064,
+      "examples": [
+        "Berufskraftfahrer"
+      ]
+    }
+  },
+  "coverage_linearity": "PERFECT (R^2 = 1.0)",
+  "coverage_range": {
+    "min": 10000,
+    "max": 300000,
+    "step": 5000,
+    "default": 50000
+  },
+  "recommended_template": "Custom (A-like with discrete age bands)",
+  "confidence": "HIGH"
+}
