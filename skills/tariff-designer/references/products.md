@@ -545,23 +545,52 @@ Both include: Ambulante + stationäre Behandlung (unbegrenzt), Operationen inkl.
 | **ID** | reise |
 | **Category** | travel |
 | **Insured event** | trip cancellation, medical emergencies abroad, luggage loss |
-| **Age range** | 0–85 |
-| **Coverage** | €2.000–€30.000 trip cost, step €1.000, default €5.000 |
-| **Coverage unit** | per €1.000 trip cost |
-| **Risk class** | Destination: Europa (1.0), Weltweit (1.40) |
-| **Payment duration** | Per trip or annual flat rate |
+| **Age range** | Age bands: ≤40, 41–64, 65+ (not exact age) |
+| **Coverage** | Trip cost €1–€20.000 (for Storno/Rundum); flat rates for Krankenschutz |
+| **Coverage unit** | Percentage of trip cost (Storno: 5-6%) or flat age-band rates (Kranken) |
+| **Risk class** | None |
+| **Payment duration** | Per trip or annual |
 | **Waiting period** | None |
 
-**Base rates** (per €1k trip cost): Grundschutz €1.50, Komfort €2.80, Premium €4.20
-**Age curve**: base=0.75, linear=0.10, quadratic=0.30 (U-shape: young adventurers + elderly)
-**Loading**: 20%
+**Note — Not tiers**: ERGO offers 3 **separate product categories**, not tiers:
+- **Stornokostenschutz** — Trip cancellation + interruption
+- **Rundumschutz** — Bundle: Storno + Kranken + Gepäck
+- **Krankenschutz** — Medical coverage abroad only
 
-**Tiers**:
-- **Grundschutz**: Reiserücktritt only, SB €100
-- **Komfort**: + Reiseabbruch, Reisegepäck bis €2.000, SB €50
-- **Premium**: + Auslandskranken, Mietwagenschutz, 24/7-Assistance, SB €0
+Each has single-trip (Einmal) and annual (Jahres) variants, each with/without Selbstbeteiligung.
 
-**Wizard steps**: Destination → Trip details → Coverage → Plan selection → Traveler data → Summary
+**Note — External domain**: Calculator is on `app.ergo-reiseversicherung.de` (ERV subsidiary), NOT ergo.de. Completely different UX from other ERGO calculators.
+
+**Pricing model: Template F** (travel-specific — trip-cost-based, does not fit templates A-E)
+
+**Stornokostenschutz Einmal** (single trip):
+- mit SB: exactly 5% of trip cost (age-independent, per-booking)
+- ohne SB: exactly 6% of trip cost
+- Auto transport: ×0.92 discount vs Flug
+- Region has ZERO effect
+
+**Stornokostenschutz Jahres** (annual):
+- Formula: `price = (-91 + 3.79 × √trip_cost) × ageMult × groupMult × sbMult`
+- Sparfuchs variant = ×0.90
+- Age multipliers: ≤40 = 1.0, 41-64 = 1.10, 65+ = 2.09
+- Group: Single = 1.0, Paar/Familie = 1.12 (children free with 2 adults)
+- ohne SB: ×1.19
+
+**Krankenschutz Einmal** (Europa, mit SB): ≤40 = €12.80, 41-64 = €16.00, 65+ = €34.40
+- Welt multiplier (mit SB): ×1.125; (ohne SB): ×2.05
+**Krankenschutz Jahres** (region-independent, mit SB): ≤40 = €31, 41-64 = €39, 65+ = €105
+
+**Loading**: Built into rates
+**Calibration**: Storno Einmal, 1 adult ≤40, €5k trip, Flug, mit SB → €250 (5% × 5000) ✓
+
+**Wizard steps**: N/A — single-page configurator. Select product category → Enter travelers (age bands) → Trip details (dates, cost, destination, transport) → Instant price display for all variants.
+
+**Form fields**: productCategory (tabs: Stornokostenschutz/Rundumschutz/Krankenschutz), travelers (age-band counters: ≤40/41-64/65+/kids), tripCost (number), destination (radio: Europa/Welt), transport (radio: Flugzeug-Schiff/Auto-Zug), travelDates (date range), bookingDate (date), deductible (checkbox: mit/ohne SB)
+
+**Source**: app.ergo-reiseversicherung.de — researched 2026-04-13
+**Evidence**: research/reise/screenshots/, research/reise/price-matrix.json
+**Confidence**: MEDIUM-HIGH (20+ data points, Storno 5% rule exact, Jahres sqrt fit, age bands verified)
+**Discrepancies from previous entry**: Not 3 tiers — 3 separate product categories. Trip-cost-based (5% for cancellation, not per-€1k rate). Age bands not continuous curve. External ERV domain. No risk classes. Template F (new).
 
 ---
 
@@ -572,23 +601,73 @@ Both include: Ambulante + stationäre Behandlung (unbegrenzt), Operationen inkl.
 | **ID** | wohngebaeude |
 | **Category** | property |
 | **Insured event** | damage to the building structure (fire, storm, water, natural hazards) |
-| **Age range** | 18–99 |
-| **Coverage** | €100.000–€1.000.000 Gebäudewert, step €50.000, default €350.000 |
-| **Coverage unit** | per €50.000 |
-| **Risk class** | Building type: Massiv (0.85), Fertighaus (1.0), Holz/Fachwerk (1.35) |
-| **Payment duration** | Annual renewal |
+| **Age range** | N/A (no customer age field — construction year replaces age) |
+| **Coverage** | Derived from Wohnfläche: 60–180 m² (>180 requires advisor) |
+| **Coverage unit** | per m² (linear: price = slope × m² + intercept) |
+| **Risk class** | Address-specific (PLZ + street + house number, ZÜRS zones) |
+| **Payment duration** | 3 years (stated in calculator) |
 | **Waiting period** | None |
 
-**Base rates** (per €50k/month): Grundschutz €1.20, Komfort €1.85, Premium €2.60
-**Age curve**: base=1.0, linear=0.0, quadratic=0.0 (flat)
-**Loading**: 22%
+**Note — Only 2 tiers**: ERGO Wohngebäude has 2 tiers (Smart/Best), NOT 3.
 
-**Tiers**:
-- **Grundschutz**: Feuer, Leitungswasser, Sturm/Hagel, SB €1.000
-- **Komfort**: + Elementarschäden (Hochwasser, Erdbeben), Aufräumkosten, SB €500
-- **Premium**: + Photovoltaik, Smarthome, grobe Fahrlässigkeit, Mietausfall 24 Monate, SB €0
+**Note — External calculator**: Calculator is on `wohngebaeudeversicherung.ergo.de` (external subdomain), not the standard ergo.de/abschluss pattern.
 
-**Wizard steps**: Property address → Building details → Coverage → Plan selection → Owner data → Summary
+**Pricing model: Template C variant** (linear per-m² with multiplicative factors, like Hausrat)
+
+**Pricing formula** (annual, Smart, München reference):
+```
+annual_price = (4.854 × m² + 87.93) × regionMult × yearMult × sbMult × tierMult
+```
+
+**Tier multipliers**: Smart = 1.000, Best = 1.0953 (constant across all data points)
+
+**Deductible factors**: ohne SB = 1.000, €500 = 0.850, €1000 = 0.800
+
+**Construction year factors** (discrete bands):
+
+| Construction year | Factor |
+|-------------------|--------|
+| Pre-2000 (1960, 1980) | 1.068 |
+| 2000 | 1.000 (reference) |
+| 2010 | 0.830 |
+| 2020 | 0.660 |
+
+**Regional multipliers** (address-specific, München=reference):
+
+| City | PLZ | Multiplier |
+|------|-----|-----------|
+| Berlin | 10117 | 0.875 |
+| Trier | 54290 | 0.996 |
+| München | 80331 | 1.000 |
+| Köln | 50667 | 1.170 |
+
+**Age curve**: NONE — no customer age field in calculator. Construction year is the age-like factor.
+
+**Building configuration** (measured but factors NOT yet quantified):
+- House type: Einfamilienhaus / Zweifamilienhaus / Mehrfamilienhaus
+- Roof: Ausgebautes Dach / Nicht ausgebautes Dach / Flachdach
+- Floors: 0–3 Vollgeschosse
+- Basement: mehr/weniger als Hälfte unterkellert / kein Keller
+- Garage: 0–4
+- Open fireplace: Ja/Nein (>5000 Watt)
+
+**Perils**: Feuer + Leitungswasser included. Sturm/Hagel and Elementargefahren toggleable. Add-ons: Leitungswasser Plus, Allgemeine Haustechnik, Heizungs- und Energietechnik.
+
+**Loading**: Built into rates
+**Calibration**: EFH, 120m², München, Baujahr 2000, SB €500, Smart → annual price from formula (4.854×120+87.93)×1.0×1.0×0.85×1.0 = €570.18/year ≈ €47.51/month
+
+**Tiers** (ERGO names: Smart / Best):
+- **Smart** (→ grundschutz): Basis-Gebäudeschutz, Feuer + Leitungswasser
+- **Best** (→ komfort): + erweiterte Leistungen, höhere Deckungssummen
+
+**Wizard steps**: Hausdaten (Haustyp/Dach/Geschosse/Keller/Garage/Kamin) → Wohnfläche (m²) → Baujahr → Adresse (PLZ+Straße+Hausnummer, validiert) → Versicherungsschutz (Gefahren toggles) → Tarifergebnis (Smart/Best, SB, Zahlweise)
+
+**Form fields**: haustyp (radio: EFH/ZFH/MFH), dach (radio: 3 options), vollgeschosse (dropdown: 0-3), keller (radio: 3 options), garagen (dropdown: 0-4), kamin (radio: Ja/Nein), wohnflaeche (number: 60-180 m²), baujahr (dropdown), plz (text), strasse (text, validated), hausnummer (text), gefahren (toggles: Sturm/Hagel/Elementar), addOns (toggles), plan (tabs: Smart/Best), selbstbeteiligung (dropdown: ohne/€500/€1000), zahlweise (dropdown)
+
+**Source**: wohngebaeudeversicherung.ergo.de — researched 2026-04-13
+**Evidence**: research/wohngebaeude/screenshots/, research/wohngebaeude/price-matrix.json
+**Confidence**: MEDIUM-HIGH (15 data points, m² linearity R²=0.997, tier ratio constant. Building config factors and add-on pricing not yet measured due to API 502 errors.)
+**Discrepancies from previous entry**: Only 2 tiers (was 3). Per-m² pricing (was per-€50k). No age field (was 18-99). Construction year bands replace age. Address-specific regional (was building type risk classes). External subdomain calculator. Template C variant not A.
 
 ---
 
@@ -682,7 +761,66 @@ VK SF: 0=54%, ½=49%, 1=44%, 2=42%, 3=41%, 4=39%, 5=38%, 6=37%, 7=36%, 8=34%, 9=
 
 ---
 
-## 14. Cyberversicherung (Cyber Risk — for individuals)
+## 14. Motorradversicherung (Motorcycle Insurance)
+
+| Parameter | Value |
+|-----------|-------|
+| **ID** | motorrad |
+| **Category** | motor |
+| **Insured event** | motorcycle damage, liability, theft |
+| **Age range** | 18+ (age AFFECTS pricing — U-shaped curve, unlike Kfz) |
+| **Coverage** | Haftpflicht (mandatory) + Teilkasko or Vollkasko (optional) |
+| **Coverage unit** | N/A (vehicle-specific) |
+| **Risk class** | SF-Klasse (0–20+, 22 levels) — SEPARATE tables for HP and VK |
+| **Payment duration** | 1 year renewable |
+| **Waiting period** | None |
+
+**Note — Only 2 tiers**: Smart / Best (same as Kfz).
+
+**Pricing model: Template E variant** (like Kfz but WITH age curve)
+
+**Pricing formula**: `monthlyPremium = (HP_base × ageFactor × HP_SF%/100) + (VK_base × ageFactor × VK_SF%/100) + TK_flat + tierAddon`
+
+**Base rates** (monthly at 100% SF, Honda CBF 500, München, 6k km, SB VK150/TK150, age 36):
+
+| Component | Smart | Best |
+|-----------|-------|------|
+| HP base | €22.16 | €26.99 |
+| VK base | €78.49 | €106.45 |
+| TK (flat, no SF) | €7.09 | €11.23 |
+| Tier addon | €0 | €1.30 |
+
+**Age curve** (U-shaped quadratic, minimum at ~47):
+`ageFactor(age) = 2.566 - 0.0698 × age + 0.000750 × age²`
+- Age 26: 1.26, Age 36: 1.03, Age 46: 0.94, Age 66: 1.23
+
+**SF-Klasse lookup tables** (22 levels):
+HP SF: 0=100%, ½=74%, 1=54%, 2=48%, 3=44%, 4=40%, 5=38%, 6=36%, 7=34%, 8=32%, 9=31%, 10=30%, 11=29%, 12=28%, 13=28%, 14=27%, 15=27%, 16=26%, 17=26%, 18=25%, 19=25%, 20+=24%
+
+VK SF: 0=100%, ½=76%, 1=55%, 2=49%, 3=46%, 4=43%, 5=40%, 6=38%, 7=36%, 8=35%, 9=34%, 10=33%, 11=32%, 12=31%, 13=30%, 14=30%, 15=29%, 16=28%, 17=28%, 18=28%, 19=27%, 20+=27%
+
+**Key differences from Kfz**: Age curve EXISTS (Kfz had none). Only 22 SF levels (Kfz: 51). HP SF 0=100% (Kfz: 86%). Motorcycle-specific add-on: Motorradbekleidung Plus. Saisonkennzeichen option.
+
+**Loading**: Built into base rates
+**Calibration**: Honda CBF 500, München, 6k km, SF 10, VK150, Smart, age 36 → HP (22.16×1.03×0.30) + VK (78.49×1.03×0.33) + addon 0 ≈ €33.53/month
+
+**Tiers** (ERGO names: Smart / Best):
+- **Smart** (→ grundschutz): Stärkere Rückstufung
+- **Best** (→ komfort): Normale Rückstufung + Ersatzfahrzeug Plus + Schutzbrief + Motorradbekleidung Plus
+
+**Wizard steps**: ~13 steps: Angaben (Vertragsart/Geburtsdatum/Berufsgruppe/Beginn/Saisonkennzeichen) → Fahrzeugsuche (Hersteller/Modell/Hubraum → HSN/TSN) → Fahrzeughalter (Halter/PLZ/Erstzulassung/Fahrer) → Fahrzeugnutzung (km/Nutzung/SF HP+VK/Versicherungsschutz) → Tarifdaten (Smart/Best, SB, Zahlweise, add-ons)
+
+**Form fields**: Similar to Kfz but with motorcycle-specific fields (Hubraum, Saisonkennzeichen)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/motorrad/screenshots/, research/motorrad/price-matrix.json
+**Confidence**: MEDIUM-HIGH (~22 data points, HP SF model verified with zero error, age curve verified at 6 ages, only 1 motorcycle tested)
+
+---
+
+## 15. Cyberversicherung (Cyber Risk — for individuals)
+
+**⚠ NO ONLINE CALCULATOR**: ERGO does not have a Cyberversicherung product page (404). All pricing data below is UNVERIFIED market estimates.
 
 | Parameter | Value |
 |-----------|-------|
@@ -696,16 +834,19 @@ VK SF: 0=54%, ½=49%, 1=44%, 2=42%, 3=41%, 4=39%, 5=38%, 6=37%, 7=36%, 8=34%, 9=
 | **Payment duration** | Annual renewal |
 | **Waiting period** | None |
 
-**Base rates** (flat/month, coverageUnit=defaultCoverage so units=1): Grundschutz €1.50, Komfort €2.80, Premium €4.50
-**Age curve**: base=1.0, linear=0.0, quadratic=0.0 (flat — cyber risk is age-independent)
+**Base rates** (flat/month, UNVERIFIED): Grundschutz €1.50, Komfort €2.80, Premium €4.50
+**Age curve**: base=1.0, linear=0.0, quadratic=0.0 (flat — assumed)
 **Loading**: 20%
 
-**Tiers**:
+**Tiers** (UNVERIFIED):
 - **Grundschutz**: Identitätsdiebstahl bis €10k, Phishing-Schutz, Datenrettung
 - **Komfort**: + Onlinekauf-Schutz, Cybermobbing, Rechtsberatung digital, Kreditkartenschutz
 - **Premium**: + Dark-Web-Monitoring, Reputationsschutz, psychologische Beratung, Lösegeldzahlung
 
-**Wizard steps**: Digital profile → Coverage → Plan selection → Personal data → Summary
+**Wizard steps**: N/A — no online calculator
+
+**Source**: Generic market estimates (NO calculator verification possible)
+**Confidence**: LOW (product page returns 404, pricing unverified)
 
 ---
 
@@ -715,21 +856,57 @@ VK SF: 0=54%, ½=49%, 1=44%, 2=42%, 3=41%, 4=39%, 5=38%, 6=37%, 7=36%, 8=34%, 9=
 |-----------|-------|
 | **ID** | krankentagegeld |
 | **Category** | person |
-| **Insured event** | income loss during illness (beyond employer continuation) |
-| **Age range** | 18–60 |
-| **Coverage** | €10–€200/day, step €10, default €75 |
-| **Coverage unit** | per €10/day |
-| **Risk class** | Employment: Angestellt (1.0), Selbstständig (1.30) |
-| **Payment duration** | 67 − age |
-| **Waiting period** | Angestellt: ab Tag 43 (after Lohnfortzahlung), Selbstständig: ab Tag 15 or 22 |
+| **Insured event** | income loss during illness (Krankentagegeld supplement for employees; full income replacement for self-employed) |
+| **Age range** | 15–80 (birth year 1946–2011; quadratic age curve with plateau at 67+) |
+| **Coverage** | €5–€520/day, step €5, default €15 (AN) / €50 (SE) |
+| **Coverage unit** | per €1/day (perfectly linear: price = rate × dailyBenefit) |
+| **Risk class** | Berufsstatus: separate tariff tables for Arbeitnehmer vs Selbständiger/Freiberufler |
+| **Payment duration** | Unlimited (keine Höchstleistungsdauer) |
+| **Waiting period** | Leistungsbeginn: AN 43–365 Tag (10 options), SE 4–183 Tag (8 options) |
 
-**Base rates** (per €10/day/month): Grundschutz €2.20, Komfort €3.10, Premium €4.30
-**Age curve**: base=0.70, linear=0.35, quadratic=0.20 (steady increase)
-**Loading**: 25%
+**Note — Not tiers**: ERGO does NOT offer tiers. Single product (KombiMed KTAG) with configuration via Berufsstatus, Leistungsbeginn, and Tagegeldhöhe.
 
-**Tiers**:
-- **Grundschutz**: Tagegeld ab 43. Tag, begrenzt auf 78 Wochen
-- **Komfort**: Ab 43. Tag, unbegrenzt, Nachversicherungsgarantie
-- **Premium**: Ab 22. Tag, unbegrenzt, Beitragsrückgewähr bei Leistungsfreiheit, Optionstarif
+**Note — Two tariff tables**: Arbeitnehmer and Selbständiger/Freiberufler use completely separate rate tables. Freiberufler = Selbständiger pricing (only max coverage differs: €520 vs €300/day).
 
-**Wizard steps**: Employment type → Income → Waiting period → Coverage/day → Plan selection → Personal data → Summary
+**Note — DKV brand**: Calculator is DKV-branded (ERGO Group subsidiary).
+
+**Pricing model: Template B variant** (quadratic age curve with plateau, separate tariff tables)
+
+**Pricing formula**: `price = ageRate(age, berufsstatus) × dailyBenefit × lbFactor(tag, berufsstatus)`
+
+**Arbeitnehmer age rates** (EUR/month per €1/day, Leistungsbeginn 43.Tag):
+
+| Age | Rate | Age | Rate | Age | Rate |
+|-----|------|-----|------|-----|------|
+| 25 | 0.454 | 40 | 0.734 | 55 | 1.178 |
+| 30 | 0.534 | 45 | 0.864 | 60 | 1.316 |
+| 35 | 0.626 | 50 | 1.016 | 67+ | 1.412 (plateau) |
+
+**Selbständiger age rates** (EUR/month per €1/day, Leistungsbeginn 29.Tag):
+
+| Age | Rate | Age | Rate | Age | Rate |
+|-----|------|-----|------|-----|------|
+| 25 | 0.598 | 40 | 0.860 | 55 | 1.246 |
+| 30 | 0.672 | 45 | 0.974 | 60 | 1.406 |
+| 35 | 0.760 | 50 | 1.102 | 67+ | 1.532 (plateau) |
+
+**Leistungsbeginn factors — AN** (normalized to 43.Tag = 1.0):
+43=1.000, 64=0.712, 85=0.577, 92=0.502, 106=0.438, 127=0.375, 169=0.273, 183=0.243, 274=0.116, 365=0.064
+
+**Leistungsbeginn factors — SE** (normalized to 29.Tag = 1.0):
+4=3.432, 8=3.116, 15=1.905, 22=1.283, 29=1.000, 43=0.810, 92=0.354, 183=0.107
+
+**Coverage limits by Berufsstatus**: AN pflichtversichert = €5-35/day, AN freiwillig = €5-520/day, Selbständiger = €5-300/day, Freiberufler = €5-520/day. Versicherungsstatus has NO effect on pricing — only changes max coverage.
+
+**Loading**: Built into rates
+**Calibration**: AN, age 30, 43.Tag, €15/day → €8.01/month (0.534×15) ✓
+**Calibration**: SE, age 30, 29.Tag, €50/day → €33.60/month (0.672×50) ✓
+
+**Wizard steps**: N/A (single-page configurator — Berufsstatus → Geburtsjahr → [Versicherungsstatus] → Leistungsbeginn → Tagegeldhöhe → instant price)
+
+**Form fields**: berufsstatus (radio: Arbeitnehmer/Selbständiger/Freiberufler), versicherungsstatus (radio, AN only: pflichtversichert/freiwillig), birthYear (dropdown 1946-2011), leistungsbeginn (dropdown, options vary by status), dailyBenefit (dropdown: €5-€520 in €5 steps)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/krankentagegeld/screenshots/, research/krankentagegeld/price-matrix.json
+**Confidence**: HIGH (~146 data points, coverage linearity verified, quadratic MAPE<1%, Leistungsbeginn factors verified at 3 ages)
+**Discrepancies from previous entry**: Not 3 tiers — single product. Separate AN/SE tariff tables (not simple multiplier). Coverage step €5 (was €10). Age range 15-80 (was 18-60). Leistungsbeginn is key pricing variable with 10/8 options. Single-page configurator. DKV-branded.

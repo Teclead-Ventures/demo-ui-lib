@@ -762,3 +762,102 @@ export function calculatePaymentDuration(age: number): number {
 - For property products (Wohngebäude), expect Template C or additive tiers
 - For liability products, check for Baustein/Template D pattern
 - For person products with health underwriting (BU), expect complex wizard with many steps
+
+---
+
+## Run: 2026-04-13 (Homepage, ergo-site-researcher)
+
+### Self-Assessment
+- **Result**: SUCCESS
+- Duration: ~8 min
+- Components identified: 13 unique
+- Design tokens extracted: 130+ CSS custom properties
+- Screenshots: 5 (full-page, tablet, mobile, 2 mega menu)
+- Firecrawl scrapes used: 1 of 500
+
+### What worked
+- Firecrawl v4 SDK uses `app.v1.scrapeUrl()` (not `app.scrapeUrl()` or `app.scrape()`)
+- CSS custom properties from `:root` gave comprehensive design tokens
+- ERGO uses `.cmp-hero` not `.cmp-stage` for the hero component
+- Section background pattern: `bg-blue`, `bg-green`, `bg-yellow`, `bg-magenta` classes
+- Mega menu: 3-column pattern (categories → sub-categories → promo cards)
+
+### What failed
+- Initial Firecrawl script had top-level await issue → wrapped in async main
+- `[class*=trust]` selector matched OneTrust cookie overlay instead of trust section → use `.cmp-tile` instead
+- Footer `<footer>` element has no direct styles — styling is on nested `esc_container` divs
+
+### User Feedback
+- Use Google Fonts alternatives (not ERGO's commercial fonts)
+- SectionHeader should be a standalone component
+- Use existing component libraries where possible (carousel, etc.)
+
+### Applied Improvements
+- [x] Documented Firecrawl v4 API: use `app.v1.scrapeUrl()`
+- [x] Saved font/library decisions to memory
+- [ ] Need to identify specific Google Font pairings (DM Sans for FS Me, Source Serif Pro for Fedra Serif)
+
+### Impact on next run
+- Skip `.cmp-stage` selector, use `.cmp-hero` for hero components
+- Avoid `[class*=trust]` — OneTrust cookie library pollutes that selector
+- Query footer styles from nested containers, not `<footer>` directly
+- Firecrawl script is working and reusable for all remaining pages
+
+## Run: 2026-04-13 (ergo-researcher, Batch 5: Wohngebäude + Motorrad + Krankentagegeld + Reise — final batch)
+
+### Result: SUCCESS (all 4 products researched — completes 14/14 product survey)
+
+### Self-Assessment
+
+**Metrics**:
+- Duration: ~64 min total (4 agents in parallel, limited by Motorrad at ~64 min)
+- Products researched: 4 (Wohngebäude, Motorrad, Krankentagegeld, Reise)
+- Data points: ~203 total (15 + 22 + 146 + 20)
+- New templates: 1 (Template F for travel)
+- Confidence: MEDIUM-HIGH (Wohngebäude, Motorrad, Reise), HIGH (Krankentagegeld)
+
+**What worked**:
+- **Pre-flight URL check**: Saved time by confirming BU (advisor-only) and Cyber (404) before dispatching agents. Only sent agents to products with confirmed calculators.
+- **4 parallel agents**: All 4 ran concurrently without issues. ERGO tolerated 4 simultaneous sessions.
+- **DKV pattern recognition**: Krankentagegeld agent immediately recognized the DKV single-page configurator pattern (like Pflegezusatz) and adapted.
+- **External domain handling**: Both Wohngebäude (external subdomain) and Reise (external ERV domain) were handled correctly despite different UX.
+
+**What failed / was suboptimal**:
+- **Wohngebäude API instability**: The external calculator at wohngebaeudeversicherung.ergo.de returned 502 errors intermittently, limiting data collection to 15 points. Building config factors (roof, floors, basement) could not be measured.
+- **Motorrad had ~13 wizard steps**: The most complex wizard encountered. Agent needed many more interactions than Kfz's 5 steps.
+- **Reise pricing model is unique**: Trip-cost-based pricing with sqrt curves doesn't fit any existing template. Required Template F.
+
+### Comparison: Our Assumptions vs ERGO Reality
+
+| Product | Our assumed template | Actual template | Structural mismatch |
+|---------|---------------------|-----------------|-------------------|
+| Wohngebäude | A (flat, 3 tiers, per-€50k) | C variant (per-m², construction year) | No age field, 2 tiers, address-specific ZÜRS, construction year bands |
+| Motorrad | (no entry) | E variant (Kfz + age curve) | U-shaped age (min ~47), 22 SF levels (not 51), HP SF 0=100% |
+| Krankentagegeld | A (3 tiers, polynomial) | B variant (DKV, separate tables) | No tiers, separate AN/SE tariff tables, 10 Leistungsbeginn options |
+| Reise | A (3 tiers, U-curve) | F (travel-specific, NEW) | 3 product categories, trip-cost-based (5%), age bands, external ERV |
+
+### Final template distribution (all 14 products):
+
+| Template | Count | Products |
+|----------|-------|----------|
+| A (polynomial) | 1 | Zahnzusatz |
+| A+step | 1 | Unfall |
+| B (lookup) | 4 | Sterbegeld, Risikoleben, Pflegezusatz, Krankentagegeld |
+| C (property) | 2 | Hausrat, Wohngebäude |
+| D (configurator) | 2 | Rechtsschutz, Haftpflicht |
+| E (motor) | 2 | Kfz, Motorrad |
+| F (travel) | 1 | Reise |
+| No calculator | 3 | Tierkranken, BU, Cyber |
+
+### Applied Improvements
+- [x] products.md: Wohngebäude — Template C variant, per-m², construction year bands, 2 tiers, address-specific
+- [x] products.md: Motorrad — NEW entry, Template E variant with age curve, 22 SF levels
+- [x] products.md: Krankentagegeld — Template B variant, no tiers, separate AN/SE tables, DKV
+- [x] products.md: Reise — Template F (new), 3 product categories, trip-cost-based
+- [x] products.md: Cyber — flagged NO CALCULATOR (404)
+- [x] pricing-model.md: Added Template F. Updated all template assignments and calibration table.
+- [x] ergo-product-urls.md: All 4 confirmed. Updated header to 13 confirmed + 3 no-calculator.
+- [x] SKILL.md: Updated accumulated learnings to 14 products, 7 templates.
+
+### Research complete
+All 14 ERGO products have been surveyed. 11 have online calculators with verified pricing models. 3 have no online calculator (Tierkranken, BU, Cyber). The "universal polynomial formula" assumption has been thoroughly disproven — Template A covers 1/14 products.

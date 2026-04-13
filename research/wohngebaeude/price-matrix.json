@@ -1,0 +1,247 @@
+{
+  "product": "ERGO Wohngebäudeversicherung",
+  "product_code": "WOHN25",
+  "api_code": "WOHN24",
+  "collection_date": "2026-04-13",
+  "collection_notes": "API intermittently returning 502. Some data points failed and required retries.",
+
+  "baseline_config": {
+    "house_type": "Einfamilienhaus",
+    "self_occupied": true,
+    "roof": "Ausgebautes Dach",
+    "floors": 1,
+    "basement": "mehr als die Hälfte unterkellert",
+    "kamin": false,
+    "garage": 1,
+    "deductible": 500,
+    "payment": "jährlich",
+    "start_year": 2026,
+    "contract_duration": "3 Jahre"
+  },
+
+  "data_points": [
+    {
+      "id": 1,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 681.44,
+      "best_annual": 746.40,
+      "notes": "Baseline data point"
+    },
+    {
+      "id": 2,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 80,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 476.52,
+      "best_annual": 521.95,
+      "notes": "m² variation: 80"
+    },
+    {
+      "id": 3,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 150,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 824.02,
+      "best_annual": 902.55,
+      "notes": "m² variation: 150"
+    },
+    {
+      "id": 4,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 180,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 947.16,
+      "best_annual": 1037.41,
+      "notes": "m² variation: 180 (max online)"
+    },
+    {
+      "id": 5,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 60,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 365.72,
+      "best_annual": 400.59,
+      "notes": "m² variation: 60"
+    },
+    {
+      "id": 6,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 100,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 581.75,
+      "best_annual": 637.21,
+      "notes": "m² variation: 100"
+    },
+    {
+      "id": 7,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2000,
+      "deductible": 0,
+      "smart_annual": 801.69,
+      "best_annual": 878.12,
+      "notes": "Deductible variation: ohne SB"
+    },
+    {
+      "id": 8,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2000,
+      "deductible": 1000,
+      "smart_annual": 641.36,
+      "best_annual": 702.49,
+      "notes": "Deductible variation: 1000€ SB"
+    },
+    {
+      "id": 9,
+      "plz": "54290",
+      "city": "Trier",
+      "street": "Hauptmarkt",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 678.87,
+      "best_annual": 743.61,
+      "notes": "Regional variation: Trier"
+    },
+    {
+      "id": 10,
+      "plz": "50667",
+      "city": "Köln",
+      "street": "Albertusstr.",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 797.20,
+      "best_annual": 873.18,
+      "notes": "Regional variation: Köln"
+    },
+    {
+      "id": 11,
+      "plz": "10117",
+      "city": "Berlin",
+      "street": "Friedrichstr.",
+      "house_nr": "100",
+      "sqm": 120,
+      "construction_year": 2000,
+      "deductible": 500,
+      "smart_annual": 596.01,
+      "best_annual": null,
+      "notes": "Regional variation: Berlin. Best price API failed (502). Estimated ~652.83 using tier ratio 1.0953"
+    },
+    {
+      "id": 12,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 1960,
+      "deductible": 500,
+      "smart_annual": 727.78,
+      "best_annual": 797.16,
+      "notes": "Construction year variation: 1960"
+    },
+    {
+      "id": 13,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 1980,
+      "deductible": 500,
+      "smart_annual": 727.78,
+      "best_annual": 797.16,
+      "notes": "Construction year variation: 1980 — SAME as 1960!"
+    },
+    {
+      "id": 14,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2010,
+      "deductible": 500,
+      "smart_annual": 565.60,
+      "best_annual": 619.51,
+      "notes": "Construction year variation: 2010"
+    },
+    {
+      "id": 15,
+      "plz": "80331",
+      "city": "München",
+      "street": "Marienplatz",
+      "house_nr": "1",
+      "sqm": 120,
+      "construction_year": 2020,
+      "deductible": 500,
+      "smart_annual": 449.75,
+      "best_annual": 492.62,
+      "notes": "Construction year variation: 2020"
+    }
+  ],
+
+  "deductible_factors": {
+    "0": 1.000,
+    "500": 0.850,
+    "1000": 0.800
+  },
+
+  "tier_ratio": {
+    "best_over_smart": 1.0953,
+    "note": "Consistent across all data points within 0.1%"
+  },
+
+  "regional_factors_vs_muenchen": {
+    "80331_München": 1.000,
+    "54290_Trier": 0.996,
+    "50667_Köln": 1.170,
+    "10117_Berlin": 0.875,
+    "note": "Computed from Smart tier, 120m², year 2000, 500€ SB"
+  },
+
+  "construction_year_factors_vs_2000": {
+    "1960": 1.068,
+    "1980": 1.068,
+    "2000": 1.000,
+    "2010": 0.830,
+    "2020": 0.660,
+    "note": "1960 and 1980 give identical prices — likely grouped into 'pre-2000' band"
+  }
+}

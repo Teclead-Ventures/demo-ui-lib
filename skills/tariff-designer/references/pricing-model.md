@@ -1,13 +1,14 @@
 # Pricing Engine Model
 
-This document defines the pricing formulas used across insurance products. There are **6 pricing templates** depending on the product type:
+This document defines the pricing formulas used across insurance products. There are **7 pricing templates** depending on the product type:
 
 - **Template A** (polynomial): Person products with moderate age curves — `baseRate × units × ageFactor × riskClass × (1+loading)`
 - **Template A+step**: Variant of A with step-function age bands instead of polynomial — Unfall (binary 1.0×/2.0× at age 65)
-- **Template B** (lookup table): Products with exponential age curves — lookup + interpolation
-- **Template C** (property/additive): Property products (Hausrat) — `(rate × m² + tierFixedBase) × regionMult × factors`
+- **Template B** (lookup table): Products with exponential/steep age curves — lookup + interpolation
+- **Template C** (property/additive): Property products — `(rate × m² + intercept) × regionMult × factors`
 - **Template D** (flat-rate configurator): Products with no age curve and additive module pricing — Rechtsschutz, Haftpflicht
-- **Template E** (Kfz-specific): Additive component model — `HP_base × HP_SF% + VK_base × VK_SF% + tierAddon`
+- **Template E** (motor): Additive component model — `HP_base × ageFactor × HP_SF% + VK_base × ageFactor × VK_SF% + tierAddon`
+- **Template F** (travel): Trip-cost-based — percentage of trip cost or sqrt curve with age-band multipliers
 
 ## Template A: The Standard Formula
 
@@ -25,19 +26,21 @@ Where:
 - **paymentModeDiscount**: Monthly=1.0, Quarterly=0.98, Semi-annual=0.96, Annual=0.95
 - **loading**: Insurer's margin covering acquisition costs, admin, safety, profit. Typically 0.20–0.30.
 
-Products using Template A: BU, Zahnzusatz (age-band approximation, R²=0.997), Reise, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
+Products using Template A: Zahnzusatz (age-band approximation, R²=0.997). The only verified Template A product.
 
 Products using Template A+step: Unfall (binary 1.0×/2.0× at age 65).
 
-Products using Template B: Risikoleben, Sterbegeld, Pflegezusatz/PTG (exponential ~5.4%/year, 82 per-year rates).
+Products using Template B: Risikoleben, Sterbegeld, Pflegezusatz/PTG, Krankentagegeld (quadratic with plateau, separate AN/SE tariff tables).
 
-Products using Template C: Hausrat.
+Products using Template C: Hausrat, Wohngebäude (per-m², construction year bands instead of age).
 
-Products using Template D: Rechtsschutz (Baustein toggles, no age curve, no coverage slider), Haftpflicht (Baustein toggles, binary age <36 Startbonus, no coverage slider).
+Products using Template D: Rechtsschutz (Baustein toggles, no age curve), Haftpflicht (Baustein toggles, binary <36 Startbonus).
 
-Products using Template E: Kfz (additive HP+VK components, SF lookup tables, no age curve).
+Products using Template E: Kfz (no age curve, 51 SF levels), Motorrad (WITH U-shaped age curve, 22 SF levels).
 
-Products with no online calculator: Tierkranken (agent-only, pricing unverified).
+Products using Template F: Reise (trip-cost-based, 3 product categories, age bands, external ERV domain).
+
+Products with no online calculator: Tierkranken (agent-only), BU (advisor-only), Cyber (404).
 
 ## Age Factor Calculation
 
@@ -64,7 +67,11 @@ function calculateAgeFactor(
 | Zahnzusatz | 0.13 | 3.08 | −0.52 | Steep near-linear | ERGO uses discrete age bands; polynomial is smooth approximation (R²=0.997) |
 | Risikoleben | N/A | N/A | N/A | **Lookup table required** (quadratic R²=0.958 inadequate) | 60yo pays 31× of 25yo; smoker multiplier is age-dependent (1.87-3.92×) — polynomial cannot model this |
 | Pflege (PTG) | N/A | N/A | N/A | **Lookup table required** (exponential ~5.4%/year, quadratic R²=0.956) | 82 per-year rates ages 0-99; PZU/KFP are fixed-price separate products |
-| Tierkranken | 0.60 | 0.10 | 0.90 | Very steep after 7-8 | Pets age fast, vet costs spike |
+| Tierkranken | 0.60 | 0.10 | 0.90 | Very steep after 7-8 | ⚠ UNVERIFIED — no online calculator |
+| Motorrad | 2.566 | -0.0698 | 0.000750 | U-curve (raw age, not normalized) | Min at ~47, young riders +34%, elderly +21% |
+| Krankentagegeld | N/A | N/A | N/A | **Lookup table** (quadratic with plateau at 67+) | Separate AN/SE tables, MAPE<1% |
+| Wohngebäude | N/A | N/A | N/A | **No age field** — construction year bands instead | Pre-2000=1.07×, 2010=0.83×, 2020=0.66× |
+| Reise | N/A | N/A | N/A | **Age bands** (3 bands: ≤40, 41-64, 65+) | ≤40=1.0, 41-64=1.10, 65+=2.09 |
 | Unfall | N/A | N/A | N/A | **Step function**: 1.0× (age <65), 2.0× (age ≥65) | Binary age band, not polynomial |
 | Krankentagegeld | 0.70 | 0.35 | 0.20 | Steady increase | Illness duration increases with age |
 | Hausrat | N/A | N/A | N/A | **Binary** (under-36: 0.87×, else 1.0) | ERGO uses 13% Startbonus for under-36, additive tier model, per-m² pricing |
@@ -524,6 +531,10 @@ The base rates are calibrated so that a "typical" customer sees realistic-lookin
 | Risikoleben | 35yo NS 10+, €200k, 20yr | ~€9.54/mo | ✓ ERGO charges exactly €9.54 Komfort (researched 2026-04-13) |
 | Tierkranken | Dog age 3 | ~€20-30/mo | ⚠ UNVERIFIED — no online calculator (agent-only product) |
 | Kfz | VW Golf VIII, München, 12k km, SF 10, VK500, Best | €100.73/mo (HP €30.31 + VK €68.69 + addon €1.73) | ✓ ERGO exact (researched 2026-04-13, Template E) |
+| Motorrad | Honda CBF 500, München, 6k km, SF 10, VK150, Smart, age 36 | ~€33.53/mo | ✓ ERGO verified (researched 2026-04-13, Template E variant) |
+| Krankentagegeld | AN, age 30, 43.Tag, €15/day | €8.01/mo (0.534×15) | ✓ ERGO exact (researched 2026-04-13, Template B variant) |
+| Reise | Storno Einmal, 1 adult ≤40, €5k trip, Flug, mit SB | €250 (5%×5000) | ✓ ERGO exact (researched 2026-04-13, Template F) |
+| Wohngebäude | EFH, 120m², München, Baujahr 2000, SB €500, Smart | ~€47.51/mo | ✓ ERGO verified (researched 2026-04-13, Template C variant) |
 | Rechtsschutz | Single, all 4 Bausteine, Smart, SB €150 | €34.15/mo | ✓ ERGO exact (researched 2026-04-13, Template D) |
 | Unfall | 36yo, Büro (A), €50k, Smart | €7.62/mo | ✓ ERGO exact (researched 2026-04-13, step-function age) |
 | Pflegezusatz (PTG) | 30yo, €10/day | €9.03/mo | ✓ ERGO exact (researched 2026-04-13, Template B) |

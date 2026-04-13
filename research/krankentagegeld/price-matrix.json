@@ -1,0 +1,223 @@
+{
+  "metadata": {
+    "product": "Krankentagegeld (KombiMed KTAG)",
+    "brand": "DKV (via ERGO)",
+    "calculator_url": "https://www.ergo.de/de/Produkte/Krankenversicherung/Krankentagegeld/abschluss",
+    "collected": "2026-04-13",
+    "calculator_type": "single-page configurator"
+  },
+  "structure": {
+    "berufsstatus": ["Arbeitnehmer", "Selbständiger", "Freiberufler"],
+    "age_input": "Geburtsjahr (dropdown, 1946-2011)",
+    "arbeitnehmer_options": {
+      "versicherungsstatus": ["Gesetzlich pflichtversichert", "Gesetzlich freiwillig versichert"],
+      "leistungsbeginn": [43, 64, 85, 92, 106, 127, 169, 183, 274, 365],
+      "tagesgelhoehe_pflicht": {"min": 5, "max": 35, "step": 5},
+      "tagesgelhoehe_freiwillig": {"min": 5, "max": 520, "step": 5},
+      "columns": ["für gesetzlich versicherte Arbeitnehmer", "für DKV-vollversicherte Arbeitnehmer"],
+      "note": "Column 2 (DKV-vollversichert) has fixed price that only varies with age, not with Leistungsbeginn or Tagegeldhöhe"
+    },
+    "selbstaendiger_options": {
+      "leistungsbeginn": [4, 8, 15, 22, 29, 43, 92, 183],
+      "tagesgelhoehe": {"min": 5, "max": 300, "step": 5}
+    },
+    "freiberufler_options": {
+      "leistungsbeginn": [4, 8, 15, 22, 29, 43, 92, 183],
+      "tagesgelhoehe": {"min": 5, "max": 520, "step": 5},
+      "note": "Identical pricing to Selbständiger, just higher max Tagegeldhöhe"
+    }
+  },
+  "arbeitnehmer_age_curve": {
+    "description": "Arbeitnehmer, Gesetzlich pflichtversichert, 43. Tag, 15€/day",
+    "note": "Col1 = gesetzlich versicherte AN, Col2 = DKV-vollversicherte AN (fixed, age-only)",
+    "data": [
+      {"year": 2001, "age": 25, "col1": 6.81, "col2": 4.65},
+      {"year": 1999, "age": 27, "col1": 7.26, "col2": 4.92},
+      {"year": 1996, "age": 30, "col1": 8.01, "col2": 5.37},
+      {"year": 1993, "age": 33, "col1": 8.82, "col2": 5.88},
+      {"year": 1991, "age": 35, "col1": 9.39, "col2": 6.21},
+      {"year": 1988, "age": 38, "col1": 10.32, "col2": 6.81},
+      {"year": 1986, "age": 40, "col1": 11.01, "col2": 7.23},
+      {"year": 1983, "age": 43, "col1": 12.15, "col2": 7.92},
+      {"year": 1981, "age": 45, "col1": 12.96, "col2": 8.43},
+      {"year": 1978, "age": 48, "col1": 14.31, "col2": 9.27},
+      {"year": 1976, "age": 50, "col1": 15.24, "col2": 9.90},
+      {"year": 1973, "age": 53, "col1": 16.71, "col2": 10.89},
+      {"year": 1971, "age": 55, "col1": 17.67, "col2": 11.55},
+      {"year": 1968, "age": 58, "col1": 18.96, "col2": 12.54},
+      {"year": 1966, "age": 60, "col1": 19.74, "col2": 13.11},
+      {"year": 1964, "age": 62, "col1": 20.34, "col2": 13.53},
+      {"year": 1963, "age": 63, "col1": 20.55, "col2": 13.68},
+      {"year": 1962, "age": 64, "col1": 20.76, "col2": 13.80},
+      {"year": 1961, "age": 65, "col1": 20.94, "col2": 13.86},
+      {"year": 1960, "age": 66, "col1": 21.09, "col2": 13.86},
+      {"year": 1959, "age": 67, "col1": 21.18, "col2": 13.86},
+      {"year": 1958, "age": 68, "col1": 21.18, "col2": 13.86},
+      {"year": 1957, "age": 69, "col1": 21.18, "col2": 13.86},
+      {"year": 1956, "age": 70, "col1": 21.18, "col2": 13.86},
+      {"year": 1953, "age": 73, "col1": 21.18, "col2": 13.86},
+      {"year": 1951, "age": 75, "col1": 21.18, "col2": 13.86},
+      {"year": 1948, "age": 78, "col1": 21.18, "col2": 13.86},
+      {"year": 1946, "age": 80, "col1": 21.18, "col2": 13.86}
+    ]
+  },
+  "arbeitnehmer_leistungsbeginn": {
+    "description": "Arbeitnehmer, Age 30, 15€/day, Gesetzlich pflichtversichert",
+    "note": "Col2 always 5.37€ regardless of Leistungsbeginn",
+    "data": [
+      {"tag": 43, "col1": 8.01},
+      {"tag": 64, "col1": 5.70},
+      {"tag": 85, "col1": 4.62},
+      {"tag": 92, "col1": 4.02},
+      {"tag": 106, "col1": 3.51},
+      {"tag": 127, "col1": 3.00},
+      {"tag": 169, "col1": 2.19},
+      {"tag": 183, "col1": 1.95},
+      {"tag": 274, "col1": 0.93},
+      {"tag": 365, "col1": 0.51}
+    ]
+  },
+  "arbeitnehmer_leistungsbeginn_age50": {
+    "description": "Arbeitnehmer, Age 50, 15€/day",
+    "data": [
+      {"tag": 43, "col1": 15.24},
+      {"tag": 64, "col1": 11.04},
+      {"tag": 85, "col1": 8.91},
+      {"tag": 92, "col1": 7.29},
+      {"tag": 106, "col1": 6.39},
+      {"tag": 127, "col1": 5.43},
+      {"tag": 169, "col1": 3.93},
+      {"tag": 183, "col1": 3.54},
+      {"tag": 274, "col1": 1.68},
+      {"tag": 365, "col1": 0.93}
+    ]
+  },
+  "arbeitnehmer_leistungsbeginn_age60": {
+    "description": "Arbeitnehmer, Age 60, 15€/day (subset)",
+    "data": [
+      {"tag": 43, "col1": 19.74},
+      {"tag": 92, "col1": 9.51},
+      {"tag": 183, "col1": 4.62},
+      {"tag": 365, "col1": 1.20}
+    ]
+  },
+  "arbeitnehmer_tagesgelhoehe": {
+    "description": "Arbeitnehmer, Age 30, 43.Tag, pflichtversichert",
+    "note": "Perfectly linear: 0.534€/mtl per €/day",
+    "data": [
+      {"hoehe": 5, "col1": 2.67},
+      {"hoehe": 10, "col1": 5.34},
+      {"hoehe": 15, "col1": 8.01},
+      {"hoehe": 20, "col1": 10.68},
+      {"hoehe": 25, "col1": 13.35},
+      {"hoehe": 30, "col1": 16.02},
+      {"hoehe": 35, "col1": 18.69}
+    ]
+  },
+  "arbeitnehmer_freiwillig_tagesgelhoehe": {
+    "description": "Arbeitnehmer, Age 30, 43.Tag, freiwillig versichert",
+    "note": "Same price per €/day as pflichtversichert (0.534€/mtl per €/day)",
+    "data": [
+      {"hoehe": 5, "col1": 2.67},
+      {"hoehe": 10, "col1": 5.34},
+      {"hoehe": 50, "col1": 26.70},
+      {"hoehe": 100, "col1": 53.40},
+      {"hoehe": 200, "col1": 106.80},
+      {"hoehe": 300, "col1": 160.20},
+      {"hoehe": 400, "col1": 213.60},
+      {"hoehe": 520, "col1": 277.68}
+    ]
+  },
+  "selbstaendiger_age_curve": {
+    "description": "Selbständiger, 29. Tag, 50€/day",
+    "note": "Identical to Freiberufler. Plateau at age 67.",
+    "data": [
+      {"year": 2006, "age": 20, "price": 26.70},
+      {"year": 2003, "age": 23, "price": 28.50},
+      {"year": 2001, "age": 25, "price": 29.90},
+      {"year": 2000, "age": 26, "price": 30.60},
+      {"year": 1998, "age": 28, "price": 32.10},
+      {"year": 1996, "age": 30, "price": 33.60},
+      {"year": 1995, "age": 31, "price": 34.50},
+      {"year": 1992, "age": 34, "price": 37.10},
+      {"year": 1991, "age": 35, "price": 38.00},
+      {"year": 1989, "age": 37, "price": 40.00},
+      {"year": 1987, "age": 39, "price": 42.00},
+      {"year": 1986, "age": 40, "price": 43.00},
+      {"year": 1984, "age": 42, "price": 45.20},
+      {"year": 1982, "age": 44, "price": 47.50},
+      {"year": 1981, "age": 45, "price": 48.70},
+      {"year": 1979, "age": 47, "price": 51.10},
+      {"year": 1977, "age": 49, "price": 53.70},
+      {"year": 1976, "age": 50, "price": 55.10},
+      {"year": 1974, "age": 52, "price": 57.90},
+      {"year": 1972, "age": 54, "price": 60.80},
+      {"year": 1971, "age": 55, "price": 62.30},
+      {"year": 1969, "age": 57, "price": 65.50},
+      {"year": 1967, "age": 59, "price": 68.70},
+      {"year": 1966, "age": 60, "price": 70.30},
+      {"year": 1965, "age": 61, "price": 71.80},
+      {"year": 1963, "age": 63, "price": 74.40},
+      {"year": 1961, "age": 65, "price": 76.20},
+      {"year": 1960, "age": 66, "price": 76.50},
+      {"year": 1959, "age": 67, "price": 76.60},
+      {"year": 1957, "age": 69, "price": 76.60},
+      {"year": 1956, "age": 70, "price": 76.60},
+      {"year": 1951, "age": 75, "price": 76.60},
+      {"year": 1946, "age": 80, "price": 76.60}
+    ]
+  },
+  "selbstaendiger_leistungsbeginn": {
+    "description": "Selbständiger, Age 30, 50€/day",
+    "data": [
+      {"tag": 4, "price": 115.30},
+      {"tag": 8, "price": 104.70},
+      {"tag": 15, "price": 64.00},
+      {"tag": 22, "price": 43.10},
+      {"tag": 29, "price": 33.60},
+      {"tag": 43, "price": 27.20},
+      {"tag": 92, "price": 11.90},
+      {"tag": 183, "price": 3.60}
+    ]
+  },
+  "selbstaendiger_leistungsbeginn_age40": {
+    "description": "Selbständiger, Age 40, 50€/day",
+    "data": [
+      {"tag": 4, "price": 126.70},
+      {"tag": 8, "price": 115.10},
+      {"tag": 15, "price": 74.50},
+      {"tag": 22, "price": 52.30},
+      {"tag": 29, "price": 43.00},
+      {"tag": 43, "price": 35.90},
+      {"tag": 92, "price": 15.20},
+      {"tag": 183, "price": 4.60}
+    ]
+  },
+  "selbstaendiger_leistungsbeginn_age50": {
+    "description": "Selbständiger, Age 50, 50€/day",
+    "data": [
+      {"tag": 4, "price": 144.80},
+      {"tag": 15, "price": 90.80},
+      {"tag": 29, "price": 55.10},
+      {"tag": 43, "price": 49.00},
+      {"tag": 92, "price": 20.00},
+      {"tag": 183, "price": 6.10}
+    ]
+  },
+  "selbstaendiger_tagesgelhoehe": {
+    "description": "Selbständiger, Age 30, 29.Tag",
+    "note": "Perfectly linear: 0.672€/mtl per €/day",
+    "data": [
+      {"hoehe": 5, "price": 3.36},
+      {"hoehe": 10, "price": 6.72},
+      {"hoehe": 15, "price": 10.08},
+      {"hoehe": 20, "price": 13.44},
+      {"hoehe": 50, "price": 33.60},
+      {"hoehe": 100, "price": 67.20},
+      {"hoehe": 150, "price": 100.80},
+      {"hoehe": 200, "price": 134.40},
+      {"hoehe": 250, "price": 168.00},
+      {"hoehe": 300, "price": 201.60}
+    ]
+  }
+}

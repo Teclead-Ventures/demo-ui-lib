@@ -1,0 +1,97 @@
+{
+  "metadata": {
+    "product": "ERGO Reiseversicherung",
+    "calculator_url": "https://app.ergo-reiseversicherung.de/ba4/landingPage.html?agency=028413000000&ba=standard",
+    "collected_date": "2026-04-13",
+    "travel_dates": "2026-05-01 to 2026-05-08 (7 days)",
+    "booking_date": "2026-04-13"
+  },
+  "stornokostenschutz": {
+    "description": "Reiseruecktritt inkl. Reiseabbruch",
+    "sub_products": {
+      "jahres_rrv": "Jahres-Reiseruecktritts-Versicherung inkl. RAB (12 months min, yearly cancellable)",
+      "sparfuchs": "Jahres-Reiseruecktritts-Versicherung Sparfuchs (24 months min, then yearly)",
+      "einmal_rrv": "Reiseruecktritts-Versicherung inkl. RAB (single trip)"
+    },
+    "trip_cost_variation": {
+      "description": "1 adult <=40, Europa, Flugzeug, May 1-8",
+      "data": [
+        {"trip_cost": 1000, "jahres_msb": 45, "sparfuchs_msb": 41, "einmal_msb": 49, "jahres_osb": 57, "sparfuchs_osb": 51, "einmal_osb": 59},
+        {"trip_cost": 2000, "jahres_msb": 66, "sparfuchs_msb": 59, "einmal_msb": 99, "jahres_osb": 75, "sparfuchs_osb": 68, "einmal_osb": 109},
+        {"trip_cost": 5000, "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 250, "jahres_osb": 175, "sparfuchs_osb": 158, "einmal_osb": 300},
+        {"trip_cost": 10000, "jahres_msb": 302, "sparfuchs_msb": 272, "einmal_msb": 500, "jahres_osb": 368, "sparfuchs_osb": 331, "einmal_osb": 600},
+        {"trip_cost": 20000, "jahres_msb": 444, "sparfuchs_msb": 400, "einmal_msb": 1000, "jahres_osb": 555, "sparfuchs_osb": 500, "einmal_osb": 1200}
+      ]
+    },
+    "age_variation": {
+      "description": "EUR 5000, Europa, Flugzeug, May 1-8, mit SB",
+      "data": [
+        {"age_band": "<=40", "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 250},
+        {"age_band": "41-64", "jahres_msb": 178, "sparfuchs_msb": 160, "einmal_msb": 250},
+        {"age_band": "65+", "jahres_msb": 337, "sparfuchs_msb": 303, "einmal_msb": 250}
+      ]
+    },
+    "region_variation": {
+      "description": "1 adult <=40, EUR 5000, Flugzeug, May 1-8, mit SB",
+      "data": [
+        {"region": "Europa", "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 250, "jahres_osb": 175, "sparfuchs_osb": 158, "einmal_osb": 300},
+        {"region": "Welt", "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 250, "jahres_osb": 175, "sparfuchs_osb": 158, "einmal_osb": 300}
+      ],
+      "note": "Region does NOT affect Stornokostenschutz pricing - identical for Europa and Welt"
+    },
+    "transport_variation": {
+      "description": "1 adult <=40, EUR 5000, Europa, May 1-8, mit SB",
+      "data": [
+        {"transport": "Flugzeug/Schiff", "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 250},
+        {"transport": "Auto/Zug/Sonstige", "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 230}
+      ],
+      "note": "Transport affects ONLY single-trip pricing (250 vs 230), NOT annual pricing"
+    },
+    "group_variation": {
+      "description": "EUR 5000, Europa, Flugzeug, May 1-8, mit SB",
+      "data": [
+        {"travelers": "1 adult <=40", "jahres_msb": 161, "sparfuchs_msb": 145, "einmal_msb": 250},
+        {"travelers": "2 adults <=40 (pair)", "jahres_msb": 180, "sparfuchs_msb": 162, "einmal_msb": 250},
+        {"travelers": "2 adults <=40 + 1 child (family)", "jahres_msb": 180, "sparfuchs_msb": 162, "einmal_msb": 250}
+      ],
+      "note": "Pair and family tariffs have same price. Children are free with 2 adults. Single trip price is per-booking (not per-person)."
+    }
+  },
+  "rundumschutz": {
+    "description": "Reiseruecktritt inkl. Reiseabbruch + Reisekranken + Reisegepaeck",
+    "sub_products": {
+      "rs_schutz": "RundumSorglos-Schutz (single trip)",
+      "rs_jahresschutz": "RundumSorglos-Jahresschutz (12 months min)"
+    },
+    "data": {
+      "description": "1 adult <=40, EUR 5000, Europa, Flugzeug, May 1-8",
+      "rs_schutz_msb": 450,
+      "rs_jahresschutz_msb": 184,
+      "rs_schutz_osb": 650,
+      "rs_jahresschutz_osb": 201
+    }
+  },
+  "krankenschutz": {
+    "description": "Reisekranken only",
+    "sub_products": {
+      "einmal_kranken": "Reisekranken-Versicherung (single trip)",
+      "jahres_kranken": "Jahres-Reisekranken-Versicherung (12 months min)"
+    },
+    "age_variation": {
+      "description": "Europa, May 1-8",
+      "data": [
+        {"age_band": "<=40", "einmal_msb": 12.80, "jahres_msb": 31, "einmal_osb": 17.60, "jahres_osb": 49},
+        {"age_band": "41-64", "einmal_msb": 16.00, "jahres_msb": 39, "einmal_osb": 19.20, "jahres_osb": 59},
+        {"age_band": "65+", "einmal_msb": 34.40, "jahres_msb": 105, "einmal_osb": 57.60, "jahres_osb": 155}
+      ]
+    },
+    "region_variation": {
+      "description": "1 adult <=40, May 1-8",
+      "data": [
+        {"region": "Europa", "einmal_msb": 12.80, "jahres_msb": 31, "einmal_osb": 17.60, "jahres_osb": 49},
+        {"region": "Welt", "einmal_msb": 14.40, "jahres_msb": 31, "einmal_osb": 36.00, "jahres_osb": 49}
+      ],
+      "note": "Region affects single-trip pricing but NOT annual pricing. Welt ohne SB has much larger effect."
+    }
+  }
+}

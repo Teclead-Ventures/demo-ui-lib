@@ -1,0 +1,117 @@
+{
+  "vehicle": "HONDA CBF 500, 54 PS (40 kW), 499 ccm, HSN 4124 / TSN 133",
+  "plz": "80331",
+  "regionalklasse": 5,
+  "mileage_km": 6000,
+  "selbstbeteiligung": "VK 150 / TK 150",
+  "zahlweise": "monatlich",
+  "erstzulassung": "01.06.2020",
+  "collection_date": "2026-04-13",
+
+  "age_effect_test": {
+    "description": "Smart HP-only SF 10 at different ages",
+    "sf": "SF_10",
+    "coverage": "HP",
+    "tier": "Smart",
+    "data": [
+      {"birth": "15.03.2000", "age": 26, "hp_smart": 8.93},
+      {"birth": "15.03.1996", "age": 30, "hp_smart": 6.97},
+      {"birth": "15.03.1990", "age": 36, "hp_smart": 6.65},
+      {"birth": "15.03.1980", "age": 46, "hp_smart": 6.51},
+      {"birth": "15.03.1971", "age": 55, "hp_smart": 6.78},
+      {"birth": "15.03.1960", "age": 66, "hp_smart": 8.03}
+    ]
+  },
+
+  "age_effect_best_test": {
+    "description": "Best HP-only SF 10 at different ages",
+    "sf": "SF_10",
+    "coverage": "HP",
+    "tier": "Best",
+    "data": [
+      {"birth": "15.03.1990", "age": 36, "hp_best": 8.09},
+      {"birth": "15.03.1960", "age": 66, "hp_best": 9.78}
+    ]
+  },
+
+  "hp_sf_test": {
+    "description": "HP-only prices at age 36, varying SF",
+    "birth": "15.03.1990",
+    "age": 36,
+    "coverage": "HP",
+    "data": [
+      {"sf": "KL_0", "sf_pct": 100, "smart_total": 22.16, "smart_hp": 22.16, "best_total": 28.29, "best_hp": 26.99},
+      {"sf": "SF_3", "sf_pct": 44, "smart_total": 9.75, "smart_hp": 9.75, "best_total": 13.18, "best_hp": 11.88},
+      {"sf": "SF_10", "sf_pct": 30, "smart_total": 6.65, "smart_hp": 6.65, "best_total": 9.39, "best_hp": 8.09},
+      {"sf": "SF_20_PLUS", "sf_pct": 24, "smart_total": 5.32, "smart_hp": 5.32}
+    ]
+  },
+
+  "vk_sf_test": {
+    "description": "VK prices at age 36, varying SF (both HP and VK SF set equal)",
+    "birth": "15.03.1990",
+    "age": 36,
+    "coverage": "VK",
+    "selbstbeteiligung": "VK 150 / TK 150",
+    "data": [
+      {
+        "hp_sf": "KL_0", "hp_sf_pct": 100, "vk_sf": "KL_0", "vk_sf_pct": 100,
+        "smart_total": 100.65, "smart_hp": 22.16, "smart_vk": 78.49,
+        "best_total": 134.74, "best_hp": 26.99, "best_vk": 106.45
+      },
+      {
+        "hp_sf": "SF_5", "hp_sf_pct": 38, "vk_sf": "SF_5", "vk_sf_pct": 40,
+        "smart_total": 39.82, "smart_hp": 8.43, "smart_vk": 31.39,
+        "best_total": 54.91, "best_hp": 10.26, "best_vk": 43.35
+      },
+      {
+        "hp_sf": "SF_10", "hp_sf_pct": 30, "vk_sf": "SF_10", "vk_sf_pct": 33,
+        "smart_total": 32.56, "smart_hp": 6.65, "smart_vk": 25.91,
+        "best_total": 45.39, "best_hp": 8.09, "best_vk": 36.00
+      }
+    ]
+  },
+
+  "tk_test": {
+    "description": "TK prices at age 36 - TK is FLAT (no SF scaling)",
+    "birth": "15.03.1990",
+    "age": 36,
+    "coverage": "TK",
+    "data": [
+      {
+        "hp_sf": "KL_0", "hp_sf_pct": 100,
+        "smart_total": 29.25, "smart_hp": 22.16, "smart_tk": 7.09,
+        "best_total": 39.52, "best_hp": 26.99, "best_tk": 11.23
+      },
+      {
+        "hp_sf": "SF_10", "hp_sf_pct": 30,
+        "smart_total": 13.74, "smart_hp": 6.65, "smart_tk": 7.09,
+        "best_total": 20.62, "best_hp": 8.09, "best_tk": 11.23
+      }
+    ],
+    "note": "TK Smart = 7.09 EUR flat, TK Best = 11.23 EUR flat regardless of SF"
+  },
+
+  "best_addon_analysis": {
+    "description": "Best tier add-on cost (HP-only)",
+    "hp_only_addon": 1.30,
+    "note": "Best total - (Best HP component) = constant 1.30 EUR for Ersatzfahrzeug Plus + Schutzbrief in HP-only. For VK: Best total - Best HP - Best VK = 1.30 EUR."
+  },
+
+  "sf_tables": {
+    "hp": {
+      "KL_0": 100, "SF_1_2": 74, "SF_1": 54, "SF_2": 48, "SF_3": 44,
+      "SF_4": 40, "SF_5": 38, "SF_6": 36, "SF_7": 34, "SF_8": 32,
+      "SF_9": 31, "SF_10": 30, "SF_11": 29, "SF_12": 28, "SF_13": 28,
+      "SF_14": 27, "SF_15": 27, "SF_16": 26, "SF_17": 26, "SF_18": 25,
+      "SF_19": 25, "SF_20_PLUS": 24
+    },
+    "vk": {
+      "KL_0": 100, "SF_1_2": 76, "SF_1": 55, "SF_2": 49, "SF_3": 46,
+      "SF_4": 43, "SF_5": 40, "SF_6": 38, "SF_7": 36, "SF_8": 35,
+      "SF_9": 34, "SF_10": 33, "SF_11": 32, "SF_12": 31, "SF_13": 30,
+      "SF_14": 30, "SF_15": 29, "SF_16": 28, "SF_17": 28, "SF_18": 28,
+      "SF_19": 27, "SF_20_PLUS": 27
+    }
+  }
+}

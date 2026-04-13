@@ -175,11 +175,11 @@ Run the full feedback cycle for the overall research effort:
 
 ## Accumulated learnings (read before every run)
 
-Discovered across 10 products (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz, Haftpflicht, Kfz, Tierkranken). Apply from the start — don't rediscover them.
+Discovered across 14 products (all researched — Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz, Haftpflicht, Kfz, Tierkranken, Wohngebäude, Motorrad, Krankentagegeld, Reise). Apply from the start — don't rediscover them.
 
 ### The most important lesson
 
-Our original assumption — "every tariff uses the same formula, only parameters change" — was wrong. ERGO uses at least 6 distinct pricing architectures. **Do not predict the template before researching.** Let the agent discover which model the product uses. Every product we researched had structural surprises; prediction accuracy across batches 3 and 4 was 0/6.
+Our original assumption — "every tariff uses the same formula, only parameters change" — was wrong. ERGO uses at least 7 distinct pricing architectures. **Do not predict the template before researching.** Template A (the "standard polynomial") covers exactly 1 out of 14 products. Prediction accuracy across batches 3-5 was 0/10.
 
 ### Structural patterns
 
@@ -221,16 +221,17 @@ Our original assumption — "every tariff uses the same formula, only parameters
 27. **Some products have NO online calculator**: Tierkranken is agent-only — no product page on ergo.de.
 28. **16-32 data points is often enough** — Unfall needed 16, Haftpflicht 32, Kfz 28. Don't over-sample.
 
-### Pricing model selection (6 templates)
+### Pricing model selection (7 templates)
 
 Do not choose the template before Phase B. Let fit_pricing.py try all models and pick the best fit.
 
-- **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers. Products: BU, Zahnzusatz.
-- **Template A+step** (step-function): Discrete age bands with sharp transitions. Product: Unfall (binary 1.0×/2.0× at age 65).
-- **Template B** (lookup table): Exponential/steep age curve (quadratic R² < 0.96), or age-dependent risk multipliers. Products: Risikoleben, Sterbegeld, Pflegezusatz.
-- **Template C** (property/additive): Per-m² or per-unit pricing with additive tier difference. Product: Hausrat.
-- **Template D** (flat-rate configurator): No age curve, no coverage slider, additive module/Baustein toggles. Products: Rechtsschutz, Haftpflicht.
-- **Template E** (Kfz-specific): Additive HP+VK components with separate SF lookup tables, no age curve. Product: Kfz.
+- **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers. Product: Zahnzusatz (1/14 — the rarest template!).
+- **Template A+step** (step-function): Discrete age bands with sharp transitions. Product: Unfall.
+- **Template B** (lookup table): Exponential/steep age curve, or separate tariff tables. Products: Risikoleben, Sterbegeld, Pflegezusatz, Krankentagegeld.
+- **Template C** (property): Per-m² pricing with multiplicative factors. Products: Hausrat, Wohngebäude.
+- **Template D** (flat-rate configurator): Additive Baustein/module toggles. Products: Rechtsschutz, Haftpflicht.
+- **Template E** (motor): Additive HP+VK components with SF lookup tables. Products: Kfz (no age), Motorrad (with U-curve age).
+- **Template F** (travel): Trip-cost-based pricing with age bands. Product: Reise.
 
 ### Navigation patterns
 - Most ERGO calculators use React SPAs at `#/step-name` URL fragments
