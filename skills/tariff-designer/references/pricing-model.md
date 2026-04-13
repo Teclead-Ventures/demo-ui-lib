@@ -40,7 +40,7 @@ function calculateAgeFactor(
 |---------|------|--------|-----------|-------|-----|
 | Sterbegeld | 0.65 | 0.15 | 0.55 | Exponential after 60 | Mortality rises steeply with age |
 | BU | 0.70 | 0.50 | −0.15 | Bell curve ~45-50 | Disability risk peaks mid-career, drops near retirement |
-| Zahnzusatz | 0.80 | 0.35 | 0.10 | Gentle linear | Dental issues increase gradually |
+| Zahnzusatz | 0.13 | 3.08 | −0.52 | Steep near-linear | ERGO uses discrete age bands; polynomial is smooth approximation (R²=0.997) |
 | Risikoleben | 0.40 | 0.20 | 0.80 | Steep exponential | Mortality doubles every ~8 years |
 | Pflege | 0.50 | 0.25 | 0.65 | Steep growth | Care need rises sharply after 70 |
 | Tierkranken | 0.60 | 0.10 | 0.90 | Very steep after 7-8 | Pets age fast, vet costs spike |
@@ -60,8 +60,15 @@ Some products (Haftpflicht, Rechtsschutz, Kfz, Cyber) have flat-rate pricing whe
 | Rechtsschutz | = defaultCoverage (€300k) | Premium depends on legal areas covered, not the cap |
 | Kfz | = 1 | Premium is per vehicle, not per coverage euro |
 | Cyber | = defaultCoverage (€25k) | Premium is flat, coverage sets the max payout |
+| Zahnzusatz | = 1 (flat rate) | Tariff name (DS75/DS90/DS100) IS the coverage level (reimbursement %). No user-selectable coverage amount. |
 
 The formula still works: `baseRate × 1 × ageFactor × riskClass × paymentMode × (1 + loading)`.
+
+## Age-Band Pricing (discovered via ERGO research)
+
+Some products (e.g., Zahnzusatz) use **discrete age bands** rather than a smooth polynomial. ERGO's Zahnzusatz has 6 bands with flat monthly prices per band. Our polynomial age curve is a smooth approximation that fits band midpoints with R²≈0.997 but deviates at band boundaries.
+
+For products where the product entry includes a "Note — Age bands" section, the polynomial is an approximation. The actual ERGO pricing uses a step function. The demo should use the polynomial for smooth UX (slider-reactive pricing), but the prices won't match ERGO exactly at every age — they match at band midpoints and deviate up to ±20-30% at band edges. This is acceptable for demo purposes.
 
 ## TypeScript Implementation Template
 
@@ -130,7 +137,7 @@ The base rates are calibrated so that a "typical" customer sees realistic-lookin
 |---------|-----------------|---------------|---------------|
 | Sterbegeld | 44yo, €8k | ~€30/mo | ✓ ERGO charges €25-35 |
 | BU | 30yo desk worker, €2k/mo | ~€55/mo | ✓ Market range €40-80 |
-| Zahnzusatz | 35yo, €1.5k budget | ~€22/mo | ✓ Market range €15-40 |
+| Zahnzusatz | 35yo, flat rate | ~€21.70/mo | ✓ ERGO DS90 charges exactly €21.70 |
 | Hausrat | 50m² urban, €50k | ~€8/mo | ✓ Market range €5-15 |
 | Haftpflicht | Single, €10M | ~€6/mo | ✓ Market range €4-10 |
 | Risikoleben | 35yo non-smoker, €200k | ~€12/mo | ✓ Market range €8-20 |

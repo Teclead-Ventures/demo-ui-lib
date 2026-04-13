@@ -1,0 +1,21 @@
+{
+  "age_curve": {
+    "base": 0.127,
+    "linear": 3.0809,
+    "quadratic": -0.5156
+  },
+  "r_squared": 0.9974,
+  "base_rates_at_loading_22pct": {
+    "grundschutz": 14.26,
+    "komfort": 17.79,
+    "premium": 22.62
+  },
+  "tier_ratios": {
+    "DS75_to_DS100": 0.6177,
+    "DS90_to_DS100": 0.7806
+  },
+  "model_type": "flat_rate_with_age_bands",
+  "ergo_uses_discrete_bands": true,
+  "our_polynomial_approximation_r2": 0.9974,
+  "note": "ERGO uses step-function pricing (age bands). Our polynomial is a smooth approximation."
+}

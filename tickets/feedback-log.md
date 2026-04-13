@@ -436,3 +436,50 @@ export function calculatePaymentDuration(age: number): number {
 
 ### Applied Fixes
 - [x] All previous run fixes applied proactively
+
+## Run: 2026-04-12 (ergo-researcher, Zahnzusatz — Mode A single-product iteration)
+
+### Result: SUCCESS
+
+### Self-Assessment
+
+**Metrics**:
+- Duration: ~45 min
+- Products researched: 1 (Zahnzusatz)
+- Data points: 28 (10 calculator-verified, 18 from Beitragstabelle)
+- Pricing accuracy: 100% match between calculator and official Beitragstabelle
+- R² (polynomial fit to band midpoints): 0.9974
+
+**What worked**:
+- Beitragstabelle shortcut: The ergo.de product page has a "Zur Beitragstabelle" button that opens a dialog with all tariff prices by age band — this is far more efficient than scraping the calculator for each data point
+- Verification approach: Using the calculator to spot-check 10 data points against the Beitragstabelle confirmed 100% accuracy
+- Full wizard flow: Navigating through all steps (initial-selection → birth date → weiter → insurance-beginning) to reach the price display
+
+**What failed**:
+- Initial scraping approach tried to extract price after birth date entry without clicking "weiter" — missed the critical step that advances to the price display page — ROOT CAUSE: SPA wizard doesn't show price until you navigate past the birth date step — SEVERITY: high (wasted ~10 min)
+- Background run-code script for bulk collection failed silently when browser session was closed — ROOT CAUSE: closing browser terminates the script without error capture — SEVERITY: low (Beitragstabelle shortcut made this unnecessary)
+- `#ppzApp` selector needed instead of `main` — two main elements on page — ROOT CAUSE: ERGO wraps calculator in nested main elements — SEVERITY: low
+
+**Improvements applied**:
+- [x] products.md: Complete rewrite of Zahnzusatz entry (flat rate, no coverage slider, age bands, correct tiers, no waiting period)
+- [x] pricing-model.md: Updated age curve table, added Zahnzusatz to flat-rate products, added age-band pricing documentation, updated calibration table
+- [x] ergo-product-urls.md: Marked Zahnzusatz as CONFIRMED with specific calculator URLs
+- [x] ticket-templates.md: Updated Zahnzusatz wizardSteps to match real ERGO flow
+
+### Key Structural Findings
+1. ERGO Zahnzusatz is a FLAT-RATE product — no coverage slider at all
+2. Tariff tiers are reimbursement percentages (DS75/DS90/DS100), not benefit tiers
+3. Pricing uses 6 discrete age bands, not a continuous polynomial
+4. No waiting period, no dental status field, no missing teeth field
+5. First 6 months at 50% premium (Startbeitrag)
+6. Our previous model was off by +429% at age 20 and −40% at age 60
+
+### User Feedback
+- "yes update everything so the implementation plan is closer to reality of ergo"
+- Applied all changes to products.md, pricing-model.md, ticket-templates.md, ergo-product-urls.md
+
+### Impact on next run
+- Always check Beitragstabelle first before scraping calculator
+- Navigate through ALL wizard steps to reach price display
+- Use `#ppzApp` selector for ERGO calculator content extraction
+- Expect structural differences from our assumptions — ERGO products may not match our model architecture

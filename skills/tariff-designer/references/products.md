@@ -75,28 +75,35 @@ When the user names a product, find the matching entry and use it as the startin
 | **ID** | zahnzusatz |
 | **Category** | person |
 | **Insured event** | dental treatment, dentures, orthodontics |
-| **Age range** | 18–75 |
-| **Coverage** | €500–€5.000/year dental budget, step €250, default €1.500 |
-| **Coverage unit** | per €250/year |
-| **Risk class** | None (age-based pricing only) |
-| **Payment duration** | Ongoing (no end date, cancel anytime after minimum 2 years) |
-| **Waiting period** | Grundschutz: 8 months, Komfort: 3 months, Premium: none |
+| **Age range** | 0–75 |
+| **Coverage** | Reimbursement percentage: 75% / 90% / 100% (determined by tariff, not user-selectable) |
+| **Coverage unit** | flat rate (coverageUnit=defaultCoverage so units=1) |
+| **Risk class** | None (age-band pricing only) |
+| **Payment duration** | Ongoing (no end date, cancel anytime) |
+| **Waiting period** | None (all tariffs) |
 
-**Base rates** (per €250/year): Grundschutz €2.70, Komfort €3.29, Premium €4.05
-**Age curve**: base=0.80, linear=0.35, quadratic=0.10 (gentle linear increase)
+**Base rates** (flat/month, coverageUnit=defaultCoverage so units=1): Grundschutz €14.26, Komfort €17.79, Premium €22.62
+**Age curve**: base=0.13, linear=3.08, quadratic=-0.52 (steep near-linear increase; ERGO uses discrete age bands — see note)
 **Loading**: 22%
-**Calibration**: 35yo, €1.5k budget, Komfort → ~€22/month ✓
+**Calibration**: 35yo, Komfort → ~€21.70/month ✓
+
+**Note — Age bands**: ERGO uses discrete age bands, not a smooth curve. Actual ERGO band prices (Komfort/DS90): 0–20: €3.70, 21–25: €7.20, 26–30: €13.80, 31–40: €21.70, 41–50: €32.50, 51+: €44.40. First 6 months at 50% premium (Startbeitrag).
 
 **Tiers**:
-- **Grundschutz**: 60% Zahnbehandlung, 50% Zahnersatz, 8-month waiting
-- **Komfort**: 80% Zahnbehandlung, 70% Zahnersatz, professionelle Zahnreinigung 1×/year, 3-month waiting
-- **Premium**: 100% Zahnbehandlung, 90% Zahnersatz, Zahnreinigung 2×/year, Kieferorthopädie, Implantate, no waiting
+- **Grundschutz** (Dental-Schutz 75): 75% Erstattung für Zahnersatz, Inlays, Implantate. Professionelle Zahnreinigung 1×/Jahr. Leistungsbegrenzung Y1-4. GOZ bis 3,5-fach
+- **Komfort** (Dental-Schutz 90): 90% Erstattung für Zahnersatz, Inlays, Implantate. Professionelle Zahnreinigung 1×/Jahr. Leistungsbegrenzung Y1-4. GOZ bis 3,5-fach
+- **Premium** (Dental-Schutz 100): 100% Erstattung für Zahnersatz, Inlays, Implantate, KFO für Kinder (bis €1.000). Professionelle Zahnreinigung. GOZ bis 5,0-fach. Fahrkostenpauschale €50 nach Narkose
 
-**Wizard steps**: Birth date → Coverage budget → Dental status → Plan selection → Personal data → Summary
+**Wizard steps**: Who to insure → Birth date → Start date (price shown) → Plan comparison → Personal data → Summary
 
-**Form fields**: birthDate, coverageAmount (slider), dentalStatus (select: Sehr gut / Gut / Befriedigend / Lückenhaft), missingTeeth (number, 0-10), plan, salutation, firstName, lastName, street, zip, city
+**Form fields**: insurerType (radio: Ich / Ich und jemand anders / Nur jemand anders), birthDate (spinbutton: Tag/Monat/Jahr), insuranceStart (radio: 1st of next 3 months), plan (tabs: Dental-Schutz [X] / Dental-Vorsorge + Dental-Schutz [X]), salutation, firstName, lastName, street, zip, city
 
-**Validation**: Age 18-75, missingTeeth ≤ 10
+**Validation**: Birth date required
+
+**Source**: ergo.de — researched 2026-04-12
+**Evidence**: research/zahnzusatz/screenshots/, research/zahnzusatz/price-matrix.json
+**Confidence**: HIGH
+**Discrepancies from previous entry**: Coverage model changed from per-unit to flat rate. Coverage slider removed. Age range 0–75. Base rates changed. Age curve now steep (0.13/3.08/−0.52). No waiting period. dentalStatus/missingTeeth fields removed. Tiers are reimbursement %-based (DS75/DS90/DS100).
 
 ---
 

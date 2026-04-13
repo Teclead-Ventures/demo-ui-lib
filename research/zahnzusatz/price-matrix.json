@@ -1,0 +1,63 @@
+{
+  "product": "zahnzusatz",
+  "sampled_at": "2026-04-12",
+  "source_url": "https://www.ergo.de/de/Produkte/Zahnzusatzversicherung/zahnersatz",
+  "ergo_tier_names": {
+    "tier1": "Dental-Schutz 75",
+    "tier2": "Dental-Schutz 90",
+    "tier3": "Dental-Schutz 100"
+  },
+  "tier_mapping": {
+    "DS75": "grundschutz",
+    "DS90": "komfort",
+    "DS100": "premium"
+  },
+  "pricing_structure": {
+    "type": "discrete_age_bands",
+    "note": "ERGO uses flat monthly rates per age band per tariff. NOT per-coverage-unit pricing. First 6 months at 50% (Startbeitrag). No coverage amount selection.",
+    "bands": [
+      { "age_band": "0-20",  "age_midpoint": 10,  "DS75": 2.90,  "DS90": 3.70,  "DS100": 4.80  },
+      { "age_band": "21-25", "age_midpoint": 23,  "DS75": 5.70,  "DS90": 7.20,  "DS100": 9.20  },
+      { "age_band": "26-30", "age_midpoint": 28,  "DS75": 10.90, "DS90": 13.80, "DS100": 17.50 },
+      { "age_band": "31-40", "age_midpoint": 35,  "DS75": 17.40, "DS90": 21.70, "DS100": 27.60 },
+      { "age_band": "41-50", "age_midpoint": 45,  "DS75": 25.90, "DS90": 32.50, "DS100": 41.30 },
+      { "age_band": "51+",   "age_midpoint": 60,  "DS75": 34.80, "DS90": 44.40, "DS100": 57.80 }
+    ]
+  },
+  "data_points": [
+    { "inputs": { "age": 20, "tier": "DS100" }, "output": { "monthly_price": 4.80 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 25, "tier": "DS100" }, "output": { "monthly_price": 9.20 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 29, "tier": "DS100" }, "output": { "monthly_price": 17.50 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 35, "tier": "DS100" }, "output": { "monthly_price": 27.60 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 36, "tier": "DS100" }, "output": { "monthly_price": 27.60 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 42, "tier": "DS100" }, "output": { "monthly_price": 41.30 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 48, "tier": "DS100" }, "output": { "monthly_price": 41.30 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 60, "tier": "DS100" }, "output": { "monthly_price": 57.80 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 35, "tier": "DS75" },  "output": { "monthly_price": 17.40 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 35, "tier": "DS90" },  "output": { "monthly_price": 21.70 }, "source": "calculator", "verified": true },
+    { "inputs": { "age": 10, "tier": "DS75" },  "output": { "monthly_price": 2.90 },  "source": "beitragstabelle" },
+    { "inputs": { "age": 10, "tier": "DS90" },  "output": { "monthly_price": 3.70 },  "source": "beitragstabelle" },
+    { "inputs": { "age": 10, "tier": "DS100" }, "output": { "monthly_price": 4.80 },  "source": "beitragstabelle" },
+    { "inputs": { "age": 23, "tier": "DS75" },  "output": { "monthly_price": 5.70 },  "source": "beitragstabelle" },
+    { "inputs": { "age": 23, "tier": "DS90" },  "output": { "monthly_price": 7.20 },  "source": "beitragstabelle" },
+    { "inputs": { "age": 23, "tier": "DS100" }, "output": { "monthly_price": 9.20 },  "source": "beitragstabelle" },
+    { "inputs": { "age": 28, "tier": "DS75" },  "output": { "monthly_price": 10.90 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 28, "tier": "DS90" },  "output": { "monthly_price": 13.80 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 28, "tier": "DS100" }, "output": { "monthly_price": 17.50 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 35, "tier": "DS75" },  "output": { "monthly_price": 17.40 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 35, "tier": "DS90" },  "output": { "monthly_price": 21.70 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 35, "tier": "DS100" }, "output": { "monthly_price": 27.60 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 45, "tier": "DS75" },  "output": { "monthly_price": 25.90 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 45, "tier": "DS90" },  "output": { "monthly_price": 32.50 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 45, "tier": "DS100" }, "output": { "monthly_price": 41.30 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 60, "tier": "DS75" },  "output": { "monthly_price": 34.80 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 60, "tier": "DS90" },  "output": { "monthly_price": 44.40 }, "source": "beitragstabelle" },
+    { "inputs": { "age": 60, "tier": "DS100" }, "output": { "monthly_price": 57.80 }, "source": "beitragstabelle" }
+  ],
+  "verification": {
+    "calculator_vs_table_matches": 10,
+    "calculator_vs_table_mismatches": 0,
+    "within_band_same_price_confirmed": true,
+    "note": "Ages 42 and 48 (both band 41-50) return identical price 41.30, confirming flat pricing within bands"
+  }
+}

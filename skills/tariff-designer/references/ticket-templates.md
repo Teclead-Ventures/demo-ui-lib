@@ -19,10 +19,15 @@ src/
 │   ├── page.tsx                          ← Landing page: product grid with cards
 │   ├── wizard/
 │   │   └── [product]/                    ← Dynamic route: /wizard/zahnzusatz, /wizard/kfz
-│   │       ├── page.tsx                  ← Product-specific wizard shell + providers
+│   │       ├── page.tsx                  ← Dynamic wizard shell (loads product config + pages)
 │   │       └── pages/
-│   │           ├── BirthDatePage.tsx     ← Product-specific wizard pages
-│   │           ├── PlanSelectionPage.tsx
+│   │           ├── zahnzusatz/           ← Each product gets its own subdirectory
+│   │           │   ├── BirthDatePage.tsx
+│   │           │   ├── PlanSelectionPage.tsx
+│   │           │   └── ...
+│   │           ├── kfz/
+│   │           │   ├── VehiclePage.tsx
+│   │           │   └── ...
 │   │           └── ...
 │   ├── dashboard/
 │   │   ├── page.tsx                      ← Overview dashboard (all products combined)
@@ -75,7 +80,7 @@ export const PRODUCTS: ProductEntry[] = [
     icon: "🦷",
     category: "Gesundheit",
     tableSuffix: "zahnzusatz_applications",
-    wizardSteps: [{ label: "Tarifdaten" }, { label: "Beitrag" }, { label: "Persönliches" }, { label: "Zusammenfassung" }],
+    wizardSteps: [{ label: "Versicherte Person" }, { label: "Geburtsdatum" }, { label: "Versicherungsbeginn" }, { label: "Tarifauswahl" }, { label: "Persönliches" }, { label: "Zusammenfassung" }],
     enabled: true,
   },
   // ... more products added as they're built
@@ -119,7 +124,76 @@ export default function ProductWizardPage({ params }: { params: Promise<{ produc
 }
 ```
 
-The exact dynamic import pattern depends on how many products exist. For simplicity, a switch/case on `product` ID is fine — the registry tells you which products are available.
+### Dynamic imports pattern
+
+Each product exports a `productConfig` from its directory that contains everything the wizard page needs:
+
+```typescript
+// src/lib/products/zahnzusatz/index.ts
+export { TariffProvider, TARIFF_STEPS, TARIFF_STEP_MAP, DEMO_DEFAULTS } from "./TariffContext";
+export { default as renderPage } from "./renderPage";
+// renderPage is a function: (step: number, subStep: number) => ReactNode
+```
+
+The wizard page uses dynamic `import()`:
+
+```tsx
+// src/app/wizard/[product]/page.tsx
+"use client";
+import { use, lazy, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { getProduct } from "@/lib/products/registry";
+import { notFound } from "next/navigation";
+import { WizardShell } from "@/lib/wizard/WizardShell";
+import { WizardTrackingProvider } from "@/lib/wizard/WizardTrackingProvider";
+import { ToastProvider } from "@/components/ui/Toast/Toast";
+import { Stepper } from "@/components/ui/Stepper/Stepper";
+
+// Product configs loaded dynamically — add new import lines as products are added
+const PRODUCT_CONFIGS: Record<string, () => Promise<any>> = {
+  zahnzusatz: () => import("@/lib/products/zahnzusatz"),
+  kfz: () => import("@/lib/products/kfz"),
+  // ... team members add their product here
+};
+```
+
+Each team member adds ONE line to this map. This is simpler than a giant switch/case and each line is independent.
+
+### Submit API routing (multi-product)
+
+The submit API accepts a `product` field and uses the registry to determine the table:
+
+```typescript
+// src/app/api/submit/route.ts
+import { supabase, isSupabaseConfigured, tableName } from "@/lib/supabase";
+import { PRODUCTS } from "@/lib/products/registry";
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { product, ...data } = body;
+
+  // Look up table suffix from registry
+  const entry = PRODUCTS.find(p => p.id === product);
+  const table = entry ? tableName(entry.tableSuffix) : tableName("applications");
+
+  const { error } = await supabase.from(table).insert([data]);
+  // ...
+}
+```
+
+Each product's summary page sends `{ product: "<product-id>", ...formData }` in the POST body.
+
+### Dashboard per-product routing
+
+```typescript
+// src/app/dashboard/[product]/page.tsx
+// Reads the product ID from params, looks up tableSuffix from registry, queries that table
+// Each product's dashboard knows its own column names from the registry or product config
+```
+
+### Type safety strategy
+
+The submit API does NOT type-check the payload — it passes through to Supabase as `Record<string, unknown>`. Type safety is enforced at the wizard level: each product's `TariffProvider` is strongly typed with its own `TariffFormData` interface. The API is a thin pass-through.
 
 ---
 
@@ -178,7 +252,12 @@ Create the multi-step wizard infrastructure for {{product.name}} ({{product.shor
 
 ## Files to Create
 
-### `src/lib/wizard/TariffContext.tsx`
+### Product files location
+
+**Single-product mode**: `src/lib/wizard/TariffContext.tsx`, `src/lib/data/pricing.ts`, `src/lib/data/planData.ts`
+**Multi-product mode**: `src/lib/products/{{product.id}}/TariffContext.tsx`, `src/lib/products/{{product.id}}/pricing.ts`, `src/lib/products/{{product.id}}/planData.ts`
+
+### TariffContext
 
 ```typescript
 export interface TariffFormData {
@@ -256,25 +335,11 @@ Same as the existing pipeline:
 
 ### Demo mode implementation
 
-The wizard page (`src/app/wizard/page.tsx`) must detect the `?demo=true` URL parameter and pass it to TariffProvider. The TariffContext uses `DEMO_DEFAULTS` instead of `INITIAL_DATA` when demo mode is active:
+**Single-product**: `src/app/wizard/page.tsx` reads `?demo=true` and passes to `TariffProvider`.
+**Multi-product**: `src/app/wizard/[product]/page.tsx` reads `?demo=true` and passes to the product-specific provider.
 
 ```tsx
-// In src/app/wizard/page.tsx:
-"use client";
-import { useSearchParams } from "next/navigation";
-
-export default function WizardPage() {
-  const searchParams = useSearchParams();
-  const isDemo = searchParams.get("demo") === "true";
-
-  return (
-    <TariffProvider demo={isDemo}>
-      ...
-    </TariffProvider>
-  );
-}
-
-// In TariffContext.tsx, TariffProvider accepts demo prop:
+// Works for both modes — the key is the TariffProvider accepting a demo prop:
 export function TariffProvider({ children, demo = false }: { children: React.ReactNode; demo?: boolean }) {
   return (
     <WizardProvider<TariffFormData>
@@ -287,12 +352,15 @@ export function TariffProvider({ children, demo = false }: { children: React.Rea
 }
 ```
 
+Multi-product URL: `https://ergo-tarife.vercel.app/wizard/zahnzusatz?demo=true`
+Single-product URL: `https://zahnzusatz-v2.vercel.app/wizard?demo=true`
+
 When `?demo=true` is active:
-- All fields pre-filled with realistic German test data
+- All fields pre-filled with realistic German test data from the product's DEMO_DEFAULTS
 - All validations pass immediately (fields are non-empty)
 - User can click "weiter" through the entire wizard without typing
 - User can still edit any field to show interactivity
-- Summary page has both checkboxes unchecked (must still be clicked to submit — this is intentional, shows the consent step)
+- Summary page has both checkboxes unchecked (must still be clicked — shows the consent step)
 
 ## Sub-step Map
 
