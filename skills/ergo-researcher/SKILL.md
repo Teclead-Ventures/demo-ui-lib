@@ -171,6 +171,35 @@ Run the full feedback cycle for the overall research effort:
 
 ---
 
+## Accumulated learnings (read before every run)
+
+These patterns were discovered across 4 products (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat). Apply them from the start — don't rediscover them.
+
+### Structural patterns
+1. **Beitragstabelle is rare** — Only Zahnzusatz had one. Check for it (10 seconds), but don't count on it.
+2. **ERGO may have 2 or 3 tiers** — Hausrat has only Smart/Best (2 tiers). Most person products have Grundschutz/Komfort/Premium (3). Count tiers before building the sampling grid.
+3. **Tier relationships vary** — Most products are multiplicative (Komfort = Grundschutz × 1.27). Hausrat is additive (Best = Smart + €3.39 fixed). Check which model applies.
+4. **Some products have fixed fee components** — Sterbegeld has ~€1.80/month independent of coverage. Check by sampling 2+ coverage amounts at the same age.
+5. **Smoker/risk multipliers may be age-dependent** — Risikoleben's smoker multiplier ranges from 1.87× (age 25) to 3.92× (age 50). Always sample the risk class at multiple ages.
+6. **Coverage may be derived, not entered** — Hausrat calculates coverage from m² (650 EUR/m²). Property products may use indirect coverage inputs.
+7. **Calculator URL pattern**: Product page URL + `/abschluss` is the calculator URL for all products tested so far.
+
+### Pricing model selection
+- **Polynomial (Template A)**: If the age curve R² > 0.96 with quadratic fit and tier multipliers are constant. Most person products.
+- **Lookup table (Template B)**: If age curve R² < 0.96, or if risk class multipliers are age-dependent. Currently: Risikoleben.
+- **Property/additive (Template C)**: If tier difference is additive and pricing is per-m² or per-unit with a fixed base. Currently: Hausrat.
+
+Decide which template after Phase B (price sampling). The fit_pricing.py script should try all reasonable models and report R² for each.
+
+### Navigation patterns
+- All ERGO calculators use React SPAs at `#/step-name` URL fragments
+- Cookie consent persists within a session — dismiss once per fresh start
+- Price display page always has tier tabs/radio buttons — capture ALL tiers per visit
+- `#ppzApp` selector works on Sterbegeld and Zahnzusatz; Risikoleben and Hausrat use standard selectors
+- Address fields (Hausrat) validate against a real street database — use known-valid addresses
+
+---
+
 ## Curve fitting: use Python scripts
 
 The LLM cannot compute polynomial regression. For every product's analysis phase, the research agent MUST write and execute a Python script:
@@ -237,14 +266,24 @@ ERGO's wizards are React SPAs. Back-navigation is unreliable for early-step chan
 
 **For varying risk classes (often early-step):** Start fresh per risk class.
 
-**Realistic timing per product:**
+**Realistic timing per product** (updated 2026-04-13 from batch run):
 - Structure crawl: ~5 min (navigate all steps, screenshot, document)
-- Price sampling (50 data points at ~20s each): ~17 min
+- Price sampling: ~15-40 min depending on product complexity
+  - Simple (Sterbegeld, 50 points): ~17 min
+  - Complex (Risikoleben, 75 points with 2 risk classes): ~30 min
+  - Property (Hausrat, 23 points with ZIP/floor/building variations): ~15 min
 - Analysis (Python script): ~2 min
 - Review: ~3 min
-- **Total per product: ~27 min**
+- **Total per product: ~25-50 min**
 
-With 3 parallel sessions (Mode B): 14 products in ~2.5 hours.
+With 3 parallel sessions (Mode B): Actual batch of 3 took ~87 min (limited by slowest agent, Sterbegeld).
+Projected for remaining 10 products: ~4 batches × ~90 min = ~6 hours.
+
+**Data point targets** (learned 2026-04-13):
+- Products with linear coverage scaling: 50 points is enough, don't over-sample coverage variants
+- Products with exponential age curves: sample every 5 years across full age range
+- Property products: 5-8 ZIP codes + variations of floor/building type = ~25 points
+- Always capture ALL tier prices per data point (tiers are on the same page)
 
 ---
 
@@ -263,7 +302,7 @@ ERGO's calculators use React with custom components:
 
 ## Rate limiting
 
-**Global rule**: Maintain a minimum 5-second gap between any request to ergo.de, across ALL concurrent sessions. With 3 parallel sessions, each session waits 15 seconds between its own page loads.
+**Global rule**: Maintain a minimum 5-second gap between any request to ergo.de per session. With 3 parallel sessions, no cross-session coordination needed — ERGO tolerated 3 concurrent sessions without throttling in the 2026-04-13 batch run.
 
 If ergo.de shows signs of throttling (slow responses, error pages, CAPTCHAs):
 1. Reduce to 1 concurrent session

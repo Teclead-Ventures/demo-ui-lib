@@ -36,6 +36,9 @@ N = sequential number. Used for reference only.
 
 ### 3. Pricing line
 
+Choose the format that matches the product's pricing template (see pricing-model.md):
+
+**Template A (polynomial — most products):**
 ```markdown
 **Base rates** (per €Xk/month): Grundschutz €A.AA, Komfort €B.BB, Premium €C.CC
 **Age curve**: base=X.XX, linear=X.XX, quadratic=X.XX (description of shape)
@@ -43,17 +46,46 @@ N = sequential number. Used for reference only.
 **Calibration**: [typical customer profile] → ~€XX/month ✓
 ```
 
-The calibration line is CRITICAL — it's the sanity check. The formula with the stated base rates, age curve, and loading MUST produce a price within 5% of the calibration target for the stated customer profile.
+**Template B (lookup table — exponential age curves):**
+```markdown
+**Pricing model: Lookup table** (age curve too steep for polynomial — quadratic R²=X.XX)
+**Reference prices (€Xk, Xyr, reference risk class, monthly):**
+[lookup table with ages × tiers]
+**Risk class multipliers**: [per-age if age-dependent]
+**Calibration**: [typical customer profile] → €XX.XX/month ✓
+```
+
+**Template C (property/additive — per-m² products):**
+```markdown
+**Pricing model: Linear per-m² with ADDITIVE tier difference:**
+[formula per tier]
+**Regional multipliers**: [ZIP → multiplier table]
+**Factor multipliers**: [floor, building type, age, deductible, contract]
+**Calibration**: [typical property profile] → Tier1 €XX.XX, Tier2 €XX.XX ✓
+```
+
+The calibration line is CRITICAL — it's the sanity check. The formula with the stated parameters MUST produce a price within 5% of the calibration target for the stated customer profile.
 
 For flat-rate products, add: `(coverageUnit=defaultCoverage so units=1)` after the base rates.
 
 ### 4. Tiers
 
+Products may have 2 or 3 tiers. Use the format that matches ERGO's actual tier count:
+
+**3-tier products (most):**
 ```markdown
 **Tiers**:
 - **Grundschutz**: [benefits, waiting period, limitations]
 - **Komfort**: [benefits, improvements over Grundschutz]
 - **Premium**: [benefits, improvements over Komfort]
+```
+
+**2-tier products (e.g., Hausrat):**
+```markdown
+**Note — Only 2 tiers**: ERGO [Product] has 2 tiers ([Name1]/[Name2]), NOT 3.
+**Tiers** (ERGO names: [Name1] / [Name2]):
+- **[Name1]** (→ grundschutz): [benefits]
+- **[Name2]** (→ komfort): [benefits]
 ```
 
 ### 5. Wizard steps
@@ -115,10 +147,15 @@ Before accepting a product entry (whether from ergo-researcher or manual creatio
 
 1. [ ] All required sections present
 2. [ ] ID is unique and kebab-case
-3. [ ] Base rates produce calibration target price (within 5%)
-4. [ ] Grundschutz < Komfort < Premium pricing
-5. [ ] Age curve produces positive values across the entire age range
-6. [ ] Risk class multipliers are in 0.5–3.0 range
-7. [ ] Tier benefits meaningfully differentiate (not just price)
-8. [ ] Wizard steps include at least: risk input → coverage → plan selection → personal data → summary
-9. [ ] Form fields cover all data needed for the Supabase table columns
+3. [ ] Pricing template identified (A=polynomial, B=lookup, C=property)
+4. [ ] Calibration target price matches within 5% using stated parameters
+5. [ ] Tier pricing order: cheapest tier < most expensive tier
+6. [ ] For Template A: Age curve produces positive values across entire age range
+7. [ ] For Template B: Lookup table covers the full age range at 5-year intervals
+8. [ ] For Template C: Regional multipliers sampled for at least 5 ZIP codes
+9. [ ] Risk class multipliers in 0.5–4.0 range (extended from 3.0 — Risikoleben smoker reaches 3.92×)
+10. [ ] If risk multipliers are age-dependent, per-age values documented
+11. [ ] Tier benefits meaningfully differentiate (not just price)
+12. [ ] Wizard steps match ERGO's actual flow (verified via screenshots)
+13. [ ] Form fields cover all data needed for the Supabase table columns
+14. [ ] Tier count matches ERGO (2 or 3 — don't assume 3)

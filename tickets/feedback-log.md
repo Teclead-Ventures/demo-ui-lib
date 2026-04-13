@@ -531,10 +531,42 @@ export function calculatePaymentDuration(age: number): number {
 2. Hausrat has only 2 tiers. Should we keep our 3-tier demo structure (adding a synthetic Premium) or match ERGO's 2-tier model?
 3. The additive tier model for Hausrat (Best = Smart + €3.39 fixed) is fundamentally different from our multiplicative model. Should we add a separate pricing function for property products?
 
+### User Feedback
+- Risikoleben: approved lookup table approach (Template B)
+- Hausrat: approved 2-tier model, no synthetic Premium
+- Property pricing: approved separate Template C for additive tier models
+
+### Applied Improvements (post-user-feedback)
+- [x] pricing-model.md: 3 pricing templates (A=polynomial, B=lookup, C=property) with full TypeScript implementations
+- [x] pricing-model.md: Risikoleben lookup table with age-dependent smoker multipliers and term scaling
+- [x] pricing-model.md: Hausrat Template C with additive tiers, per-m² rate, ZIP/floor/building/age factors
+- [x] SKILL.md: Added "Accumulated learnings" section with 7 structural patterns and pricing model selection guide
+- [x] SKILL.md: Updated timing estimates from actual batch run data
+- [x] SKILL.md: Rate limiting updated — 3 concurrent sessions worked fine, no cross-session coordination needed
+- [x] researcher-prompt.md: Phase C now does multi-model fitting (quadratic/cubic/exponential/piecewise), checks tier relationship type, tests risk multiplier age-dependency, checks for fixed fees
+- [x] product-schema.md: Updated for 2-tier products, 3 pricing templates, expanded validation checklist
+- [x] ergo-product-urls.md: 3 URLs confirmed with calculator details
+
 ### Impact on next run
-- Beitragstabelle is Zahnzusatz-specific — don't waste time looking for it on other products, but still check (it's a 10-second check)
-- For products with exponential age curves (Risikoleben, potentially Pflege), plan for lookup table approach from the start
-- Property products (Hausrat, Wohngebäude) may use additive tier models and per-m² pricing — verify Wohngebäude when researched
-- Sterbegeld's fixed fee component (~€1.80/month) is a new pattern — check for this in other products
-- Regional multipliers are ZIP-specific, not zone-based — collect at least 5-8 ZIP codes to characterize the distribution
-- 50 data points is sufficient for well-behaved products; 160 was overkill for Sterbegeld's linear coverage scaling
+- Beitragstabelle is Zahnzusatz-specific — still check (10-second effort), but plan for calculator scraping
+- For products with exponential age curves (potentially Pflege), plan for lookup table (Template B) from the start
+- Property products (Wohngebäude) may use additive tier models and per-m² pricing like Hausrat — verify with Template C
+- Check for fixed fee components in every product (Sterbegeld had ~€1.80/month)
+- Check if risk class multipliers are age-dependent (Risikoleben smoker was 1.87-3.92×)
+- 50 data points is enough for most products; property products need ~25 with ZIP/factor variations
+- fit_pricing.py should always try multiple models and auto-select based on R²
+
+### Next batch proposal
+**Batch 3: Rechtsschutz, Unfall, Pflegezusatz**
+
+| Product | Why this order | Expected model | Key question |
+|---------|---------------|----------------|-------------|
+| Rechtsschutz | Liability product, likely flat age curve + fixed pricing. Should be straightforward (Template A). Good to confirm our Rechtsschutz assumptions quickly. | Template A (polynomial, mild age curve) | Does it have legal area checkboxes that affect pricing? |
+| Unfall | Person product with moderate age curve. Tests whether our 0.85/0.10/0.15 age curve is accurate. Also has occupation risk classes — test if multipliers are constant or age-dependent. | Template A (likely) or B (if steep) | Are occupation multipliers age-dependent like Risikoleben smoker? |
+| Pflegezusatz | Steep age curve (0.50/0.25/0.65) — may need Template B like Risikoleben. Important to test because care insurance pricing is notoriously complex. | Template A or B | Is the age curve polynomial or does it need a lookup table? |
+
+**Methodology adjustments for batch 3:**
+- Each agent's fit_pricing.py should try quadratic, cubic, exponential, AND piecewise from the start
+- Check tier relationship type (multiplicative vs additive) for every product
+- Sample risk class multipliers at 3+ ages to detect age-dependency early
+- Target 50 data points per product (not 160)

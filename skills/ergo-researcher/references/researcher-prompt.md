@@ -177,14 +177,26 @@ python3 research/{{PRODUCT_ID}}/fit_pricing.py
 The script should:
 1. Load `price-matrix.json`
 2. Group data by tier, filter to reference risk class
-3. For age-dependent products: use `numpy.polyfit(t, prices, 2)` to fit the quadratic age curve
-4. Compute R² from residuals
-5. Derive base rates per tier (price at reference age / units)
-6. Compute risk class multipliers (ratio of risk-class prices to reference-class prices)
-7. Estimate loading by comparing derived net premium structure to lowest-tier rate
-8. Output results as JSON
+3. **Multi-model fitting** (try ALL of these, report R² for each):
+   a. Quadratic polynomial: `numpy.polyfit(t, prices, 2)` — works for most products
+   b. Cubic polynomial: `numpy.polyfit(t, prices, 3)` — needed for steep age curves (Sterbegeld)
+   c. Exponential: `price = a * exp(b * age)` — needed for mortality products (Risikoleben)
+   d. Piecewise/step function check: compute price variance within 5-year age bands — if near-zero, ERGO uses age bands (Zahnzusatz)
+4. **Check tier relationship**:
+   a. Multiplicative: compute ratio between tiers at each age — if constant (±5%), report multiplier
+   b. Additive: compute difference between tiers at each age — if constant (±5%), report fixed delta
+   c. Age-dependent: if neither is constant, report the range and recommend lookup table
+5. **Check risk class multipliers at multiple ages** — if multiplier varies >10% across ages, it's age-dependent (Risikoleben smoker). Report per-age multipliers.
+6. **Check for fixed fee**: Compare price at min coverage vs. extrapolated zero-coverage intercept. If non-zero, report fixed fee component.
+7. Derive base rates per tier (price at reference age / units)
+8. Output results as JSON to `research/{{PRODUCT_ID}}/fit_results.json`
 
-If R² < 0.90, the script should also try a piecewise linear fit (ERGO may use discrete age bands). Report both fits and note which is better.
+**Template selection** (include in output):
+- If quadratic R² > 0.96 and tier multipliers constant: recommend **Template A** (polynomial)
+- If quadratic R² < 0.96 or risk multipliers age-dependent: recommend **Template B** (lookup table)
+- If tier relationship is additive and coverage is per-m²: recommend **Template C** (property/additive)
+
+Use `/tmp/ergo-research-venv/bin/python3` (numpy already available in venv).
 
 The script produces `research/{{PRODUCT_ID}}/fit_results.json` which you read to write the analysis.
 
