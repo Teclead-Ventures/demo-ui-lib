@@ -173,29 +173,58 @@ Run the full feedback cycle for the overall research effort:
 
 ## Accumulated learnings (read before every run)
 
-These patterns were discovered across 4 products (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat). Apply them from the start — don't rediscover them.
+Discovered across 7 products (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz). Apply from the start — don't rediscover them.
+
+### The most important lesson
+
+Our original assumption — "every tariff uses the same formula, only parameters change" — was wrong. ERGO uses at least 5 distinct pricing architectures. **Do not predict the template before researching.** Let the agent discover which model the product uses. Every product we researched had structural surprises; in batch 3, 0/3 template predictions were correct.
 
 ### Structural patterns
-1. **Beitragstabelle is rare** — Only Zahnzusatz had one. Check for it (10 seconds), but don't count on it.
-2. **ERGO may have 2 or 3 tiers** — Hausrat has only Smart/Best (2 tiers). Most person products have Grundschutz/Komfort/Premium (3). Count tiers before building the sampling grid.
-3. **Tier relationships vary** — Most products are multiplicative (Komfort = Grundschutz × 1.27). Hausrat is additive (Best = Smart + €3.39 fixed). Check which model applies.
-4. **Some products have fixed fee components** — Sterbegeld has ~€1.80/month independent of coverage. Check by sampling 2+ coverage amounts at the same age.
-5. **Smoker/risk multipliers may be age-dependent** — Risikoleben's smoker multiplier ranges from 1.87× (age 25) to 3.92× (age 50). Always sample the risk class at multiple ages.
-6. **Coverage may be derived, not entered** — Hausrat calculates coverage from m² (650 EUR/m²). Property products may use indirect coverage inputs.
-7. **Calculator URL pattern**: Product page URL + `/abschluss` is the calculator URL for all products tested so far.
 
-### Pricing model selection
-- **Polynomial (Template A)**: If the age curve R² > 0.96 with quadratic fit and tier multipliers are constant. Most person products.
-- **Lookup table (Template B)**: If age curve R² < 0.96, or if risk class multipliers are age-dependent. Currently: Risikoleben.
-- **Property/additive (Template C)**: If tier difference is additive and pricing is per-m² or per-unit with a fixed base. Currently: Hausrat.
+**Tier structure (never assume 3 tiers):**
+1. Some products have 3 tiers: Sterbegeld (Grundschutz/Komfort/Premium), Unfall (Basic/Smart/Best)
+2. Some have 2 tiers: Hausrat (Smart/Best), Rechtsschutz (Smart/Best)
+3. Some have NO tiers — they're separate products: Pflegezusatz has PTG (age-dependent), PZU (fixed €29.70/€59.40), KFP (fixed €25.72). These look like "tiers" from outside but are actually independent products with different calculators.
+4. Tier names are product-specific — not always Grundschutz/Komfort/Premium. Keep ERGO's names.
 
-Decide which template after Phase B (price sampling). The fit_pricing.py script should try all reasonable models and report R² for each.
+**Age pricing (never assume polynomial):**
+5. Some products have NO age-based pricing: Rechtsschutz (flat, with under-25 youth discount)
+6. Some use a binary step function: Unfall (1.0× under-65, 2.0× at 65+)
+7. Some use age bands: Zahnzusatz (6 flat bands), Unfall (2 bands)
+8. Some are exponential: Risikoleben (~doubling per 8 years), Pflegezusatz (~5.4%/year growth)
+9. Some are cubic: Sterbegeld (R²=0.997 cubic vs 0.978 quadratic)
+
+**Coverage model (never assume a slider):**
+10. Some products have no coverage selection at all: Rechtsschutz (fixed by tier: Smart=€2M, Best=unlimited)
+11. Some derive coverage from another input: Hausrat (650 EUR/m² × m²)
+12. Some use EUR/day, not EUR/month: Pflegezusatz (€5-€160/day)
+13. Some have additive module pricing: Rechtsschutz (Privat/Beruf/Wohnen/Verkehr toggles sum additively)
+
+**Other patterns:**
+14. **Beitragstabelle is Zahnzusatz-only** — 6 other products didn't have one. Check in 10 seconds but don't count on it.
+15. **Fixed fee components exist** — Sterbegeld ~€1.80/month, Risikoleben ~€0.91/month independent of coverage.
+16. **Risk multipliers can be age-dependent** — Risikoleben smoker: 1.87× (age 25) to 3.92× (age 50). Always sample at 3+ ages.
+17. **Calculator URL pattern**: Usually product page + `/abschluss`, but Pflegezusatz uses `/abschluss-tagegeld`.
+18. **Calculators vary structurally**: Multi-step wizards (Sterbegeld 4 steps, Risikoleben 8 steps, Unfall 6 steps), single-page configurators (Pflegezusatz: 2 dropdowns), tabbed configurators with live pricing (Rechtsschutz, Hausrat).
+19. **DKV branding**: Some ERGO Group products use subsidiary brands (Pflegezusatz → DKV). Watch for different UX patterns.
+20. **16 data points can be enough** if the model is simple (binary step + linear coverage). Don't over-sample — Sterbegeld's 160 points was overkill.
+
+### Pricing model selection (5 templates)
+
+Do not choose the template before Phase B. Let fit_pricing.py try all models and pick the best fit.
+
+- **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers. Products: BU, Zahnzusatz, Tierkranken, Kfz, etc.
+- **Template A+step** (step-function): Discrete age bands with sharp transitions. Product: Unfall (binary 1.0×/2.0× at age 65).
+- **Template B** (lookup table): Exponential/steep age curve (quadratic R² < 0.96), or age-dependent risk multipliers. Products: Risikoleben, Sterbegeld, Pflegezusatz.
+- **Template C** (property/additive): Per-m² or per-unit pricing with additive tier difference. Product: Hausrat.
+- **Template D** (flat-rate configurator): No age curve, no coverage slider, additive module/Baustein toggles. Product: Rechtsschutz.
 
 ### Navigation patterns
-- All ERGO calculators use React SPAs at `#/step-name` URL fragments
+- Most ERGO calculators use React SPAs at `#/step-name` URL fragments
+- Some are single-page configurators (Pflegezusatz: just 2 dropdowns)
 - Cookie consent persists within a session — dismiss once per fresh start
-- Price display page always has tier tabs/radio buttons — capture ALL tiers per visit
-- `#ppzApp` selector works on Sterbegeld and Zahnzusatz; Risikoleben and Hausrat use standard selectors
+- Price display page usually has tier tabs/radio buttons — capture ALL tiers per visit
+- `#ppzApp` selector works on some products (Sterbegeld, Zahnzusatz); others use standard selectors
 - Address fields (Hausrat) validate against a real street database — use known-valid addresses
 
 ---

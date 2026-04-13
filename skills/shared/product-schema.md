@@ -55,6 +55,15 @@ Choose the format that matches the product's pricing template (see pricing-model
 **Calibration**: [typical customer profile] → €XX.XX/month ✓
 ```
 
+**Template A+step (step-function age bands — e.g., Unfall):**
+```markdown
+**Base rates** (per €Xk/month, reference risk class, under-threshold): Tier1 €A.AA, Tier2 €B.BB, Tier3 €C.CC
+**Age curve**: Step function — [threshold age]: multiplier [X.X]× (e.g., "under-65: 1.0×, 65+: 2.0×")
+**Risk class multipliers**: [class: mult, ...] — constant or age-dependent?
+**Coverage scaling**: Linear (R²=X.XX) [with/without] fixed fee
+**Calibration**: [typical profile] → €XX.XX/month ✓
+```
+
 **Template C (property/additive — per-m² products):**
 ```markdown
 **Pricing model: Linear per-m² with ADDITIVE tier difference:**
@@ -64,15 +73,25 @@ Choose the format that matches the product's pricing template (see pricing-model
 **Calibration**: [typical property profile] → Tier1 €XX.XX, Tier2 €XX.XX ✓
 ```
 
+**Template D (flat-rate configurator — additive Baustein/module pricing):**
+```markdown
+**Pricing model: Template D** (flat-rate additive configurator — no age curve, no coverage slider)
+**Baustein base rates** (reference config, monthly):
+[table of Baustein × tier prices]
+**Pricing formula**: `price = bausteinSum × familyMult × sbDiscount × contractDiscount × youthDiscount`
+**Factor multipliers**: [family, SB, contract, youth/senior]
+**Calibration**: [typical config] → €XX.XX/month ✓
+```
+
 The calibration line is CRITICAL — it's the sanity check. The formula with the stated parameters MUST produce a price within 5% of the calibration target for the stated customer profile.
 
 For flat-rate products, add: `(coverageUnit=defaultCoverage so units=1)` after the base rates.
 
 ### 4. Tiers
 
-Products may have 2 or 3 tiers. Use the format that matches ERGO's actual tier count:
+Products may have 2 tiers, 3 tiers, or no tiers (separate products). Use the format that matches ERGO's actual structure:
 
-**3-tier products (most):**
+**3-tier products:**
 ```markdown
 **Tiers**:
 - **Grundschutz**: [benefits, waiting period, limitations]
@@ -80,12 +99,29 @@ Products may have 2 or 3 tiers. Use the format that matches ERGO's actual tier c
 - **Premium**: [benefits, improvements over Komfort]
 ```
 
-**2-tier products (e.g., Hausrat):**
+**2-tier products (e.g., Hausrat, Rechtsschutz):**
 ```markdown
 **Note — Only 2 tiers**: ERGO [Product] has 2 tiers ([Name1]/[Name2]), NOT 3.
 **Tiers** (ERGO names: [Name1] / [Name2]):
 - **[Name1]** (→ grundschutz): [benefits]
 - **[Name2]** (→ komfort): [benefits]
+```
+
+**Separate products, not tiers (e.g., Pflegezusatz):**
+```markdown
+**Note — Not tiers**: ERGO offers [N] **separate products**, not tiers of one product:
+- **[Product1]** — [pricing model, age-dependent/fixed, description]
+- **[Product2]** — [pricing model, fixed price €XX.XX, description]
+- **[Product3]** — [pricing model, fixed price €XX.XX, description]
+```
+
+**3-tier with ERGO-specific names (e.g., Unfall: Basic/Smart/Best):**
+```markdown
+**Note — ERGO tier names**: [Name1] / [Name2] / [Name3] (not Grundschutz/Komfort/Premium). Keep ERGO's names.
+**Tiers** (ERGO names):
+- **[Name1]**: [benefits]
+- **[Name2]**: [benefits]
+- **[Name3]**: [benefits]
 ```
 
 ### 5. Wizard steps

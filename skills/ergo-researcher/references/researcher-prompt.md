@@ -40,15 +40,29 @@ playwright-cli -s={{PRODUCT_ID}} snapshot
 playwright-cli -s={{PRODUCT_ID}} screenshot --filename=research/{{PRODUCT_ID}}/screenshots/landing.png
 ```
 
-4. Find and click the calculator entry point ("Beitrag berechnen", "Jetzt berechnen", etc.)
+4. Find and click the calculator entry point ("Beitrag berechnen", "Jetzt berechnen", etc.). Try `/abschluss` suffix if not on product page. Some products use a variant (e.g., Pflegezusatz uses `/abschluss-tagegeld`).
 
-5. At EVERY step of the wizard:
+5. **Determine calculator type** before proceeding:
+   - **Multi-step wizard** (most products): Has "weiter" buttons, step indicators, hash-based routing (#/step-name)
+   - **Single-page configurator** (e.g., Pflegezusatz): All inputs on one page with instant price updates. May have just 1-2 dropdowns.
+   - **Tabbed configurator** (e.g., Rechtsschutz, Hausrat): Wizard for intake steps, then a configurator page with tier tabs, toggles, and live pricing
+
+6. At EVERY step of the wizard (or for each section of a single-page configurator):
    - `playwright-cli -s={{PRODUCT_ID}} snapshot` → record all visible fields
    - `playwright-cli -s={{PRODUCT_ID}} screenshot --filename=research/{{PRODUCT_ID}}/screenshots/step-N-name.png`
    - Document: step number, heading text, all field labels, field types, options, default values
    - Try leaving required fields empty and clicking next → capture validation messages
 
-6. Write the structure to `research/{{PRODUCT_ID}}/structure.md`:
+7. **Answer these discovery questions** during the structure crawl (critical for template selection):
+   - How many tiers? (2 or 3? What are ERGO's names for them?)
+   - Are they tiers of ONE product, or separate products with different calculators? (Pflegezusatz: 3 separate products)
+   - Is there a coverage slider/input, or is coverage fixed by tier? (Rechtsschutz: fixed)
+   - Does coverage use a standard unit (EUR) or something else (EUR/day, m²)?
+   - Are there toggleable modules/Bausteine? (Rechtsschutz: Privat/Beruf/Wohnen/Verkehr)
+   - Is there an age input? (Rechtsschutz: only for youth discount, not pricing)
+   - What brand is the calculator? (Usually ERGO, but Pflegezusatz is DKV)
+
+8. Write the structure to `research/{{PRODUCT_ID}}/structure.md`:
 ```markdown
 # ERGO {{PRODUCT_NAME}} — Form Structure
 
@@ -178,23 +192,29 @@ The script should:
 1. Load `price-matrix.json`
 2. Group data by tier, filter to reference risk class
 3. **Multi-model fitting** (try ALL of these, report R² for each):
-   a. Quadratic polynomial: `numpy.polyfit(t, prices, 2)` — works for most products
-   b. Cubic polynomial: `numpy.polyfit(t, prices, 3)` — needed for steep age curves (Sterbegeld)
-   c. Exponential: `price = a * exp(b * age)` — needed for mortality products (Risikoleben)
-   d. Piecewise/step function check: compute price variance within 5-year age bands — if near-zero, ERGO uses age bands (Zahnzusatz)
-4. **Check tier relationship**:
+   a. Quadratic polynomial: `numpy.polyfit(t, prices, 2)`
+   b. Cubic polynomial: `numpy.polyfit(t, prices, 3)`
+   c. Exponential: `price = a * exp(b * age)` — needed for mortality/care products
+   d. Piecewise/step function detection: for each pair of adjacent age samples, compute price ratio. If ratio is near-constant across most ages but has a sharp jump at one age threshold, this is a step function (Unfall: exact 2.0× jump at age 65)
+   e. Age band detection: compute price variance within 5-year age bands — if near-zero within bands but jumps between bands, ERGO uses discrete age bands (Zahnzusatz: 6 flat bands)
+4. **Check if pricing is age-independent**: If all age samples produce the same price (±1%), the product has no age curve (Rechtsschutz). Report "flat" and check for youth/senior discounts.
+5. **Check tier relationship**:
    a. Multiplicative: compute ratio between tiers at each age — if constant (±5%), report multiplier
-   b. Additive: compute difference between tiers at each age — if constant (±5%), report fixed delta
+   b. Additive: compute difference between tiers at each age — if constant (±5%), report fixed delta (Hausrat: Best = Smart + €3.39)
    c. Age-dependent: if neither is constant, report the range and recommend lookup table
-5. **Check risk class multipliers at multiple ages** — if multiplier varies >10% across ages, it's age-dependent (Risikoleben smoker). Report per-age multipliers.
-6. **Check for fixed fee**: Compare price at min coverage vs. extrapolated zero-coverage intercept. If non-zero, report fixed fee component.
-7. Derive base rates per tier (price at reference age / units)
-8. Output results as JSON to `research/{{PRODUCT_ID}}/fit_results.json`
+6. **Check if "tiers" are actually separate products**: If different "tiers" have completely different age curves, coverage models, or calculators, they may be separate products (Pflegezusatz: PTG is age-dependent, PZU/KFP are fixed-price). Note this in the output.
+7. **Check for Baustein/module pricing**: If the product has toggleable modules (legal areas, coverage add-ons) that each add a fixed price, check if prices are perfectly additive (Rechtsschutz: 0.00 error). Report per-module prices.
+8. **Check risk class multipliers at multiple ages** — if multiplier varies >10% across ages, it's age-dependent (Risikoleben smoker: 1.87-3.92×). Report per-age multipliers.
+9. **Check for fixed fee**: Compare price at min coverage vs. extrapolated zero-coverage intercept. If non-zero, report fixed fee component (Sterbegeld: ~€1.80, Risikoleben: ~€0.91).
+10. Derive base rates per tier (price at reference age / units)
+11. Output results as JSON to `research/{{PRODUCT_ID}}/fit_results.json`
 
-**Template selection** (include in output):
-- If quadratic R² > 0.96 and tier multipliers constant: recommend **Template A** (polynomial)
-- If quadratic R² < 0.96 or risk multipliers age-dependent: recommend **Template B** (lookup table)
-- If tier relationship is additive and coverage is per-m²: recommend **Template C** (property/additive)
+**Template selection** (include in output — 5 options):
+- **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers, coverage-proportional
+- **Template A+step** (step function): Discrete age bands with sharp threshold (e.g., 1.0×/2.0× at age 65)
+- **Template B** (lookup table): Quadratic R² < 0.96, or risk multipliers age-dependent, or exponential growth
+- **Template C** (property/additive): Additive tier difference, per-m² or regional pricing
+- **Template D** (flat-rate configurator): No age curve, no coverage slider, additive Baustein/module toggles
 
 Use `/tmp/ergo-research-venv/bin/python3` (numpy already available in venv).
 
