@@ -2,7 +2,7 @@
 
 Known URLs for ERGO's online tariff calculators. Updated by the scout agent at the start of each research run.
 
-**Last updated**: 2026-04-13 (7 products confirmed: Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz)
+**Last updated**: 2026-04-13 (9 products confirmed: Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz, Haftpflicht, Kfz. 1 product confirmed NO calculator: Tierkranken)
 
 ## Consumer portal (ergo.de)
 
@@ -12,15 +12,15 @@ Known URLs for ERGO's online tariff calculators. Updated by the scout agent at t
 | Sterbegeld | https://www.ergo.de/de/Produkte/Sterbegeldversicherungen/Sterbegeldversicherung | /abschluss | CONFIRMED — 4-step wizard. No Beitragstabelle. 160 data points. Researched 2026-04-13. |
 | Risikoleben | https://www.ergo.de/de/Produkte/Lebensversicherung/Risikolebensversicherung | /abschluss | CONFIRMED — 8-step wizard + price page. 3 smoker classes. Employment+occupation fields. 75 data points. Researched 2026-04-13. |
 | Hausrat | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung/Hausratversicherung | /abschluss | CONFIRMED — 7-step wizard. Only 2 tiers (Smart/Best). Per-m² model. 23 data points. Researched 2026-04-13. |
-| Kfz (Auto) | https://www.ergo.de/de/Produkte/KFZ-Versicherung/Autoversicherung | likely /abschluss | Unconfirmed — full Tarifrechner expected |
+| Kfz (Auto) | https://www.ergo.de/de/Produkte/KFZ-Versicherung/Autoversicherung | /abschluss#/neu/ | CONFIRMED — 5-step wizard. 2 tiers (Smart/Best). Additive HP+VK components. SF-Klasse 0-50+ with 51 levels. NO age curve. Vehicle via HSN/TSN cascading dropdowns. 28 data points. Researched 2026-04-13. |
 | Rechtsschutz | https://www.ergo.de/de/Produkte/Rechtsschutzversicherung | /abschluss | CONFIRMED — 4 intake steps + configurator page. Only 2 tiers (Smart/Best). Additive Bausteine (Privat/Beruf/Wohnen/Verkehr). NO age pricing. 42 data points. Researched 2026-04-13. |
 | Unfall | https://www.ergo.de/de/Produkte/Unfallversicherung | /abschluss | CONFIRMED — 6-step wizard. 3 tiers (Basic/Smart/Best). Step-function age (1.0×/<65, 2.0×/≥65). Occupation autocomplete. 16 data points. Researched 2026-04-13. |
 | Pflegezusatz | https://www.ergo.de/de/Produkte/Pflegeversicherung/Pflegezusatzversicherung | /abschluss-tagegeld | CONFIRMED — DKV-branded single-page configurator. 3 separate products (PTG/PZU/KFP). PTG exponential age curve. 82 data points. Researched 2026-04-13. |
-| Haftpflicht | https://www.ergo.de/de/Produkte/Haftpflichtversicherung | likely /abschluss | Unconfirmed |
+| Haftpflicht | https://www.ergo.de/de/Produkte/Haftpflichtversicherung/Privathaftpflichtversicherung | /abschluss | CONFIRMED — 3 intake steps + configurator page. 2 tiers (Smart/Best). Template D (additive Bausteine). Binary age (<36 Startbonus). 32 data points. Researched 2026-04-13. |
 | BU | https://www.ergo.de/de/Produkte/Berufsunfaehigkeitsversicherung | unknown | Unconfirmed — possibly broker-only |
 | Reise | https://www.ergo.de/de/Produkte/Reiseversicherung | likely /abschluss | Unconfirmed |
 | Wohngebäude | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung | likely /abschluss | Unconfirmed — possibly combined with Hausrat |
-| Tierkranken | https://www.ergo.de/de/Produkte/Tierversicherung | unknown | Unconfirmed — may be DKV-branded |
+| Tierkranken | https://www.ergo.de/de/Produkte/Tierversicherung | NONE | NO_CALCULATOR — Agent-only product. No product page on ergo.de (all URLs return 404). ERGO agents sell third-party products (HanseMerkur, Uelzener, Helvetia). Only Hundehalterhaftpflicht and Pferdehalterhaftpflicht exist online. Researched 2026-04-13. |
 | Motorrad | https://www.ergo.de/de/Produkte/KFZ-Versicherung/Motorradversicherung | likely /abschluss | Unconfirmed |
 | Cyber | unknown | unknown | Unconfirmed — may not exist on ergo.de |
 | Krankentagegeld | unknown | unknown | Unconfirmed — may be DKV-branded |

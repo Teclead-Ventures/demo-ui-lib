@@ -1,0 +1,170 @@
+{
+  "product": "haftpflicht",
+  "sampled_at": "2026-04-13",
+  "source_url": "https://www.ergo.de/de/Produkte/Haftpflichtversicherung/Privathaftpflichtversicherung/abschluss",
+  "ergo_tier_names": {"tier1": "Smart", "tier2": "Best"},
+  "tier_mapping": {"Smart": "grundschutz", "Best": "premium"},
+  "notes": "2 tiers only (Smart/Best), not 3 as assumed. Coverage is fixed by tier: Smart=10M, Best=50M. No coverage slider. Additive Bausteine. Binary age band: <36 gets 13% Startbonus, >=36 flat. No continuous age curve.",
+  "data_points": [
+    {
+      "id": 1,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 6.05}
+    },
+    {
+      "id": 2,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 10.58}
+    },
+    {
+      "id": 3,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Schlüsselverlust"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.26, "notes": "Schlüsselverlust adds 1.21"}
+    },
+    {
+      "id": 4,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Neuwertentschädigung"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.26, "notes": "Neuwertentschädigung adds 1.21"}
+    },
+    {
+      "id": 5,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.26, "notes": "Forderungsausfall adds 1.21"}
+    },
+    {
+      "id": 6,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Schlüsselverlust", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 8.46, "notes": "Two Bausteine: 6.05 + 2.41 = 8.46"}
+    },
+    {
+      "id": 7,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 9.67, "notes": "All 3 Best-default Bausteine on Smart: 6.05 + 3.62 = 9.67"}
+    },
+    {
+      "id": 8,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Amts- und Diensthaftpflicht"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.98, "notes": "Amts-Dienst adds 1.93"}
+    },
+    {
+      "id": 9,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": ["Alleinstehende Familienangehörige"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 6.05, "notes": "Alleinstehende adds 0.00 (free)"}
+    },
+    {
+      "id": 10,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": [], "sb": "150", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 4.84, "notes": "SB 150 discount: 4.84/6.05 = 0.800 = 20% off"}
+    },
+    {
+      "id": 11,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "1 Jahr", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 6.72, "notes": "1-year contract: 6.72/6.05 = 1.111 = 11% surcharge vs 3-year"}
+    },
+    {
+      "id": 12,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "vierteljährlich"},
+      "output": {"quarterly_price": 17.97, "monthly_equiv": 5.99, "notes": "Quarterly: 17.97/3=5.99, annual=71.88"}
+    },
+    {
+      "id": 13,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "halbjährlich"},
+      "output": {"semiannual_price": 35.26, "monthly_equiv": 5.877, "notes": "Semi-annual: 35.26/6=5.877, annual=70.52"}
+    },
+    {
+      "id": 14,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "jährlich"},
+      "output": {"annual_price": 68.46, "monthly_equiv": 5.705, "notes": "Annual: 68.46/12=5.705"}
+    },
+    {
+      "id": 15,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall", "Amts- und Diensthaftpflicht"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 12.52, "notes": "Best + Amts: 10.58 + 1.94 = 12.52"}
+    },
+    {
+      "id": 16,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "150", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 9.19, "notes": "Best + SB 150: 9.19/10.58 = 0.869"}
+    },
+    {
+      "id": 17,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 31, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 5.26, "notes": "Startbonus 13%: 5.26/6.05 = 0.869"}
+    },
+    {
+      "id": 18,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 31, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 9.20, "notes": "Startbonus 13%: 9.20/10.58 = 0.870"}
+    },
+    {
+      "id": 19,
+      "inputs": {"family_status": "paar", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.56}
+    },
+    {
+      "id": 20,
+      "inputs": {"family_status": "paar", "tier": "Best", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 12.09}
+    },
+    {
+      "id": 21,
+      "inputs": {"family_status": "alleinerziehend", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.56, "notes": "Same as Paar"}
+    },
+    {
+      "id": 22,
+      "inputs": {"family_status": "alleinerziehend", "tier": "Best", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 12.09, "notes": "Same as Paar"}
+    },
+    {
+      "id": 23,
+      "inputs": {"family_status": "familie", "tier": "Smart", "age": 36, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 9.07}
+    },
+    {
+      "id": 24,
+      "inputs": {"family_status": "familie", "tier": "Best", "age": 36, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 13.60}
+    },
+    {
+      "id": 25,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 50, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 6.05, "notes": "Same as age 36 - no age effect"}
+    },
+    {
+      "id": 26,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 50, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 10.58, "notes": "Same as age 36 - no age effect"}
+    },
+    {
+      "id": 27,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 70, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 6.05, "notes": "Same as age 36 and 50 - no age effect"}
+    },
+    {
+      "id": 28,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 70, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 10.58, "notes": "Same as age 36 and 50 - no age effect"}
+    },
+    {
+      "id": 29,
+      "inputs": {"family_status": "single", "tier": "Smart", "age": 35, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 5.26, "notes": "Startbonus: same as age 31 and 25"}
+    },
+    {
+      "id": 30,
+      "inputs": {"family_status": "single", "tier": "Best", "age": 35, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 9.20, "notes": "Startbonus: same as age 31"}
+    },
+    {
+      "id": 31,
+      "inputs": {"family_status": "familie", "tier": "Best", "age": 25, "bausteine": ["Schlüsselverlust", "Neuwertentschädigung", "Forderungsausfall"], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 11.83, "notes": "Startbonus on Familie Best: 11.83/13.60 = 0.870 = 13%"}
+    },
+    {
+      "id": 32,
+      "inputs": {"family_status": "familie", "tier": "Smart", "age": 25, "bausteine": [], "sb": "ohne", "laufzeit": "3 Jahre", "zahlweise": "monatlich"},
+      "output": {"monthly_price": 7.89, "notes": "Startbonus on Familie Smart: 7.89/9.07 = 0.870 = 13%"}
+    }
+  ]
+}

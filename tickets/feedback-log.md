@@ -669,3 +669,96 @@ export function calculatePaymentDuration(age: number): number {
 - Check if product uses separate calculators for "tiers" (like Pflegezusatz)
 - Check for Baustein/module pricing (like Rechtsschutz)
 - Accept <50 data points if model is simple
+
+## Run: 2026-04-13 (ergo-researcher, Batch 4: Haftpflicht + Kfz + Tierkranken — Mode B-lite parallel)
+
+### Result: SUCCESS (2/3 products fully researched, 1 product has no online calculator)
+
+### Self-Assessment
+
+**Metrics**:
+- Duration: ~37 min total (3 agents in parallel)
+- Products researched: 3 (Haftpflicht, Kfz, Tierkranken)
+- Data points: 60 total (32 Haftpflicht + 28 Kfz + 0 Tierkranken)
+- Agent durations: Haftpflicht ~22min, Kfz ~37min, Tierkranken ~7min
+- New templates discovered: 1 (Template E for Kfz)
+- Prediction accuracy: 0/3 (consistent with batches 2-3)
+- Confidence: HIGH (Haftpflicht), MEDIUM-HIGH (Kfz), LOW (Tierkranken)
+
+**What worked**:
+- **Parallel execution**: 3 concurrent agents with separate playwright sessions, no conflicts.
+- **Template D pattern recognition**: Haftpflicht agent correctly identified it as Template D (like Rechtsschutz) — additive Bausteine, 2 tiers, no age curve, no coverage slider. The methodology is now robust at detecting this pattern.
+- **Kfz SF verification**: The agent extracted SF percentages directly from the dropdown labels in the calculator, then verified the model `price = base × SF%` to sub-cent accuracy. This is the highest-confidence pricing verification we've done.
+- **Tierkranken agent**: Quickly and definitively established that no online calculator exists, tried multiple URL patterns, and documented the evidence. The negative finding is valuable — we now know this is agent-only.
+- **Batch 3 learnings applied**: All 3 agents correctly checked for Bausteine, step functions, separate products, and non-polynomial models from the start.
+
+**What failed / was suboptimal**:
+- **Tierkranken was a dead end** — no online calculator exists. Could have saved time by scouting this first. — ROOT CAUSE: Our ergo-product-urls.md listed it as "Unconfirmed" without flagging that the product page itself might not exist. — SEVERITY: low (agent completed in 7 min)
+- **Kfz had only 1 vehicle tested** — the SF model is verified but base rates are vehicle-specific. Testing more vehicles would improve confidence. — ROOT CAUSE: Vehicle selection via cascading dropdowns is slow and requires specific HSN/TSN knowledge — SEVERITY: medium (base rates are reference values only; SF model is exact)
+- **Some Kfz VK data points had add-on checkbox state leakage** — 5 VK prices may have been affected by add-ons being toggled during data collection. — ROOT CAUSE: The configurator page preserves checkbox state when changing other fields — SEVERITY: low (identified in analysis, core model unaffected)
+- **Prediction accuracy still 0/3** — we assumed Haftpflicht=Template A, Kfz=Template A with U-curve, Tierkranken=Template A. Reality: D, E (new), and no calculator. — SEVERITY: none (predictions no longer influence agent behavior)
+
+### Comparison: Our Assumptions vs ERGO Reality
+
+| Product | Our assumed template | Actual template | Our price | ERGO price | Structural mismatch |
+|---------|---------------------|-----------------|-----------|------------|-------------------|
+| Haftpflicht | A (flat, 3 tiers) | D (Baustein configurator) | Komfort ~€6/mo | Smart €6.05, Best €10.58 | 2 tiers, 5 Bausteine, binary age <36, no coverage slider |
+| Kfz | A (U-curve, 3 tiers, SF 0-35) | E (additive HP+VK, SF lookup) | Komfort ~€65/mo | Best €100.73 (HP+VK) | NO age curve, 2 tiers, 51 SF levels, additive components |
+| Tierkranken | A (quadratic, 3 tiers, 3 species) | No calculator | Komfort ~€35/mo | Unknown | Agent-only, Hund only, 1 tariff (GOT 1x/2x) |
+
+### Key meta-learnings from batch 4
+
+1. **Template A is rare** — only 2/10 researched products use it (BU and Zahnzusatz). Most products use specialized models. The "standard formula" is actually the exception.
+
+2. **2 tiers is the dominant pattern** — 4/10 products have Smart/Best, 2/10 have 3 tiers, 1 has separate products, 1 has GOT variants. When researching remaining products, expect 2 tiers (Smart/Best).
+
+3. **Kfz is fundamentally different** from all other products. It's the only one with additive components (HP+VK), separate SF lookup tables, and zero age effect. A 6th template (E) is needed.
+
+4. **Some products don't exist online** — Tierkranken is agent-only. Future batches should do a quick URL check before dispatching a full research agent.
+
+5. **Binary age <36 Startbonus** appears in both Haftpflicht AND Hausrat (same threshold, same 13% discount). This may be a common pattern across more products.
+
+6. **Template D (Baustein configurator)** is emerging as a pattern for liability products: Rechtsschutz (4 Bausteine) and Haftpflicht (5 Bausteine) both use it. Other liability products may too.
+
+7. **Family status multipliers can be tier-dependent** — Haftpflicht has different family multipliers for Smart vs Best (1.50 vs 1.29 for Familie). This breaks the assumption of uniform risk class multipliers.
+
+### User Feedback
+- Kfz: rebuild demo with real model (Template E)
+- Tierkranken: user asked for clarification, understood the situation (ERGO doesn't have this product online)
+- Haftpflicht: expose Baustein toggles in the demo (don't simplify)
+
+### Applied Improvements
+- [x] products.md: Haftpflicht — complete rewrite, Template D, 2 tiers, 5 Bausteine, binary age, tier-dependent family multipliers
+- [x] products.md: Kfz — complete rewrite, Template E, additive HP+VK, SF lookup tables (51 levels), no age, 2 tiers
+- [x] products.md: Tierkranken — flagged as NO ONLINE CALCULATOR, agent-only, LOW confidence, restructured as single tariff with GOT choice
+- [x] pricing-model.md: Added Template E with full TypeScript implementation. Updated template assignments, age curve table, flat-rate products, calibration table.
+- [x] ergo-product-urls.md: Haftpflicht and Kfz confirmed, Tierkranken marked NO_CALCULATOR
+- [x] SKILL.md: Updated accumulated learnings from 7 to 10 products, added Kfz-specific patterns, updated tier/age/coverage/template sections
+- [x] researcher-prompt.md: No changes needed (methodology proved robust)
+
+### Impact on next run
+- **Quick URL check first**: Before dispatching a research agent, verify the product page exists (10-second check). Tierkranken wasted an agent slot.
+- **Template D is a liability pattern**: If the next batch includes more liability products, expect Baustein configurators.
+- **Template E is Kfz-only**: Don't apply it to other products.
+- **Binary <36 Startbonus**: Check for this in every product — it appeared in 2/10 so far.
+- **Kfz demo needs rebuild**: The existing kfz-v2 demo uses the U-curve model which is completely wrong.
+- **Tierkranken demo**: Flag as generic/unverified in the demo UI.
+
+### Next batch proposal
+
+**Batch 5: Reise, Wohngebäude, BU**
+
+| Product | Why | Key question |
+|---------|-----|-------------|
+| Reise | Unconfirmed — may be Template A or something new. Travel products are unique (per-trip vs annual). | Is it per-trip pricing or annual? Does age affect price? |
+| Wohngebäude | Property product — may use Template C like Hausrat, or something different. | Does it use additive tiers like Hausrat? Per-m² model? |
+| BU | The only Template A product we haven't verified. High complexity (occupation, health). | Is the occupation model a simple multiplier or more complex? Is health underwriting modeled? |
+
+**Remaining unresearched products**: Cyber, Krankentagegeld, Motorrad
+
+**Methodology adjustments for batch 5:**
+- Quick URL existence check before dispatching agents
+- Check for binary <36 Startbonus in all products
+- For property products (Wohngebäude), expect Template C or additive tiers
+- For liability products, check for Baustein/Template D pattern
+- For person products with health underwriting (BU), expect complex wizard with many steps

@@ -1,0 +1,696 @@
+{
+  "metadata": {
+    "product": "Kfz-Versicherung",
+    "calculator_url": "https://www.ergo.de/de/Produkte/KFZ-Versicherung/Autoversicherung/abschluss",
+    "collected_date": "2026-04-13",
+    "vehicle": {
+      "make": "VW",
+      "model": "Golf VIII",
+      "variant": "Golf 1.5 TSI OPF",
+      "fuel": "Benzin/Super",
+      "category": "Limousine",
+      "power": "131 PS (96 KW)",
+      "hsn_tsn": "0603/CKM",
+      "baujahr": "2019-2022",
+      "erstzulassung": "01.06.2020"
+    },
+    "defaults": {
+      "contract_type": "Versicherer wechseln",
+      "berufsgruppe": "Sonstige (Standard)",
+      "nutzung": "Ueberwiegend privat",
+      "finanzierung": "Nein",
+      "saisonkennzeichen": "Nein",
+      "fahrer": "Versicherungsnehmer",
+      "fahrzeughalter": "Versicherungsnehmer",
+      "bereits_ergo": "Nein",
+      "sf_quelle": "Vorvertrag"
+    },
+    "tiers": ["Smart", "Best"],
+    "tier_descriptions": {
+      "Smart": "Staerkere Rueckstufung im Schadenfall",
+      "Best": "Normale Rueckstufung im Schadenfall"
+    },
+    "coverage_types": ["Haftpflicht ohne Kasko", "Haftpflicht & Teilkasko", "Haftpflicht & Vollkasko"],
+    "sf_tables": {
+      "haftpflicht": {
+        "SF 0": 86, "SF 0.5": 66, "SF 1": 53, "SF 2": 50, "SF 3": 47, "SF 4": 44,
+        "SF 5": 42, "SF 6": 40, "SF 7": 38, "SF 8": 36, "SF 9": 35, "SF 10": 33,
+        "SF 11": 32, "SF 12": 31, "SF 13": 30, "SF 14": 29, "SF 15": 28, "SF 16": 27,
+        "SF 17": 26, "SF 18": 26, "SF 19": 25, "SF 20": 24, "SF 21": 24, "SF 22": 23,
+        "SF 23": 23, "SF 24": 22, "SF 25": 22, "SF 26": 21, "SF 27": 21, "SF 28": 21,
+        "SF 29": 20, "SF 30": 20, "SF 31": 19, "SF 32": 19, "SF 33": 19, "SF 34": 18,
+        "SF 35": 18, "SF 36": 18, "SF 37": 18, "SF 38": 17, "SF 39": 17, "SF 40": 17,
+        "SF 41": 17, "SF 42": 16, "SF 43": 16, "SF 44": 16, "SF 45": 16, "SF 46": 16,
+        "SF 47": 16, "SF 48": 15, "SF 49": 15, "SF 50+": 15
+      },
+      "vollkasko": {
+        "SF 0": 54, "SF 0.5": 49, "SF 1": 44, "SF 2": 42, "SF 3": 41, "SF 4": 39,
+        "SF 5": 38, "SF 6": 37, "SF 7": 36, "SF 8": 34, "SF 9": 33, "SF 10": 33,
+        "SF 11": 32, "SF 12": 31, "SF 13": 30, "SF 14": 29, "SF 15": 28, "SF 16": 28,
+        "SF 17": 27, "SF 18": 27, "SF 19": 26, "SF 20": 25, "SF 21": 25, "SF 22": 24,
+        "SF 23": 24, "SF 24": 23, "SF 25": 23, "SF 26": 23, "SF 27": 22, "SF 28": 22,
+        "SF 29": 21, "SF 30": 21, "SF 31": 21, "SF 32": 20, "SF 33": 20, "SF 34": 20,
+        "SF 35": 19, "SF 36": 19, "SF 37": 19, "SF 38": 19, "SF 39": 18, "SF 40": 18,
+        "SF 41": 18, "SF 42": 18, "SF 43": 17, "SF 44": 17, "SF 45": 17, "SF 46": 17,
+        "SF 47": 16, "SF 48": 16, "SF 49": 16, "SF 50+": 15
+      }
+    }
+  },
+  "data_points": [
+    {
+      "id": 1,
+      "description": "Baseline - Muenchen, age 36, SF 10, 12k km, Vollkasko VK500/TK150, annual",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "city": "Muenchen",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "jaehrlich"
+      },
+      "results": {
+        "regionalklasse_hp": 10,
+        "regionalklasse_vk": 7,
+        "smart_total": 986.02,
+        "best_total": 1262.87,
+        "smart_hp": 304.64,
+        "best_hp": 339.17,
+        "smart_vk": 681.38,
+        "best_vk": 904.40
+      }
+    },
+    {
+      "id": 2,
+      "description": "Baseline monthly - same as dp1 but monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "city": "Muenchen",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "regionalklasse_hp": 10,
+        "regionalklasse_vk": 7,
+        "smart_total": 78.97,
+        "best_total": 100.73,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      }
+    },
+    {
+      "id": 3,
+      "description": "VK SF 0 - monthly, Muenchen",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 0,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 126.85,
+        "best_total": 164.26,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 99.63,
+        "best_vk": 132.22
+      }
+    },
+    {
+      "id": 4,
+      "description": "VK SF 1 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 1,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 96.22,
+        "best_total": 123.62,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 69.00,
+        "best_vk": 91.58
+      }
+    },
+    {
+      "id": 5,
+      "description": "VK SF 3 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 3,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 91.52,
+        "best_total": 117.37,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 64.30,
+        "best_vk": 85.33
+      }
+    },
+    {
+      "id": 6,
+      "description": "VK SF 5 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 5,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 97.32,
+        "best_total": 125.09,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 70.10,
+        "best_vk": 93.05
+      }
+    },
+    {
+      "id": 7,
+      "description": "VK SF 7 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 7,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 83.67,
+        "best_total": 106.97,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 56.45,
+        "best_vk": 74.93
+      }
+    },
+    {
+      "id": 8,
+      "description": "VK SF 10 - monthly (same as dp2)",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 78.97,
+        "best_total": 100.73,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      }
+    },
+    {
+      "id": 9,
+      "description": "VK SF 15 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 15,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 71.13,
+        "best_total": 90.31,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 43.91,
+        "best_vk": 58.27
+      }
+    },
+    {
+      "id": 10,
+      "description": "VK SF 20 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 20,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 73.34,
+        "best_total": 93.25,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 46.12,
+        "best_vk": 61.21
+      }
+    },
+    {
+      "id": 11,
+      "description": "VK SF 25 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 25,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 63.29,
+        "best_total": 79.91,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 36.07,
+        "best_vk": 47.87
+      }
+    },
+    {
+      "id": 12,
+      "description": "VK SF 30 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 30,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 60.15,
+        "best_total": 75.75,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 32.93,
+        "best_vk": 43.71
+      }
+    },
+    {
+      "id": 13,
+      "description": "VK SF 35 - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 35,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 62.28,
+        "best_total": 78.57,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 35.06,
+        "best_vk": 46.53
+      }
+    },
+    {
+      "id": 14,
+      "description": "VK SF 50+ - monthly",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 50,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 54.89,
+        "best_total": 68.80,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 27.67,
+        "best_vk": 36.76
+      }
+    },
+    {
+      "id": 15,
+      "description": "Teilkasko - monthly, SF 10 HP, Muenchen",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": null,
+        "coverage": "Haftpflicht & Teilkasko",
+        "sb": "TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 51.72,
+        "best_total": 66.91,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_tk": 24.50,
+        "best_tk": 34.87
+      }
+    },
+    {
+      "id": 16,
+      "description": "Haftpflicht only - monthly, SF 10 HP, Muenchen",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": null,
+        "coverage": "Haftpflicht ohne Kasko",
+        "sb": null,
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 27.22,
+        "best_total": 32.04,
+        "smart_hp": 27.22,
+        "best_hp": 30.31
+      },
+      "notes": "Best total (32.04) > Best HP (30.31) suggests ~1.73 EUR/month add-on premium in Best"
+    },
+    {
+      "id": 17,
+      "description": "HP SF 0 - monthly, VK SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 0,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 122.69,
+        "best_total": 149.39,
+        "smart_hp": 70.94,
+        "best_hp": 78.97,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      }
+    },
+    {
+      "id": 18,
+      "description": "HP SF 20 - monthly, VK SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 20,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 71.54,
+        "best_total": 92.46,
+        "smart_hp": 19.79,
+        "best_hp": 22.04,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      }
+    },
+    {
+      "id": 19,
+      "description": "HP SF 35 - monthly, VK SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 35,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 66.60,
+        "best_total": 86.95,
+        "smart_hp": 14.85,
+        "best_hp": 16.53,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      }
+    },
+    {
+      "id": 20,
+      "description": "Age 66 (born 1960) - monthly, otherwise same as baseline",
+      "params": {
+        "birth_year": 1960,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 78.97,
+        "best_total": 100.73,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      },
+      "notes": "IDENTICAL to age 36 - age has NO effect on pricing"
+    },
+    {
+      "id": 21,
+      "description": "Age 26 (born 2000) - monthly, otherwise same as baseline",
+      "params": {
+        "birth_year": 2000,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 78.97,
+        "best_total": 100.73,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 51.75,
+        "best_vk": 68.69
+      },
+      "notes": "IDENTICAL to age 36 and 66 - age has NO effect on pricing"
+    },
+    {
+      "id": 22,
+      "description": "Koeln (50667) - monthly, SF 10, 12k km",
+      "params": {
+        "birth_year": 1990,
+        "plz": "50667",
+        "city": "Koeln",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "regionalklasse_hp": 10,
+        "regionalklasse_vk": 7,
+        "smart_total": 80.44,
+        "best_total": 102.59,
+        "smart_hp": 27.62,
+        "best_hp": 30.75,
+        "smart_vk": 52.82,
+        "best_vk": 70.11
+      },
+      "notes": "Same Regionalklassen as Muenchen but slightly different prices - suggests sub-regional factor"
+    },
+    {
+      "id": 23,
+      "description": "Berlin (10117) - monthly, SF 10, 12k km",
+      "params": {
+        "birth_year": 1990,
+        "plz": "10117",
+        "city": "Berlin",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "regionalklasse_hp": 12,
+        "regionalklasse_vk": 9,
+        "smart_total": 95.49,
+        "best_total": 121.56,
+        "smart_hp": 32.25,
+        "best_hp": 35.90,
+        "smart_vk": 63.24,
+        "best_vk": 83.93
+      },
+      "notes": "Higher Regionalklassen than Muenchen - Berlin much more expensive"
+    },
+    {
+      "id": 24,
+      "description": "6000km mileage - monthly, Muenchen, SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 6,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "regionalklasse_hp": 10,
+        "regionalklasse_vk": 7,
+        "smart_total": 65.87,
+        "best_total": 84.00,
+        "smart_hp": 24.12,
+        "best_hp": 26.85,
+        "smart_vk": 41.75,
+        "best_vk": 55.42
+      }
+    },
+    {
+      "id": 25,
+      "description": "20000km mileage - monthly, Muenchen, SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 20,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 500 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "regionalklasse_hp": 10,
+        "regionalklasse_vk": 7,
+        "smart_total": 100.25,
+        "best_total": 128.14,
+        "smart_hp": 31.04,
+        "best_hp": 34.55,
+        "smart_vk": 69.21,
+        "best_vk": 91.86
+      }
+    },
+    {
+      "id": 26,
+      "description": "SB VK ohne / TK ohne - monthly, Muenchen, SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK ohne / TK ohne",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 112.83,
+        "best_total": 145.66,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 85.61,
+        "best_vk": 113.62
+      }
+    },
+    {
+      "id": 27,
+      "description": "SB VK 300 / TK 150 - monthly, Muenchen, SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 300 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 82.60,
+        "best_total": 105.55,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 55.38,
+        "best_vk": 73.51
+      }
+    },
+    {
+      "id": 28,
+      "description": "SB VK 1000 / TK 150 - monthly, Muenchen, SF 10",
+      "params": {
+        "birth_year": 1990,
+        "plz": "80331",
+        "mileage_k": 12,
+        "hp_sf": 10,
+        "vk_sf": 10,
+        "coverage": "Haftpflicht & Vollkasko",
+        "sb": "VK 1000 / TK 150",
+        "zahlweise": "monatlich"
+      },
+      "results": {
+        "smart_total": 71.89,
+        "best_total": 91.34,
+        "smart_hp": 27.22,
+        "best_hp": 30.31,
+        "smart_vk": 44.67,
+        "best_vk": 59.30
+      }
+    }
+  ]
+}

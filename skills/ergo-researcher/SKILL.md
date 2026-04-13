@@ -173,51 +173,62 @@ Run the full feedback cycle for the overall research effort:
 
 ## Accumulated learnings (read before every run)
 
-Discovered across 7 products (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz). Apply from the start — don't rediscover them.
+Discovered across 10 products (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz, Haftpflicht, Kfz, Tierkranken). Apply from the start — don't rediscover them.
 
 ### The most important lesson
 
-Our original assumption — "every tariff uses the same formula, only parameters change" — was wrong. ERGO uses at least 5 distinct pricing architectures. **Do not predict the template before researching.** Let the agent discover which model the product uses. Every product we researched had structural surprises; in batch 3, 0/3 template predictions were correct.
+Our original assumption — "every tariff uses the same formula, only parameters change" — was wrong. ERGO uses at least 6 distinct pricing architectures. **Do not predict the template before researching.** Let the agent discover which model the product uses. Every product we researched had structural surprises; prediction accuracy across batches 3 and 4 was 0/6.
 
 ### Structural patterns
 
 **Tier structure (never assume 3 tiers):**
 1. Some products have 3 tiers: Sterbegeld (Grundschutz/Komfort/Premium), Unfall (Basic/Smart/Best)
-2. Some have 2 tiers: Hausrat (Smart/Best), Rechtsschutz (Smart/Best)
-3. Some have NO tiers — they're separate products: Pflegezusatz has PTG (age-dependent), PZU (fixed €29.70/€59.40), KFP (fixed €25.72). These look like "tiers" from outside but are actually independent products with different calculators.
+2. Some have 2 tiers: Hausrat (Smart/Best), Rechtsschutz (Smart/Best), Haftpflicht (Smart/Best), Kfz (Smart/Best)
+3. Some have NO tiers — they're separate products: Pflegezusatz has PTG (age-dependent), PZU (fixed €29.70/€59.40), KFP (fixed €25.72).
 4. Tier names are product-specific — not always Grundschutz/Komfort/Premium. Keep ERGO's names.
+5. **2 tiers is the most common**: 4/10 products have exactly 2 tiers (Smart/Best). Only 2/10 have 3 tiers.
 
 **Age pricing (never assume polynomial):**
-5. Some products have NO age-based pricing: Rechtsschutz (flat, with under-25 youth discount)
-6. Some use a binary step function: Unfall (1.0× under-65, 2.0× at 65+)
-7. Some use age bands: Zahnzusatz (6 flat bands), Unfall (2 bands)
-8. Some are exponential: Risikoleben (~doubling per 8 years), Pflegezusatz (~5.4%/year growth)
-9. Some are cubic: Sterbegeld (R²=0.997 cubic vs 0.978 quadratic)
+6. Some products have NO age-based pricing at all: Kfz (zero effect, verified at 3 ages)
+7. Some have binary Startbonus: Haftpflicht (<36 = ×0.87), Hausrat (<36 = ×0.87) — note: same threshold and discount!
+8. Rechtsschutz has flat pricing with under-25 youth discount
+9. Some use a binary step function: Unfall (1.0× under-65, 2.0× at 65+)
+10. Some use age bands: Zahnzusatz (6 flat bands)
+11. Some are exponential: Risikoleben (~doubling per 8 years), Pflegezusatz (~5.4%/year growth)
+12. Some are cubic: Sterbegeld (R²=0.997 cubic vs 0.978 quadratic)
 
 **Coverage model (never assume a slider):**
-10. Some products have no coverage selection at all: Rechtsschutz (fixed by tier: Smart=€2M, Best=unlimited)
-11. Some derive coverage from another input: Hausrat (650 EUR/m² × m²)
-12. Some use EUR/day, not EUR/month: Pflegezusatz (€5-€160/day)
-13. Some have additive module pricing: Rechtsschutz (Privat/Beruf/Wohnen/Verkehr toggles sum additively)
+13. Many products have no coverage selection at all: Rechtsschutz (fixed by tier), Haftpflicht (fixed by tier: Smart=€10M, Best=€50M), Kfz (vehicle-specific)
+14. Some derive coverage from another input: Hausrat (650 EUR/m² × m²)
+15. Some use EUR/day, not EUR/month: Pflegezusatz (€5-€160/day)
+16. Some have additive module pricing: Rechtsschutz (4 Bausteine), Haftpflicht (5 Bausteine)
+
+**Kfz-specific patterns:**
+17. **Kfz uses a unique additive component model**: price = HP × SF% + VK × SF% + addon. NO other product works this way.
+18. **Separate SF lookup tables** for Haftpflicht (86%→15%) and Vollkasko (54%→15%), 51 levels each.
+19. **Vehicle identification via HSN/TSN** — cascading dropdowns (Hersteller → Modell → Kraftstoff → Kategorie → Leistung).
+20. **Mileage and region are significant price drivers** in Kfz — not modeled in other products.
 
 **Other patterns:**
-14. **Beitragstabelle is Zahnzusatz-only** — 6 other products didn't have one. Check in 10 seconds but don't count on it.
-15. **Fixed fee components exist** — Sterbegeld ~€1.80/month, Risikoleben ~€0.91/month independent of coverage.
-16. **Risk multipliers can be age-dependent** — Risikoleben smoker: 1.87× (age 25) to 3.92× (age 50). Always sample at 3+ ages.
-17. **Calculator URL pattern**: Usually product page + `/abschluss`, but Pflegezusatz uses `/abschluss-tagegeld`.
-18. **Calculators vary structurally**: Multi-step wizards (Sterbegeld 4 steps, Risikoleben 8 steps, Unfall 6 steps), single-page configurators (Pflegezusatz: 2 dropdowns), tabbed configurators with live pricing (Rechtsschutz, Hausrat).
-19. **DKV branding**: Some ERGO Group products use subsidiary brands (Pflegezusatz → DKV). Watch for different UX patterns.
-20. **16 data points can be enough** if the model is simple (binary step + linear coverage). Don't over-sample — Sterbegeld's 160 points was overkill.
+21. **Beitragstabelle is Zahnzusatz-only** — 9 other products didn't have one.
+22. **Fixed fee components exist** — Sterbegeld ~€1.80/month, Risikoleben ~€0.91/month, Kfz Best tier addon ~€1.73/month.
+23. **Risk multipliers can be age-dependent** — Risikoleben smoker: 1.87× (age 25) to 3.92× (age 50). Haftpflicht family multipliers are tier-dependent (Smart ×1.50 vs Best ×1.29 for Familie).
+24. **Calculator URL pattern**: Usually product page + `/abschluss`, but Pflegezusatz uses `/abschluss-tagegeld`, Haftpflicht is under `/Privathaftpflichtversicherung/abschluss`.
+25. **Calculators vary structurally**: Multi-step wizards, single-page configurators, tabbed configurators with live pricing (Rechtsschutz, Hausrat, Haftpflicht).
+26. **DKV branding**: Pflegezusatz → DKV. Watch for different UX patterns.
+27. **Some products have NO online calculator**: Tierkranken is agent-only — no product page on ergo.de.
+28. **16-32 data points is often enough** — Unfall needed 16, Haftpflicht 32, Kfz 28. Don't over-sample.
 
-### Pricing model selection (5 templates)
+### Pricing model selection (6 templates)
 
 Do not choose the template before Phase B. Let fit_pricing.py try all models and pick the best fit.
 
-- **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers. Products: BU, Zahnzusatz, Tierkranken, Kfz, etc.
+- **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers. Products: BU, Zahnzusatz.
 - **Template A+step** (step-function): Discrete age bands with sharp transitions. Product: Unfall (binary 1.0×/2.0× at age 65).
 - **Template B** (lookup table): Exponential/steep age curve (quadratic R² < 0.96), or age-dependent risk multipliers. Products: Risikoleben, Sterbegeld, Pflegezusatz.
 - **Template C** (property/additive): Per-m² or per-unit pricing with additive tier difference. Product: Hausrat.
-- **Template D** (flat-rate configurator): No age curve, no coverage slider, additive module/Baustein toggles. Product: Rechtsschutz.
+- **Template D** (flat-rate configurator): No age curve, no coverage slider, additive module/Baustein toggles. Products: Rechtsschutz, Haftpflicht.
+- **Template E** (Kfz-specific): Additive HP+VK components with separate SF lookup tables, no age curve. Product: Kfz.
 
 ### Navigation patterns
 - Most ERGO calculators use React SPAs at `#/step-name` URL fragments

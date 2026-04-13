@@ -1,0 +1,148 @@
+{
+  "product": "haftpflicht",
+  "template": "D",
+  "template_name": "flat-rate configurator with additive Bausteine",
+  "confidence": "HIGH",
+  "tiers": {
+    "count": 2,
+    "ergo_names": [
+      "Smart",
+      "Best"
+    ],
+    "our_mapping": {
+      "Smart": "grundschutz",
+      "Best": "premium"
+    },
+    "coverage": {
+      "Smart": "10 Mio. EUR",
+      "Best": "50 Mio. EUR"
+    },
+    "coverage_slider": false
+  },
+  "age_model": {
+    "type": "binary_band",
+    "description": "No continuous age curve. Binary: <36 years at start → 13% Startbonus, >=36 → flat rate",
+    "startbonus_threshold": 36,
+    "startbonus_discount": 0.13,
+    "startbonus_multiplier": 0.87
+  },
+  "family_status": {
+    "options": [
+      "single",
+      "alleinerziehend",
+      "paar",
+      "familie"
+    ],
+    "notes": "Alleinerziehend and Paar have identical pricing. 4 options map to 3 risk classes.",
+    "risk_classes": {
+      "single": {
+        "smart_base_monthly": 6.05,
+        "best_base_monthly": 10.58,
+        "smart_multiplier_vs_single": 1.0,
+        "best_multiplier_vs_single": 1.0
+      },
+      "paar_or_alleinerziehend": {
+        "smart_base_monthly": 7.56,
+        "best_base_monthly": 12.09,
+        "smart_multiplier_vs_single": 1.25,
+        "best_multiplier_vs_single": 1.143
+      },
+      "familie": {
+        "smart_base_monthly": 9.07,
+        "best_base_monthly": 13.6,
+        "smart_multiplier_vs_single": 1.499,
+        "best_multiplier_vs_single": 1.285
+      }
+    },
+    "multiplier_note": "Family status multipliers differ between Smart and Best, suggesting the family surcharge is additive to the base tier rather than purely multiplicative"
+  },
+  "bausteine": {
+    "description": "5 toggleable modules, additive pricing",
+    "modules": {
+      "Schlüsselverlust": {
+        "add_monthly_single_smart": 1.21,
+        "best_default": true,
+        "smart_default": false
+      },
+      "Neuwertentschädigung": {
+        "add_monthly_single_smart": 1.21,
+        "best_default": true,
+        "smart_default": false
+      },
+      "Forderungsausfall": {
+        "add_monthly_single_smart": 1.21,
+        "best_default": true,
+        "smart_default": false
+      },
+      "Amts- und Diensthaftpflicht": {
+        "add_monthly_single_smart": 1.93,
+        "add_monthly_single_best": 1.94,
+        "best_default": false,
+        "smart_default": false
+      },
+      "Alleinstehende Familienangehörige": {
+        "add_monthly": 0.0,
+        "best_default": false,
+        "smart_default": false,
+        "note": "Free add-on, no price impact"
+      }
+    },
+    "additivity_verified": true,
+    "additivity_error": "< 0.02 EUR (rounding)"
+  },
+  "selbstbeteiligung": {
+    "options": [
+      "ohne",
+      "150 EUR"
+    ],
+    "default": "ohne",
+    "smart_discount_pct": 20.0,
+    "best_discount_pct": 13.1,
+    "note": "Discount percentage differs by tier, suggesting SB reduces a base component only"
+  },
+  "vertragslaufzeit": {
+    "options": [
+      "1 Jahr",
+      "3 Jahre"
+    ],
+    "default": "3 Jahre",
+    "one_year_surcharge_pct": 11.1,
+    "three_year_is_base": true
+  },
+  "zahlungsweise": {
+    "options": [
+      "monatlich",
+      "vierteljährlich",
+      "halbjährlich",
+      "jährlich"
+    ],
+    "default": "monatlich",
+    "annual_base_eur": 68.46,
+    "surcharges": {
+      "jährlich": 0.0,
+      "halbjährlich": 3.0,
+      "vierteljährlich": 5.0,
+      "monatlich": 6.0
+    },
+    "surcharge_unit": "percent_vs_annual"
+  },
+  "base_rates_monthly_3yr_ohne_sb": {
+    "description": "Base monthly prices (3-year contract, ohne SB, monatlich payment)",
+    "single": {
+      "Smart": 6.05,
+      "Best": 10.58
+    },
+    "paar": {
+      "Smart": 7.56,
+      "Best": 12.09
+    },
+    "alleinerziehend": {
+      "Smart": 7.56,
+      "Best": 12.09
+    },
+    "familie": {
+      "Smart": 9.07,
+      "Best": 13.6
+    }
+  }
+}

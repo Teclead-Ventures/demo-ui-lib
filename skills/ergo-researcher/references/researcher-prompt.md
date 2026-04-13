@@ -209,12 +209,13 @@ The script should:
 10. Derive base rates per tier (price at reference age / units)
 11. Output results as JSON to `research/{{PRODUCT_ID}}/fit_results.json`
 
-**Template selection** (include in output — 5 options):
+**Template selection** (include in output — 6 options):
 - **Template A** (polynomial): Quadratic R² > 0.96, constant tier multipliers, coverage-proportional
 - **Template A+step** (step function): Discrete age bands with sharp threshold (e.g., 1.0×/2.0× at age 65)
 - **Template B** (lookup table): Quadratic R² < 0.96, or risk multipliers age-dependent, or exponential growth
 - **Template C** (property/additive): Additive tier difference, per-m² or regional pricing
 - **Template D** (flat-rate configurator): No age curve, no coverage slider, additive Baustein/module toggles
+- **Template E** (Kfz-specific): Additive components (HP+VK) with separate SF lookup tables, no age curve
 
 Use `/tmp/ergo-research-venv/bin/python3` (numpy already available in venv).
 

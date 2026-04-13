@@ -207,26 +207,60 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 | **ID** | privathaftpflicht |
 | **Category** | liability |
 | **Insured event** | third-party damage (personal injury, property damage, financial loss) |
-| **Age range** | 18–99 |
-| **Coverage** | €1M–€50M, step €5M, default €10M |
-| **Coverage unit** | flat rate (coverage amount affects payout cap, not premium much) |
-| **Risk class** | Family status: Single (1.0), Familie (1.35), Single mit Kind (1.20) |
-| **Payment duration** | Annual renewal |
+| **Age range** | 18+ (binary: under-36 gets 13% Startbonus) |
+| **Coverage** | Fixed by tier: Smart = €10M, Best = €50M. No user-selectable coverage. |
+| **Coverage unit** | flat rate (no user-selectable coverage; Smart=€10M cap, Best=€50M) |
+| **Risk class** | None (family status affects base rate directly, not as uniform multiplier) |
+| **Payment duration** | 1 year or 3 years (3yr = ~10% discount) |
 | **Waiting period** | None |
 
-**Base rates** (flat/month, coverageUnit=defaultCoverage so units=1): Grundschutz €4.10, Komfort €5.00, Premium €6.15
-**Age curve**: base=1.0, linear=0.0, quadratic=0.0 (flat)
-**Loading**: 20%
-**Calibration**: Single, €10M, Komfort → ~€6/month ✓
+**Note — Only 2 tiers**: ERGO Haftpflicht has 2 tiers (Smart/Best), NOT 3.
 
-**Tiers**:
-- **Grundschutz**: €1M Deckung, Personenschäden, Sachschäden, Selbstbeteiligung €150
-- **Komfort**: €10M Deckung, + Schlüsselverlust, Gefälligkeitsschäden, Mietsachschäden, SB €0
-- **Premium**: €50M Deckung, + Internetschäden, Drohnen, Ehrenamt, weltweiter Schutz, Forderungsausfalldeckung
+**Pricing model: Template D** (flat-rate additive configurator — no age curve, no coverage slider, additive Baustein modules)
 
-**Wizard steps**: Family status → Coverage sum → Plan selection → Personal data → Summary
+**Base rates** (monthly, 3yr contract, ohne SB, age ≥36):
 
-**Form fields**: familyStatus (segmented: Single/Familie/Single mit Kind), coverageAmount (slider), plan, salutation, firstName, lastName, street, zip, city
+| Family Status | Smart | Best |
+|---------------|-------|------|
+| Single | €6.05 | €10.58 |
+| Paar / Alleinerziehend | €7.56 | €12.09 |
+| Familie | €9.07 | €13.60 |
+
+**Family status multipliers** (tier-dependent, NOT uniform):
+- Single: 1.0 (both tiers)
+- Paar/Alleinerziehend: Smart ×1.25, Best ×1.14
+- Familie: Smart ×1.50, Best ×1.29
+
+**Baustein base rates** (additive, monthly, Single/Smart reference):
+
+| Baustein | Smart | Best | Default |
+|----------|-------|------|---------|
+| Schlüsselverlust | +€1.21 | included | Best: on, Smart: off |
+| Neuwertentschädigung | +€1.21 | included | Best: on, Smart: off |
+| Forderungsausfall | +€1.21 | included | Best: on, Smart: off |
+| Amts- und Diensthaftpflicht | +€1.93 | +€1.94 | off |
+| Alleinstehende Familienangehörige | +€0.00 | +€0.00 | off (free) |
+
+**Age curve**: NONE. Binary band: under 36 = ×0.87 (13% Startbonus), 36+ = ×1.0
+**SB discount**: ohne = ×1.0, €150 SB = Smart ×0.80 / Best ×0.869
+**Contract duration**: 3yr = ×1.0 (base), 1yr = ×1.111 (+11.1%)
+**Payment mode**: jährlich = ×1.0, halbjährlich = ×1.03, vierteljährlich = ×1.05, monatlich = ×1.06
+**Loading**: Built into base rates
+**Calibration**: Single, Smart, 3yr, ohne SB, monatlich, age ≥36 → €6.05/month ✓
+**Calibration**: Single, Best, 3yr, ohne SB, monatlich, age <36 → Startbonus advertised "ab €5.26" ✓
+
+**Tiers** (ERGO names: Smart / Best):
+- **Smart** (→ grundschutz): Versicherungssumme €10M, Personenschäden, Sachschäden, Vermögensschäden, Mietsachschäden, stärkere Rückstufung im Schadenfall
+- **Best** (→ komfort): Versicherungssumme €50M, + Schlüsselverlust, Neuwertentschädigung, Forderungsausfalldeckung inkl., normale Rückstufung, Internetschäden, Drohnen, Ehrenamt, weltweiter Schutz
+
+**Wizard steps**: Lebenssituation (Single/Alleinerziehend/Paar/Familie) → Versicherungsbeginn → Geburtsdatum → Beitrag/Configurator (tier tabs, Bausteine toggles, SB, Laufzeit, Zahlweise)
+
+**Form fields**: familyStatus (radio tiles: Single/Alleinerziehend/Paar/Familie), insuranceStart (radio: Morgen/Nächsten Monat/Anderes Datum), birthDate (spinbutton: Tag/Monat/Jahr), plan (tabs: Smart/Best), bausteine (checkboxes: Schlüsselverlust/Neuwertentschädigung/Forderungsausfall/Amts-Diensthaftpflicht/Alleinstehende Familienangehörige), selbstbeteiligung (dropdown: ohne/€150), vertragslaufzeit (dropdown: 1/3 Jahre), zahlweise (dropdown: monatlich/vierteljährlich/halbjährlich/jährlich)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/haftpflicht/screenshots/, research/haftpflicht/price-matrix.json
+**Confidence**: HIGH (32 data points, Baustein additivity verified <€0.02 error)
+**Discrepancies from previous entry**: Only 2 tiers (was 3). Coverage fixed by tier (was €1M-€50M slider). Template D not A. Family multipliers tier-dependent (was uniform 1.0/1.35/1.20). Binary age band <36 (was flat). 5 additive Bausteine (not modeled before). SB and contract duration factors discovered.
 
 ---
 
@@ -470,27 +504,37 @@ Full per-year rates for ages 20-99 available in research/pflegezusatz/products-e
 | **Category** | animal |
 | **Insured event** | veterinary treatment for illness/accident |
 | **Age range** | 0–10 (pet age in years) |
-| **Coverage** | €1.000–€20.000/year vet budget, step €1.000, default €5.000 |
-| **Coverage unit** | per €1.000/year |
-| **Risk class** | Species: Hund (1.0), Katze (0.75), Pferd (2.50) |
+| **Coverage** | Fixed (no annual limit) — no coverage slider |
+| **Coverage unit** | N/A (flat monthly premium) |
+| **Risk class** | Species: Hund only (Katze and Pferd NOT offered by ERGO) |
 | **Payment duration** | Ongoing |
-| **Waiting period** | Grundschutz: 3 months, Komfort: 1 month, Premium: none |
+| **Waiting period** | 30 days (all variants) |
 
-**Base rates** (per €1k/year): Grundschutz €6.62, Komfort €8.07, Premium €9.93
-**Age curve**: base=0.60, linear=0.10, quadratic=0.90 (steep increase after age 7-8)
-**Loading**: 22%
-**Calibration**: Dog age 3, €5k budget, Komfort → ~€35/month ✓
+**⚠ NO ONLINE CALCULATOR**: ERGO does not sell Tierkrankenversicherung online. No product page exists on ergo.de. This is an agent-only product, and ERGO agents may sell third-party products (HanseMerkur, Uelzener, Helvetia) rather than an ERGO-underwritten product. **All pricing data below is UNVERIFIED.**
 
-**Tiers**:
-- **Grundschutz**: OP-Schutz only, 3-month waiting, SB 20%, bis 2× GOT
-- **Komfort**: Krankenvollschutz, 1-month waiting, SB 10%, bis 3× GOT, Impfungen
-- **Premium**: Krankenvollschutz, no waiting, SB 0%, bis 4× GOT, Kastration, Zahnpflege, Auslandsschutz
+**Note — Single tariff, not 3 tiers**: ERGO's Hunde-Krankenversicherung appears to be a single tariff with a GOT reimbursement level choice (1× or 2× GOT-Satz), not 3 tiers.
 
-**Wizard steps**: Animal type → Pet details (name, breed, age) → Coverage budget → Plan selection → Owner data → Summary
+**Base rates** (monthly, UNVERIFIED): GOT-1× ~€20/month, GOT-2× ~€30/month
+**Age curve**: Flat rate ages 0-4, then +5%/year exponential escalation from age 5 birthday
+**Loading**: Unknown
+**Calibration**: Cannot verify — no online calculator
 
-**Form fields**: animalType (segmented: Hund/Katze), petName (text), breed (select), petAge (number), chipNumber (text, optional), coverageAmount (slider), plan, salutation, firstName, lastName, street, zip, city
+**Tariff variants** (not tiers):
+- **GOT-1×**: Erstattung nach 1-fachem GOT-Satz, 30 Tage Wartezeit
+- **GOT-2×**: Erstattung nach 2-fachem GOT-Satz, 30 Tage Wartezeit
 
-**Note**: Age range label is "Alter des Tieres", not "Eintrittsalter". Age validation: pet must be under 10 for new policies.
+Both include: Ambulante + stationäre Behandlung (unbegrenzt), Operationen inkl. Medikamente/Röntgen/Verbandsmaterial, €100/Jahr Zuschuss für Impfungen/Wurmkuren/Ektoparasiten/Zahnsteinentfernung, Chipkosten bis €25, Kastrationszuschuss, Alternative Behandlungen (Homöopathie/Akupunktur), 6 Monate Auslandsschutz europaweit, Freie Tierklinik/Tierarztwahl
+
+**Wizard steps**: N/A — no online calculator. Agent-only product.
+
+**Form fields**: N/A
+
+**Note for demo**: The existing demo (tierkranken-v1) uses a fabricated 3-tier model with coverage slider and species multipliers. This works as a generic pet insurance demo but does NOT reflect ERGO's actual product. Consider flagging this in the demo UI or replacing with a generic-market model disclaimer.
+
+**Source**: Agent page descriptions + third-party review sites (NO calculator verification possible)
+**Evidence**: research/tierkranken/screenshots/ergo-produkte-overview.png
+**Confidence**: LOW (no online calculator, pricing unverified, product may not be ERGO-underwritten)
+**Discrepancies from previous entry**: Not 3 tiers — single tariff with GOT choice. No coverage slider (was €1k-€20k). Hund only (was Hund/Katze/Pferd). No online calculator (was assumed to exist). Exponential age escalation from age 5 (was quadratic). 30-day waiting (was 3mo/1mo/none by tier).
 
 ---
 
@@ -553,28 +597,88 @@ Full per-year rates for ages 20-99 available in research/pflegezusatz/products-e
 | Parameter | Value |
 |-----------|-------|
 | **ID** | kfz |
-| **Category** | property |
+| **Category** | motor |
 | **Insured event** | vehicle damage, liability, theft |
-| **Age range** | 18–99 |
-| **Coverage** | Haftpflicht (mandatory) + Teilkasko/Vollkasko optional |
-| **Coverage unit** | flat rate per vehicle class |
-| **Risk class** | Typklasse (vehicle model group, 1-35) + Schadenfreiheitsklasse (SF 0-35) |
-| **Payment duration** | Annual renewal |
+| **Age range** | 18+ (age does NOT affect pricing — collected for contract purposes only) |
+| **Coverage** | Haftpflicht (mandatory) + Teilkasko or Vollkasko (optional, mutually exclusive) |
+| **Coverage unit** | N/A (vehicle-specific, not user-selectable amount) |
+| **Risk class** | SF-Klasse (0–50+, 51 levels) — SEPARATE tables for Haftpflicht and Vollkasko |
+| **Payment duration** | 1 year renewable |
 | **Waiting period** | None |
 
-**Base rates** (flat/month, coverageUnit=1 so units=1): Grundschutz €28.77, Komfort €35.08, Premium €43.15
-**Age curve**: base=1.80, linear=−1.20, quadratic=0.50 (high for young drivers, drops, slight rise for elderly)
-**Loading**: 18%
-**Calibration**: 35yo, midsize, SF 10 (1.0×), Komfort → ~€65/month ✓
+**Note — Only 2 tiers**: ERGO Kfz has 2 tiers (Smart/Best), NOT 3. Smart = stärkere Rückstufung (harsher claim downgrade, lower price). Best = normale Rückstufung + add-ons.
 
-**Tiers**:
-- **Grundschutz**: Kfz-Haftpflicht only (gesetzlich vorgeschrieben), €100M Deckung
-- **Komfort**: + Teilkasko (Diebstahl, Glasbruch, Wildschaden, Hagel), SB €150
-- **Premium**: + Vollkasko (Eigenschaden, Vandalismus), Schutzbrief, Neuwertentschädigung 24 Monate, SB €0
+**Pricing model: Template E** (Kfz-specific additive component model — does NOT fit templates A-D)
 
-**Wizard steps**: Vehicle details → Driver info → SF-Klasse → Plan selection → Personal data → Summary
+**Pricing formula**: `monthlyPremium = HP_base × HP_SF_pct/100 + VK_base × VK_SF_pct/100 + tierAddon`
 
-**Form fields**: licensePlate (text), vehicleType (select), yearBuilt (number), annualMileage (select: <5k/5-10k/10-20k/>20k km), sfClass (slider 0-35), birthDate, driverAge (auto-calculated), plan, salutation, firstName, lastName, street, zip, city
+**Base rates** (monthly at 100% SF, VW Golf VIII, München, 12k km, SB VK500/TK150):
+
+| Component | Smart | Best |
+|-----------|-------|------|
+| HP base | €82.48 | €91.85 |
+| VK base | €156.82 | €208.15 |
+| TK (at SF10) | €24.50 | €34.87 |
+| Tier addon | €0 | €1.73 |
+
+**Coverage types** (primary product selector, not tiers):
+
+| Coverage | HP | TK | VK | Smart /mo | Best /mo |
+|----------|----|----|-----|-----------|----------|
+| Haftpflicht ohne Kasko | Yes | No | No | €27.22 | €32.04 |
+| Haftpflicht & Teilkasko | Yes | Yes | No | €51.72 | €66.91 |
+| Haftpflicht & Vollkasko | Yes | No | Yes | €78.97 | €100.73 |
+
+(All prices: SF 10, München, 12k km, VK500/TK150, monthly)
+
+**SF-Klasse lookup tables** (51 levels, percentages applied to base):
+
+HP SF: 0=86%, ½=66%, 1=53%, 2=50%, 3=47%, 4=44%, 5=42%, 6=40%, 7=38%, 8=36%, 9=35%, 10=33%, 11=32%, 12=31%, 13=30%, 14=29%, 15=28%, 16=27%, 17=26%, 18=26%, 19=25%, 20=24%, 21=24%, 22=23%, 23=23%, 24=22%, 25=22%, 26=21%, 27=21%, 28=21%, 29=20%, 30=20%, 31=19%, 32=19%, 33=19%, 34=18%, 35=18%, 36=18%, 37=18%, 38=17%, 39=17%, 40=17%, 41=17%, 42=16%, 43=16%, 44=16%, 45=16%, 46=16%, 47=16%, 48=15%, 49=15%, 50+=15%
+
+VK SF: 0=54%, ½=49%, 1=44%, 2=42%, 3=41%, 4=39%, 5=38%, 6=37%, 7=36%, 8=34%, 9=33%, 10=33%, 11=32%, 12=31%, 13=30%, 14=29%, 15=28%, 16=28%, 17=27%, 18=27%, 19=26%, 20=25%, 21=25%, 22=24%, 23=24%, 24=23%, 25=23%, 26=23%, 27=22%, 28=22%, 29=21%, 30=21%, 31=21%, 32=20%, 33=20%, 34=20%, 35=19%, 36=19%, 37=19%, 38=19%, 39=18%, 40=18%, 41=18%, 42=18%, 43=17%, 44=17%, 45=17%, 46=17%, 47=16%, 48=16%, 49=16%, 50+=15%
+
+**Age curve**: NONE. Zero effect on pricing (verified at ages 26, 36, 66 — identical prices).
+
+**Mileage impact** (relative to 12k km base, München, SF 10, Best):
+- 6k km: HP ×0.886, VK ×0.807
+- 12k km: ×1.0 (reference)
+- 20k km: HP ×1.140, VK ×1.337
+
+**Regional impact** (Regionalklasse determined by PLZ, separate for HP and VK):
+
+| City | PLZ | RK HP | RK VK | HP Best SF10 | VK Best SF10 |
+|------|-----|-------|-------|-------------|-------------|
+| München | 80331 | 10 | 7 | €30.31 | €68.69 |
+| Köln | 50667 | 10 | 7 | €30.75 | €70.11 |
+| Berlin | 10117 | 12 | 9 | €35.90 | €83.93 |
+
+**SB impact** (VK component, Best, SF10, monthly):
+
+| Selbstbeteiligung | VK Best | vs VK500 |
+|-------------------|---------|----------|
+| VK ohne / TK ohne | €113.62 | ×1.654 |
+| VK 300 / TK 150 | €73.51 | ×1.070 |
+| VK 500 / TK 150 | €68.69 | ×1.000 |
+| VK 1000 / TK 150 | €59.30 | ×0.863 |
+
+**Payment mode**: monatlich = base, jährlich = ×0.932 (7.2% monthly surcharge)
+**Loading**: Built into base rates
+**Calibration**: VW Golf VIII, München, 12k km, SF 10, VK500/TK150, Best, monthly → HP €30.31 + VK €68.69 + addon €1.73 = €100.73/month ✓
+
+**Tiers** (ERGO names: Smart / Best):
+- **Smart** (→ grundschutz): Stärkere Rückstufung im Schadenfall (lower price, harsher claim penalty)
+- **Best** (→ komfort): Normale Rückstufung, + Ersatzfahrzeug Plus, Wertschutz 36 Monate, Schutzbrief, Rabattschutz (optional), Mallorca-Police
+
+**Optional add-ons**: Werkstattbonus, Ersatzfahrzeug Plus (Best: included), Wertschutz 24/36 (Best: 36 included), Schutzbrief (Best: included), Rabattschutz (Best only), Safe Drive
+
+**Wizard steps**: Angaben (Vertragsart/Geburtsdatum/Berufsgruppe/Versicherungsbeginn) → Fahrzeugsuche (Hersteller/Modell/Kraftstoff/Kategorie/Leistung → HSN/TSN selection) → Fahrzeughalter (Halter/PLZ/Erstzulassung/Fahrer) → Fahrzeugnutzung (Fahrleistung/Nutzung/SF-Klasse HP+VK/Versicherungsschutz) → Tarifdaten (tier selection Smart/Best, SB, Zahlweise, add-ons)
+
+**Form fields**: vertragsart (radio: Versicherer wechseln/Fahrzeug wechseln/Erstvertrag), birthDate (spinbutton), berufsgruppe (dropdown: 6 options), versicherungsbeginn (date), hersteller (combobox), modell (combobox), kraftstoff (combobox), fahrzeugkategorie (combobox), leistung (combobox), fahrzeugVariante (radio table: specific HSN/TSN), fahrzeughalter (dropdown), plz (text), erstzulassung (date), letzteZulassung (date), fahrer (checkboxes: VN/Partner/Familie/Sonstige), fahrleistung (spinbutton: km/year), nutzung (radio: privat/geschäftlich), sfKlasseHP (dropdown: SF 0-50+), sfKlasseVK (dropdown: SF 0-50+), versicherungsschutz (dropdown: HP only/HP+TK/HP+VK), plan (tabs: Smart/Best), selbstbeteiligung (dropdown: 11 VK/TK combinations), zahlweise (dropdown), addOns (checkboxes)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/kfz/screenshots/, research/kfz/price-matrix.json
+**Confidence**: MEDIUM-HIGH (28 data points, SF model verified to sub-cent accuracy, only 1 vehicle tested)
+**Discrepancies from previous entry**: NO age curve (was U-curve 1.80/-1.20/0.50). Only 2 tiers (was 3). Additive HP+VK components (was flat rate per tier). SF-Klasse 0-50+ with 51 levels (was 0-35). Separate SF tables for HP and VK. Category "motor" not "property". Base rates completely different. Mileage and region are significant factors (not modeled before). Template E (new) not A.
 
 ---
 

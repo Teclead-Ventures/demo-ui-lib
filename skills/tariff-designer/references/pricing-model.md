@@ -1,12 +1,13 @@
 # Pricing Engine Model
 
-This document defines the pricing formulas used across insurance products. There are **5 pricing templates** depending on the product type:
+This document defines the pricing formulas used across insurance products. There are **6 pricing templates** depending on the product type:
 
 - **Template A** (polynomial): Person products with moderate age curves — `baseRate × units × ageFactor × riskClass × (1+loading)`
 - **Template A+step**: Variant of A with step-function age bands instead of polynomial — Unfall (binary 1.0×/2.0× at age 65)
 - **Template B** (lookup table): Products with exponential age curves — lookup + interpolation
 - **Template C** (property/additive): Property products (Hausrat) — `(rate × m² + tierFixedBase) × regionMult × factors`
-- **Template D** (flat-rate configurator): Products with no age curve and additive module pricing — Rechtsschutz
+- **Template D** (flat-rate configurator): Products with no age curve and additive module pricing — Rechtsschutz, Haftpflicht
+- **Template E** (Kfz-specific): Additive component model — `HP_base × HP_SF% + VK_base × VK_SF% + tierAddon`
 
 ## Template A: The Standard Formula
 
@@ -24,7 +25,7 @@ Where:
 - **paymentModeDiscount**: Monthly=1.0, Quarterly=0.98, Semi-annual=0.96, Annual=0.95
 - **loading**: Insurer's margin covering acquisition costs, admin, safety, profit. Typically 0.20–0.30.
 
-Products using Template A: BU, Zahnzusatz (age-band approximation, R²=0.997), Haftpflicht, Tierkranken, Reise, Kfz, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
+Products using Template A: BU, Zahnzusatz (age-band approximation, R²=0.997), Reise, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
 
 Products using Template A+step: Unfall (binary 1.0×/2.0× at age 65).
 
@@ -32,7 +33,11 @@ Products using Template B: Risikoleben, Sterbegeld, Pflegezusatz/PTG (exponentia
 
 Products using Template C: Hausrat.
 
-Products using Template D: Rechtsschutz (Baustein toggles, no age curve, no coverage slider).
+Products using Template D: Rechtsschutz (Baustein toggles, no age curve, no coverage slider), Haftpflicht (Baustein toggles, binary age <36 Startbonus, no coverage slider).
+
+Products using Template E: Kfz (additive HP+VK components, SF lookup tables, no age curve).
+
+Products with no online calculator: Tierkranken (agent-only, pricing unverified).
 
 ## Age Factor Calculation
 
@@ -63,8 +68,9 @@ function calculateAgeFactor(
 | Unfall | N/A | N/A | N/A | **Step function**: 1.0× (age <65), 2.0× (age ≥65) | Binary age band, not polynomial |
 | Krankentagegeld | 0.70 | 0.35 | 0.20 | Steady increase | Illness duration increases with age |
 | Hausrat | N/A | N/A | N/A | **Binary** (under-36: 0.87×, else 1.0) | ERGO uses 13% Startbonus for under-36, additive tier model, per-m² pricing |
-| Haftpflicht/Cyber | 1.00 | 0.00 | 0.00 | Flat | Not age-dependent |
-| Kfz | 1.80 | −1.20 | 0.50 | U-curve | Young drivers high risk, drops, slight rise for elderly |
+| Haftpflicht | N/A | N/A | N/A | **Binary band**: <36 = ×0.87 (Startbonus), 36+ = ×1.0 | Template D — no polynomial age curve |
+| Cyber | 1.00 | 0.00 | 0.00 | Flat | Not age-dependent |
+| Kfz | N/A | N/A | N/A | **NONE** — age has zero effect on pricing | Template E — SF-Klasse is the primary driver, not age |
 | Reise | 0.75 | 0.10 | 0.30 | Gentle U | Young adventurers + elderly travelers |
 
 ## Flat-Rate Products
@@ -73,9 +79,9 @@ Some products (Haftpflicht, Rechtsschutz, Kfz, Cyber) have flat-rate pricing whe
 
 | Product | coverageUnit | Why |
 |---------|-------------|-----|
-| Haftpflicht | = defaultCoverage (€10M) | Premium is flat, coverage just sets the liability cap |
+| Haftpflicht | N/A — uses Template D | No coverage unit; coverage fixed by tier (Smart=€10M, Best=€50M), pricing is per-Baustein toggle |
 | Rechtsschutz | N/A — uses Template D | No coverage unit; pricing is per-Baustein toggle, not per-coverage-amount |
-| Kfz | = 1 | Premium is per vehicle, not per coverage euro |
+| Kfz | N/A — uses Template E | No coverage unit; pricing is per-vehicle via HSN/TSN + SF-Klasse lookup |
 | Cyber | = defaultCoverage (€25k) | Premium is flat, coverage sets the max payout |
 | Zahnzusatz | = 1 (flat rate) | Tariff name (DS75/DS90/DS100) IS the coverage level (reimbursement %). No user-selectable coverage amount. |
 
@@ -415,6 +421,76 @@ export function calculateMonthlyPrice(
 }
 ```
 
+### Template E: Kfz-specific additive component model
+
+Used by: Kfz (additive HP+VK components, separate SF lookup tables, no age curve)
+
+```typescript
+// src/lib/data/pricing.ts — Template E (Kfz additive components)
+
+type KfzPlan = "smart" | "best";
+type CoverageType = "hp_only" | "hp_tk" | "hp_vk";
+
+// Base rates at 100% SF (VW Golf VIII reference, München, 12k km, VK500/TK150)
+const HP_BASE: Record<KfzPlan, number> = { smart: 82.48, best: 91.85 };
+const VK_BASE: Record<KfzPlan, number> = { smart: 156.82, best: 208.15 };
+const TK_RATE: Record<KfzPlan, number> = { smart: 24.50, best: 34.87 }; // No SF for TK
+const TIER_ADDON: Record<KfzPlan, number> = { smart: 0, best: 1.73 };
+
+// SF lookup tables (percentage applied to base, 51 levels)
+const HP_SF: Record<number, number> = {
+  0: 86, 0.5: 66, 1: 53, 2: 50, 3: 47, 4: 44, 5: 42, 6: 40, 7: 38, 8: 36, 9: 35,
+  10: 33, 11: 32, 12: 31, 13: 30, 14: 29, 15: 28, 16: 27, 17: 26, 18: 26, 19: 25,
+  20: 24, 21: 24, 22: 23, 23: 23, 24: 22, 25: 22, 26: 21, 27: 21, 28: 21, 29: 20,
+  30: 20, 31: 19, 32: 19, 33: 19, 34: 18, 35: 18, 36: 18, 37: 18, 38: 17, 39: 17,
+  40: 17, 41: 17, 42: 16, 43: 16, 44: 16, 45: 16, 46: 16, 47: 16, 48: 15, 49: 15, 50: 15,
+};
+
+const VK_SF: Record<number, number> = {
+  0: 54, 0.5: 49, 1: 44, 2: 42, 3: 41, 4: 39, 5: 38, 6: 37, 7: 36, 8: 34, 9: 33,
+  10: 33, 11: 32, 12: 31, 13: 30, 14: 29, 15: 28, 16: 28, 17: 27, 18: 27, 19: 26,
+  20: 25, 21: 25, 22: 24, 23: 24, 24: 23, 25: 23, 26: 23, 27: 22, 28: 22, 29: 21,
+  30: 21, 31: 21, 32: 20, 33: 20, 34: 20, 35: 19, 36: 19, 37: 19, 38: 19, 39: 18,
+  40: 18, 41: 18, 42: 18, 43: 17, 44: 17, 45: 17, 46: 17, 47: 16, 48: 16, 49: 16, 50: 15,
+};
+
+// SB impact on VK (multiplier relative to VK500/TK150 base)
+const SB_FACTORS: Record<string, number> = {
+  "vk_ohne_tk_ohne": 1.654,
+  "vk_300_tk_150": 1.070,
+  "vk_500_tk_150": 1.000,
+  "vk_1000_tk_150": 0.863,
+};
+
+function getSFPercent(table: Record<number, number>, sf: number): number {
+  if (sf >= 50) return table[50];
+  return table[sf] ?? table[Math.floor(sf)];
+}
+
+export function calculateMonthlyPrice(
+  plan: KfzPlan,
+  coverageType: CoverageType,
+  sfHP: number,
+  sfVK: number = 10,
+  sb: string = "vk_500_tk_150",
+): number {
+  const hpPct = getSFPercent(HP_SF, sfHP) / 100;
+  const hpComponent = HP_BASE[plan] * hpPct;
+
+  let kaskoComponent = 0;
+  if (coverageType === "hp_vk") {
+    const vkPct = getSFPercent(VK_SF, sfVK) / 100;
+    const sbFactor = SB_FACTORS[sb] ?? 1.0;
+    kaskoComponent = VK_BASE[plan] * vkPct * sbFactor;
+  } else if (coverageType === "hp_tk") {
+    kaskoComponent = TK_RATE[plan]; // TK has no SF
+  }
+
+  const price = hpComponent + kaskoComponent + TIER_ADDON[plan];
+  return Math.round(price * 100) / 100;
+}
+```
+
 ### Common utilities (all templates)
 
 ```typescript
@@ -444,10 +520,10 @@ The base rates are calibrated so that a "typical" customer sees realistic-lookin
 | BU | 30yo desk worker, €2k/mo | ~€55/mo | ✓ Market range €40-80 |
 | Zahnzusatz | 35yo, flat rate | ~€21.70/mo | ✓ ERGO DS90 charges exactly €21.70 |
 | Hausrat | 80m², München, MFH 2.OG | Smart €9.01, Best €12.40 | ✓ ERGO exact (researched 2026-04-13, additive tier model) |
-| Haftpflicht | Single, €10M | ~€6/mo | ✓ Market range €4-10 |
+| Haftpflicht | Single, Smart, 3yr, ohne SB, age ≥36 | €6.05/mo | ✓ ERGO exact (researched 2026-04-13, Template D) |
 | Risikoleben | 35yo NS 10+, €200k, 20yr | ~€9.54/mo | ✓ ERGO charges exactly €9.54 Komfort (researched 2026-04-13) |
-| Tierkranken | Dog age 3, €5k budget | ~€35/mo | ✓ Market range €25-60 |
-| Kfz | 35yo, midsize, SF 10 | ~€65/mo | ✓ Market range €40-100 |
+| Tierkranken | Dog age 3 | ~€20-30/mo | ⚠ UNVERIFIED — no online calculator (agent-only product) |
+| Kfz | VW Golf VIII, München, 12k km, SF 10, VK500, Best | €100.73/mo (HP €30.31 + VK €68.69 + addon €1.73) | ✓ ERGO exact (researched 2026-04-13, Template E) |
 | Rechtsschutz | Single, all 4 Bausteine, Smart, SB €150 | €34.15/mo | ✓ ERGO exact (researched 2026-04-13, Template D) |
 | Unfall | 36yo, Büro (A), €50k, Smart | €7.62/mo | ✓ ERGO exact (researched 2026-04-13, step-function age) |
 | Pflegezusatz (PTG) | 30yo, €10/day | €9.03/mo | ✓ ERGO exact (researched 2026-04-13, Template B) |
