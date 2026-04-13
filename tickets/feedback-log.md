@@ -570,3 +570,102 @@ export function calculatePaymentDuration(age: number): number {
 - Check tier relationship type (multiplicative vs additive) for every product
 - Sample risk class multipliers at 3+ ages to detect age-dependency early
 - Target 50 data points per product (not 160)
+
+## Run: 2026-04-13 (ergo-researcher, Batch 3: Rechtsschutz + Unfall + Pflegezusatz — Mode B-lite parallel)
+
+### Result: SUCCESS (all 3 products, every one had fundamental structural surprises)
+
+### Self-Assessment
+
+**Metrics**:
+- Duration: ~40 min total (3 agents in parallel)
+- Products researched: 3 (Rechtsschutz, Unfall, Pflegezusatz)
+- Data points: 140 total (42 + 16 + 82)
+- Agent durations: Rechtsschutz ~35min, Unfall ~40min, Pflegezusatz ~22min
+- Confidence: HIGH for all 3 products
+- New templates discovered: 2 (Template D for Rechtsschutz, Template A+step for Unfall)
+
+**What worked**:
+- **Parallel execution**: 3 concurrent agents in worktrees with separate playwright sessions. No issues.
+- **Multi-model fitting**: The improved fit_pricing.py approach correctly identified non-polynomial patterns for all 3 products.
+- **Open-minded approach**: Not assuming Template A from the start allowed us to discover fundamentally different pricing architectures.
+- **Pflegezusatz single-page configurator**: Agent adapted quickly despite expecting a multi-step wizard — the product page had just 2 dropdowns (birth year + daily benefit), making data collection extremely fast (82 data points in ~22 min).
+- **Baustein additivity verification**: Rechtsschutz agent systematically toggled each Baustein combination and verified **0.00 EUR error** in additive pricing. This is strong evidence.
+
+**What failed / was suboptimal**:
+- **Batch 3 pre-analysis was wrong for all 3 products**: We predicted Rechtsschutz=Template A (mild age curve), Unfall=Template A (moderate curve), Pflegezusatz=Template A or B (steep curve). Reality: Rechtsschutz=Template D (NO age curve, Baustein toggles), Unfall=A+step (binary step function), Pflegezusatz=B (separate products, not tiers). **0/3 predictions correct.** — ROOT CAUSE: Our products.md assumptions were structurally wrong, not just parametrically off. ERGO's product designs are far more diverse than a generic insurance model suggests. — SEVERITY: low (the agents discovered the right models regardless — the methodology is robust even when predictions are wrong)
+- **Unfall had only 16 data points** — fewer than the 50 target. — ROOT CAUSE: Binary step function + perfectly linear coverage meant 16 points fully determined the model. More would have been redundant. — SEVERITY: none (model is complete)
+- **Pflegezusatz "tier" assumption was fundamentally wrong** — we assumed 3 tiers (Grundschutz/Komfort/Premium with different waiting periods). ERGO actually has 3 **separate products** (PTG/PZU/KFP) with completely different pricing models (PTG=age-dependent, PZU/KFP=fixed price). — ROOT CAUSE: Our product knowledge base was based on generic market assumptions, not ERGO-specific research — SEVERITY: high for the products.md entry (complete rewrite needed, which we did)
+
+**Batch 3 prediction accuracy**:
+
+| Product | Predicted template | Actual template | Prediction correct? |
+|---------|-------------------|-----------------|-------------------|
+| Rechtsschutz | A (polynomial, mild age) | D (flat-rate Baustein configurator) | NO |
+| Unfall | A or B (polynomial) | A+step (binary age band at 65) | NO |
+| Pflegezusatz | A or B (steep polynomial) | B (exponential lookup) + fixed-price products | PARTIAL (B was possible, but "3 tiers" was wrong) |
+
+### Comparison: Our Assumptions vs ERGO Reality
+
+| Product | Our calibration | ERGO actual | Delta | Structural mismatch |
+|---------|----------------|-------------|-------|-------------------|
+| Rechtsschutz | Komfort ~€22/mo | Smart all-4 €34.15, Best all-4 €50.36 | Can't compare (different model) | No age curve, no coverage slider, Baustein toggles, 2 tiers |
+| Unfall | Komfort €2.50/25k | Smart €1.524/10k | ~+52% per unit basis | Step function age, wider risk multipliers (3.10 not 1.7), different tier ratios |
+| Pflegezusatz | Komfort €6.20/250mo | PTG €0.903/1day at age 30 | Different units | Not tiers but separate products, EUR/day not EUR/month, age 0-99, no waiting period |
+
+### Key meta-learnings from this batch
+
+1. **Our prediction accuracy is 0/3** — every product had fundamental structural surprises. The "predict template before research" step is useful for planning but should NOT constrain the agent's investigation. Agents must stay open to discovering any model type.
+
+2. **pricing-model.md now has 5 templates** (A, A+step, B, C, D). The original "universal formula" was wrong — ERGO uses at least 5 distinct pricing architectures across their product range.
+
+3. **"Tiers" can mean different things**: 3 tiers of one product (Sterbegeld), 2 tiers (Hausrat, Rechtsschutz), 3 separate products (Pflegezusatz), or 3 tiers with non-standard names (Unfall: Basic/Smart/Best).
+
+4. **Some products have no age curve at all** (Rechtsschutz), some have a binary step (Unfall), some exponential (Pflegezusatz). The polynomial model is the exception, not the rule.
+
+5. **Calculators vary structurally**: multi-step wizards (Sterbegeld, Risikoleben, Unfall), single-page configurators with live pricing (Rechtsschutz, Pflegezusatz), tabbed configurators (Hausrat).
+
+6. **Fewer data points can be better**: Unfall needed only 16 to fully characterize its binary model. Over-collecting wastes time without improving accuracy.
+
+7. **DKV branding**: Pflegezusatz calculator is DKV-branded (ERGO Group subsidiary). Other products may also use subsidiary brands.
+
+### User Feedback
+- Rechtsschutz: simplify Bausteine in demo, include legal areas in tier description
+- Unfall: keep ERGO's tier names (Basic/Smart/Best)
+- Pflegezusatz: include fixed-price PZU/KFP products alongside PTG
+
+### Applied Improvements
+- [x] products.md: Rechtsschutz rewritten — Template D, Baustein rates, family/SB/contract multipliers, 2 tiers
+- [x] products.md: Unfall rewritten — step-function age, Basic/Smart/Best, occupation autocomplete, wider risk multipliers
+- [x] products.md: Pflegezusatz rewritten — PTG lookup table (82 per-year rates), PZU/KFP fixed prices, EUR/day coverage
+- [x] pricing-model.md: Added Template A+step (Unfall) and Template D (Rechtsschutz) with full TypeScript
+- [x] pricing-model.md: Updated calibration table with all 3 new products
+- [x] pricing-model.md: Updated age curve table (Unfall=step, Pflege=lookup)
+- [x] ergo-product-urls.md: 3 URLs confirmed with calculator details
+
+### Impact on next run
+- **Stop predicting templates** — let the agent discover the model. Include all 5 templates in the prompt so the agent can match.
+- **Check if "tiers" are separate products** — Pflegezusatz taught us this. Ask: "Are the tiers variants of one product, or separate products with different calculators?"
+- **Check for Baustein/module pricing** — Rechtsschutz uses additive toggles. Other products (Haftpflicht?) might too.
+- **Step-function age models exist** — Unfall has a binary 1.0×/2.0× at age 65. Other products may have similar thresholds.
+- **Single-page calculators exist** — Pflegezusatz had just 2 dropdowns. Don't assume a wizard.
+- **fit_pricing.py needs step-function detection** — add variance-within-bands check for detecting age bands with sharp transitions
+- **DKV and other subsidiary brands** — some calculators may be on different subdomains or have different UX patterns
+- **16 data points can be enough** — if the model is simple (binary step + linear coverage), don't collect more just to hit 50
+
+### Next batch proposal
+
+**Batch 4: Haftpflicht, Kfz, Tierkranken**
+
+| Product | Why | Expected (with low confidence) | Key question |
+|---------|-----|-------------------------------|-------------|
+| Haftpflicht | Simple liability product. After Rechtsschutz's surprise (Baustein toggles, no age curve), we should verify if Haftpflicht is also non-standard. | Unknown — could be A (flat), D (Baustein), or something new | Does family status pricing match our 1.0/1.35/1.20 multipliers? Is there a Baustein model? |
+| Kfz | Complex product with SF-Klasse that we already built a demo for. Important to verify our U-curve age model and SF-Klasse multipliers. | Likely A (U-curve) but SF-Klasse is complex | How many SF-Klasse levels? Is the U-curve actually U-shaped? What's the Typklasse system? |
+| Tierkranken | Already built a demo — verify species multipliers and age curve steepness. | Likely A (steep quadratic) | Does ERGO even offer this? May need to check DKV or other subsidiary. |
+
+**Methodology adjustments for batch 4:**
+- Remove template prediction from pre-analysis — let agents discover
+- Add step-function detection to fit_pricing.py
+- Check if product uses separate calculators for "tiers" (like Pflegezusatz)
+- Check for Baustein/module pricing (like Rechtsschutz)
+- Accept <50 data points if model is simple
