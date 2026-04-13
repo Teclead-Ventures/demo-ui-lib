@@ -22,9 +22,9 @@ Where:
 - **paymentModeDiscount**: Monthly=1.0, Quarterly=0.98, Semi-annual=0.96, Annual=0.95
 - **loading**: Insurer's margin covering acquisition costs, admin, safety, profit. Typically 0.20–0.30.
 
-Products using Template A: Sterbegeld, BU, Zahnzusatz, Haftpflicht, Rechtsschutz, Unfall, Pflege, Tierkranken, Reise, Kfz, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
+Products using Template A: BU, Zahnzusatz (age-band approximation, R²=0.997), Haftpflicht, Rechtsschutz, Unfall, Pflege, Tierkranken, Reise, Kfz, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
 
-Products using Template B: Risikoleben. See "Lookup Table Pricing" section and TypeScript Template B below.
+Products using Template B: Risikoleben, Sterbegeld (age-dependent tier multipliers + fixed fee make lookup table more accurate than polynomial). See "Lookup Table Pricing" section and TypeScript Template B below.
 
 Products using Template C: Hausrat. See "Additive Tier Models" section and TypeScript Template C below.
 
@@ -112,7 +112,7 @@ The demo pipeline uses one of these templates depending on the product's pricing
 
 ### Template A: Polynomial age curve (most person products)
 
-Used by: Sterbegeld, BU, Zahnzusatz, Pflege, Tierkranken, Unfall, Krankentagegeld
+Used by: BU, Zahnzusatz (age-band approx.), Pflege, Tierkranken, Unfall, Krankentagegeld
 
 ```typescript
 // src/lib/data/pricing.ts — Template A (polynomial)
@@ -154,9 +154,9 @@ export function calculateMonthlyPrice(
 }
 ```
 
-### Template B: Lookup table with interpolation (steep exponential products)
+### Template B: Lookup table with interpolation (steep/complex age curves)
 
-Used by: Risikoleben (and potentially Pflege if research shows R² < 0.96)
+Used by: Risikoleben (exponential + age-dependent smoker), Sterbegeld (age-dependent tier multipliers + fixed fee). Potentially Pflege if research shows R² < 0.96.
 
 ```typescript
 // src/lib/data/pricing.ts — Template B (lookup table)
@@ -181,6 +181,12 @@ const TERM_FACTORS: Record<number, number> = {
 };
 
 const REFERENCE_COVERAGE = 200000;
+
+// Note: ERGO has a small fixed fee component (~€0.91/month for Komfort at age 35)
+// that makes coverage scaling slightly non-linear. This template uses pure linear
+// scaling for simplicity, which introduces ~5% error at low coverage (€50k) and
+// ~1% error at high coverage (€500k). Acceptable for demo purposes.
+const FIXED_FEE = 0; // Set to ~0.91 for more accurate low-coverage pricing
 
 function interpolate(table: Record<number, number>, age: number): number {
   const ages = Object.keys(table).map(Number).sort((a, b) => a - b);
@@ -216,7 +222,7 @@ export function calculateMonthlyPrice(
   const smokerFactor =
     smokerClass === "raucher" ? interpolate(SMOKER_MULTIPLIERS, age) :
     smokerClass === "ns1" ? NS1_MULTIPLIER : 1.0;
-  const price = basePrice * coverageFactor * termFactor * smokerFactor * paymentModeDiscount;
+  const price = (basePrice * coverageFactor + FIXED_FEE) * termFactor * smokerFactor * paymentModeDiscount;
   return Math.round(price * 100) / 100;
 }
 ```
@@ -230,7 +236,13 @@ Used by: Hausrat (and potentially Wohngebäude after research)
 
 // ERGO Hausrat has 2 tiers with ADDITIVE pricing (not multiplicative)
 // The per-m² rate is the same for both tiers; only the fixed base differs
-const TIER_CONFIG: Record<string, { ratePerM2: number; fixedBase: number }> = {
+// Tier name mapping: smart → grundschutz, best → komfort (for UI/database)
+// The plan parameter uses ERGO's native names; the UI layer maps to internal names
+type HausratPlan = "smart" | "best";
+const PLAN_DISPLAY_NAMES: Record<HausratPlan, string> = { smart: "Smart", best: "Best" };
+const PLAN_INTERNAL_NAMES: Record<HausratPlan, string> = { smart: "grundschutz", best: "komfort" };
+
+const TIER_CONFIG: Record<HausratPlan, { ratePerM2: number; fixedBase: number }> = {
   smart:  { ratePerM2: 0.1114, fixedBase: 0.254 },
   best:   { ratePerM2: 0.1114, fixedBase: 3.642 },
 };

@@ -48,7 +48,7 @@ playwright-cli -s={{PRODUCT_ID}} screenshot --filename=research/{{PRODUCT_ID}}/s
    - Document: step number, heading text, all field labels, field types, options, default values
    - Try leaving required fields empty and clicking next → capture validation messages
 
-4. Write the structure to `research/{{PRODUCT_ID}}/structure.md`:
+6. Write the structure to `research/{{PRODUCT_ID}}/structure.md`:
 ```markdown
 # ERGO {{PRODUCT_NAME}} — Form Structure
 
@@ -106,7 +106,7 @@ For each data point:
 6. If the price page shows all tiers at once, record ALL tier prices (saves restarts)
 7. Start fresh for the next data point
 
-**Beitragstabelle note**: Only Zahnzusatz had a Beitragstabelle dialog. The other 4 products researched (Sterbegeld, Risikoleben, Hausrat) did NOT have one. Still check (10-second effort), but don't count on it.
+**Beitragstabelle note**: Of the 4 products researched so far, only Zahnzusatz had a Beitragstabelle dialog. Sterbegeld, Risikoleben, and Hausrat did NOT have one. Still check (10-second effort), but don't count on it.
 
 **Timing**: Wait 5 seconds between page loads:
 ```bash

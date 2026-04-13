@@ -17,7 +17,7 @@ When the user names a product, find the matching entry and use it as the startin
 | **Coverage** | €1.000–€20.000, step €500, default €7.000 |
 | **Coverage unit** | per €1.000 |
 | **Risk class** | None (age only) |
-| **Payment duration** | 90 − age (min 5, max 46 years) |
+| **Payment duration** | 90 − age (min 5 years; at age 40 = 50 years, at age 85 = 5 years) |
 | **Waiting period** | Grundschutz: 36 months (Aufbauzeit), Komfort: 18 months, Premium: 18 months |
 
 **Base rates** (per €1k/month, age-dependent — see lookup table):
@@ -35,8 +35,9 @@ When the user names a product, find the matching entry and use it as the startin
 | 80 | €15.36 | €16.99 | €19.49 |
 | 85 | N/A | €29.04 | €33.08 |
 
-**Age curve** (cubic, better fit than quadratic): base=1.0, linear=−1.62, quadratic=5.47 (quadratic R²=0.978, cubic R²=0.997 for Grundschutz)
-**Coverage scaling**: Linear with small fixed fee (~€1.80/month) — price = rate_per_1k × (coverage/1000) + 1.80
+**Pricing model: Lookup table** (Template B — age-dependent tier multipliers make polynomial insufficient)
+**Age curve approximation** (for reference only, do NOT use for TypeScript): base=1.0, linear=−1.62, quadratic=5.47 (R²=0.978). Cubic R²=0.997. Use the lookup table above for implementation.
+**Coverage scaling**: Linear with fixed fee (~€1.80/month) — price = rate_per_1k × (coverage/1000) + 1.80
 **Loading**: Built into base rates (no separate loading factor needed)
 **Calibration**: 44yo, €8k, Komfort → €27.45/month ✓
 
@@ -111,7 +112,7 @@ When the user names a product, find the matching entry and use it as the startin
 **Loading**: 22%
 **Calibration**: 35yo, Komfort → ~€21.70/month ✓
 
-**Note — Age bands**: ERGO uses discrete age bands, not a smooth curve. Actual ERGO band prices (Komfort/DS90): 0–20: €3.70, 21–25: €7.20, 26–30: €13.80, 31–40: €21.70, 41–50: €32.50, 51+: €44.40. First 6 months at 50% premium (Startbeitrag).
+**Note — Age bands**: ERGO uses discrete age bands, not a smooth curve. Actual ERGO band prices (Komfort/DS90): 0–20: €3.70, 21–25: €7.20, 26–30: €13.80, 31–40: €21.70, 41–50: €32.50, 51+: €44.40. First 6 months at 50% premium (Startbeitrag). Note: last band is open-ended ("51+") — upper age limit of 75 is approximate and needs confirmation in a future research run.
 
 **Tiers**:
 - **Grundschutz** (Dental-Schutz 75): 75% Erstattung für Zahnersatz, Inlays, Implantate. Professionelle Zahnreinigung 1×/Jahr. Leistungsbegrenzung Y1-4. GOZ bis 3,5-fach

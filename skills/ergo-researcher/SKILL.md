@@ -204,6 +204,8 @@ Decide which template after Phase B (price sampling). The fit_pricing.py script 
 
 The LLM cannot compute polynomial regression. For every product's analysis phase, the research agent MUST write and execute a Python script:
 
+**Note**: This is a simplified stub. The researcher-prompt.md has the authoritative multi-model fitting instructions (quadratic, cubic, exponential, piecewise). The agent MUST follow researcher-prompt.md Phase C, not this stub.
+
 ```python
 # research/<product-id>/fit_pricing.py
 import json
@@ -221,30 +223,40 @@ points = [(p["inputs"]["age"], p["output"]["monthly_price"])
 ages = np.array([p[0] for p in points])
 prices = np.array([p[1] for p in points])
 
+if len(ages) == 0:
+    raise ValueError("No data points found for komfort tier / reference risk class")
+
 # Normalize age to 0-1
 min_age, max_age = ages.min(), ages.max()
 t = (ages - min_age) / (max_age - min_age)
 
-# Fit quadratic: price = a + b*t + c*t^2
-coeffs = np.polyfit(t, prices, 2)  # returns [c, b, a]
-quadratic, linear, base_price = coeffs
+# Try multiple models — pick best R²
+results = {}
+for degree, name in [(2, "quadratic"), (3, "cubic")]:
+    coeffs = np.polyfit(t, prices, degree)
+    predicted = np.polyval(coeffs, t)
+    ss_res = np.sum((prices - predicted) ** 2)
+    ss_tot = np.sum((prices - np.mean(prices)) ** 2)
+    r2 = 1 - (ss_res / ss_tot)
+    results[name] = {"coeffs": coeffs.tolist(), "r_squared": round(float(r2), 6)}
 
-# Compute R²
-predicted = base_price + linear * t + quadratic * t**2
-ss_res = np.sum((prices - predicted) ** 2)
-ss_tot = np.sum((prices - np.mean(prices)) ** 2)
-r_squared = 1 - (ss_res / ss_tot)
-
-# The base_price includes baseRate * units * (1+loading)
-# We need to factor those out to get the ageCurve coefficients
-# ... (product-specific extraction logic)
+# Normalize quadratic coefficients relative to price at min age
+quad = results["quadratic"]["coeffs"]  # [c, b, a] where a = base_price
+base_price = quad[-1]
+if abs(base_price) < 1e-10:
+    raise ValueError(f"Base price is near zero ({base_price}) — check data")
 
 print(json.dumps({
-    "age_curve": {"base": round(float(base_price/base_price), 4), 
-                  "linear": round(float(linear/base_price), 4), 
-                  "quadratic": round(float(quadratic/base_price), 4)},
-    "r_squared": round(float(r_squared), 4),
+    "models": results,
+    "best_model": max(results, key=lambda k: results[k]["r_squared"]),
+    "age_curve_normalized": {
+        "base": 1.0,
+        "linear": round(float(quad[-2] / base_price), 4),
+        "quadratic": round(float(quad[-3] / base_price), 4),
+    },
     "base_price_at_min_age": round(float(base_price), 2),
+    "recommendation": "Use lookup table (Template B)" if results["quadratic"]["r_squared"] < 0.96
+                       else "Use polynomial (Template A)",
 }, indent=2))
 ```
 
