@@ -88,6 +88,13 @@ Systematically fill the form with varied inputs. Goal: build a price matrix with
 
 **For same-page variables (tier selection):** Switch tiers on the plan page without restarting. This is fast.
 
+**Smart sampling strategy** (learned 2026-04-13):
+- 50 data points is sufficient for well-behaved products. 160 was overkill for Sterbegeld where coverage scaling is linear.
+- For property products (Hausrat, Wohngebäude), collect 5-8 ZIP codes to characterize regional variation.
+- For products with exponential age curves (Risikoleben, potentially Pflege), plan for a lookup table from the start — polynomial R² will be inadequate.
+- Check if tier relationship is multiplicative (most products) or additive (Hausrat: Best = Smart + fixed amount).
+- Check for fixed fee components (Sterbegeld has ~€1.80/month independent of coverage).
+
 For each data point:
 1. Navigate to the calculator start URL (fresh start)
 2. Dismiss cookie banner if it reappears
@@ -98,6 +105,8 @@ For each data point:
 5. Record: all input values + displayed monthly price + tier name
 6. If the price page shows all tiers at once, record ALL tier prices (saves restarts)
 7. Start fresh for the next data point
+
+**Beitragstabelle note**: Only Zahnzusatz had a Beitragstabelle dialog. The other 4 products researched (Sterbegeld, Risikoleben, Hausrat) did NOT have one. Still check (10-second effort), but don't count on it.
 
 **Timing**: Wait 5 seconds between page loads:
 ```bash

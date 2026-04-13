@@ -1,8 +1,12 @@
 # Pricing Engine Model
 
-This document defines the universal pricing formula used across all insurance products. Every tariff uses the same structure — only the parameters change.
+This document defines the pricing formulas used across insurance products. There are **3 pricing templates** depending on the product type:
 
-## The Formula
+- **Template A** (polynomial): Most person products — `baseRate × units × ageFactor × riskClass × (1+loading)`
+- **Template B** (lookup table): Products with exponential age curves (Risikoleben) — lookup + interpolation
+- **Template C** (property/additive): Property products (Hausrat) — `(rate × m² + tierFixedBase) × regionMult × factors`
+
+## Template A: The Standard Formula
 
 ```
 monthlyPremium = netPremium × (1 + loading)
@@ -17,6 +21,12 @@ Where:
 - **riskClassMultiplier**: Risk multiplier based on the product's primary risk differentiator (occupation, smoker status, region, etc.). 1.0 if product has no risk classes.
 - **paymentModeDiscount**: Monthly=1.0, Quarterly=0.98, Semi-annual=0.96, Annual=0.95
 - **loading**: Insurer's margin covering acquisition costs, admin, safety, profit. Typically 0.20–0.30.
+
+Products using Template A: Sterbegeld, BU, Zahnzusatz, Haftpflicht, Rechtsschutz, Unfall, Pflege, Tierkranken, Reise, Kfz, Cyber, Krankentagegeld, Wohngebäude (unconfirmed).
+
+Products using Template B: Risikoleben. See "Lookup Table Pricing" section and TypeScript Template B below.
+
+Products using Template C: Hausrat. See "Additive Tier Models" section and TypeScript Template C below.
 
 ## Age Factor Calculation
 
@@ -38,15 +48,16 @@ function calculateAgeFactor(
 
 | Product | base | linear | quadratic | Shape | Why |
 |---------|------|--------|-----------|-------|-----|
-| Sterbegeld | 0.65 | 0.15 | 0.55 | Exponential after 60 | Mortality rises steeply with age |
+| Sterbegeld | 1.00 | −1.62 | 5.47 | Cubic preferred (R²=0.997 vs 0.978 quadratic) | Mortality rises steeply with age; use lookup table for best accuracy |
 | BU | 0.70 | 0.50 | −0.15 | Bell curve ~45-50 | Disability risk peaks mid-career, drops near retirement |
 | Zahnzusatz | 0.13 | 3.08 | −0.52 | Steep near-linear | ERGO uses discrete age bands; polynomial is smooth approximation (R²=0.997) |
-| Risikoleben | 0.40 | 0.20 | 0.80 | Steep exponential | Mortality doubles every ~8 years |
+| Risikoleben | N/A | N/A | N/A | **Lookup table required** (quadratic R²=0.958 inadequate) | 60yo pays 31× of 25yo; smoker multiplier is age-dependent (1.87-3.92×) — polynomial cannot model this |
 | Pflege | 0.50 | 0.25 | 0.65 | Steep growth | Care need rises sharply after 70 |
 | Tierkranken | 0.60 | 0.10 | 0.90 | Very steep after 7-8 | Pets age fast, vet costs spike |
 | Unfall | 0.85 | 0.10 | 0.15 | Moderate increase | Accident risk fairly constant, slight age effect |
 | Krankentagegeld | 0.70 | 0.35 | 0.20 | Steady increase | Illness duration increases with age |
-| Hausrat/Haftpflicht/Cyber | 1.00 | 0.00 | 0.00 | Flat | Not age-dependent |
+| Hausrat | N/A | N/A | N/A | **Binary** (under-36: 0.87×, else 1.0) | ERGO uses 13% Startbonus for under-36, additive tier model, per-m² pricing |
+| Haftpflicht/Cyber | 1.00 | 0.00 | 0.00 | Flat | Not age-dependent |
 | Kfz | 1.80 | −1.20 | 0.50 | U-curve | Young drivers high risk, drops, slight rise for elderly |
 | Reise | 0.75 | 0.10 | 0.30 | Gentle U | Young adventurers + elderly travelers |
 
@@ -70,14 +81,42 @@ Some products (e.g., Zahnzusatz) use **discrete age bands** rather than a smooth
 
 For products where the product entry includes a "Note — Age bands" section, the polynomial is an approximation. The actual ERGO pricing uses a step function. The demo should use the polynomial for smooth UX (slider-reactive pricing), but the prices won't match ERGO exactly at every age — they match at band midpoints and deviate up to ±20-30% at band edges. This is acceptable for demo purposes.
 
-## TypeScript Implementation Template
+## Lookup Table Pricing (discovered via ERGO research, 2026-04-13)
 
-This is the template the demo pipeline uses. The tariff-designer fills in the constants.
+Some products have age curves too steep for a single polynomial (R² < 0.96). For these, use a **lookup table with linear interpolation** instead of the polynomial formula:
+
+- **Risikoleben**: 60yo pays 31× of 25yo. Quadratic R²=0.958 (inadequate). Cubic R²=0.995 (better but still loses accuracy at extremes). Additionally, the smoker multiplier is age-dependent (1.87× at 25 to 3.92× at 50), which the simple `riskClassMultiplier` parameter cannot model. Use the lookup table from products.md and interpolate between sampled ages.
+
+- **Sterbegeld**: Cubic fits well (R²=0.997) but tier multipliers are age-dependent (Komfort/Grundschutz ranges 1.02-1.11×). The lookup table in products.md gives exact per-age rates. Has a fixed fee component (~€1.80/month) independent of coverage.
+
+For demo purposes, the TypeScript implementation can use the lookup table with `Array.find()` for the nearest ages and linear interpolation between them. This is more accurate than the polynomial and just as fast.
+
+## Additive Tier Models (discovered via ERGO research, 2026-04-13)
+
+ERGO Hausrat uses an **additive** tier model where Best = Smart + ~€3.39/month (fixed amount), NOT a multiplicative ratio. This is fundamentally different from the `baseRate × tier` model used by other products. The per-m² rate (0.1114 EUR/m²/month) is the same for both tiers — only the fixed base differs (Smart: €0.25, Best: €3.64).
+
+For products with additive tier models, the pricing formula becomes:
+```
+price = (ratePerUnit × units + tierFixedBase) × regionMult × otherFactors
+```
+
+Currently only Hausrat uses this model. Other property products should be verified when researched.
+
+## Per-m² Coverage Model (discovered via ERGO research, 2026-04-13)
+
+ERGO Hausrat derives coverage automatically from living space: `coverage = 650 EUR/m² × m²`. The user enters m², not a coverage amount. This means `coverageUnits` is actually `m²` for this product, not `coverage / coverageUnit`.
+
+## TypeScript Implementation Templates
+
+The demo pipeline uses one of these templates depending on the product's pricing model. The tariff-designer picks the right template and fills in the constants.
+
+### Template A: Polynomial age curve (most person products)
+
+Used by: Sterbegeld, BU, Zahnzusatz, Pflege, Tierkranken, Unfall, Krankentagegeld
 
 ```typescript
-// src/lib/data/pricing.ts
+// src/lib/data/pricing.ts — Template A (polynomial)
 
-// These values come from tariff-spec.json — filled in by tariff-designer
 const BASE_RATES: Record<"grundschutz" | "komfort" | "premium", number> = {
   grundschutz: __BASE_RATE_GRUND__,
   komfort: __BASE_RATE_KOMFORT__,
@@ -113,13 +152,158 @@ export function calculateMonthlyPrice(
   const grossPremium = netPremium * (1 + LOADING);
   return Math.round(grossPremium * 100) / 100;
 }
+```
 
+### Template B: Lookup table with interpolation (steep exponential products)
+
+Used by: Risikoleben (and potentially Pflege if research shows R² < 0.96)
+
+```typescript
+// src/lib/data/pricing.ts — Template B (lookup table)
+
+// Lookup table: age → monthly price for reference case
+// Reference: €200k coverage, 20yr term, Nichtraucher 10+
+const PRICE_TABLE: Record<string, Record<number, number>> = {
+  grundschutz: { 25: 3.94, 30: 5.15, 35: 7.54, 40: 12.16, 45: 20.32, 50: 34.34, 55: 60.94, 60: 121.61 },
+  komfort:     { 25: 4.97, 30: 6.51, 35: 9.54, 40: 15.42, 45: 25.82, 50: 43.65, 55: 77.48, 60: 154.68 },
+  premium:     { 25: 7.50, 30: 9.54, 35: 13.54, 40: 21.30, 45: 35.02, 50: 58.53, 55: 103.11, 60: 204.46 },
+};
+
+// Smoker multipliers are age-dependent (applied to Nichtraucher 10+ base)
+const SMOKER_MULTIPLIERS: Record<number, number> = {
+  25: 1.87, 30: 2.23, 35: 2.65, 40: 3.02, 45: 3.46, 50: 3.92, 55: 3.83, 60: 3.19,
+};
+const NS1_MULTIPLIER = 1.17; // Nichtraucher 1+ (approximately constant)
+
+// Term scaling relative to 20yr reference
+const TERM_FACTORS: Record<number, number> = {
+  10: 0.63, 15: 0.77, 20: 1.00, 25: 1.38, 30: 1.95,
+};
+
+const REFERENCE_COVERAGE = 200000;
+
+function interpolate(table: Record<number, number>, age: number): number {
+  const ages = Object.keys(table).map(Number).sort((a, b) => a - b);
+  if (age <= ages[0]) return table[ages[0]];
+  if (age >= ages[ages.length - 1]) return table[ages[ages.length - 1]];
+  const upper = ages.find((a) => a >= age)!;
+  const lower = ages[ages.indexOf(upper) - 1];
+  const t = (age - lower) / (upper - lower);
+  return table[lower] + t * (table[upper] - table[lower]);
+}
+
+function interpolateTerm(termYears: number): number {
+  const terms = Object.keys(TERM_FACTORS).map(Number).sort((a, b) => a - b);
+  if (termYears <= terms[0]) return TERM_FACTORS[terms[0]];
+  if (termYears >= terms[terms.length - 1]) return TERM_FACTORS[terms[terms.length - 1]];
+  const upper = terms.find((t) => t >= termYears)!;
+  const lower = terms[terms.indexOf(upper) - 1];
+  const t = (termYears - lower) / (upper - lower);
+  return TERM_FACTORS[lower] + t * (TERM_FACTORS[upper] - TERM_FACTORS[lower]);
+}
+
+export function calculateMonthlyPrice(
+  age: number,
+  coverageAmount: number,
+  plan: "grundschutz" | "komfort" | "premium",
+  smokerClass: "ns10" | "ns1" | "raucher" = "ns10",
+  termYears: number = 20,
+  paymentModeDiscount: number = 1.0,
+): number {
+  const basePrice = interpolate(PRICE_TABLE[plan], age);
+  const coverageFactor = coverageAmount / REFERENCE_COVERAGE;
+  const termFactor = interpolateTerm(termYears);
+  const smokerFactor =
+    smokerClass === "raucher" ? interpolate(SMOKER_MULTIPLIERS, age) :
+    smokerClass === "ns1" ? NS1_MULTIPLIER : 1.0;
+  const price = basePrice * coverageFactor * termFactor * smokerFactor * paymentModeDiscount;
+  return Math.round(price * 100) / 100;
+}
+```
+
+### Template C: Property product (additive tiers, per-m² pricing)
+
+Used by: Hausrat (and potentially Wohngebäude after research)
+
+```typescript
+// src/lib/data/pricing.ts — Template C (property / additive tiers)
+
+// ERGO Hausrat has 2 tiers with ADDITIVE pricing (not multiplicative)
+// The per-m² rate is the same for both tiers; only the fixed base differs
+const TIER_CONFIG: Record<string, { ratePerM2: number; fixedBase: number }> = {
+  smart:  { ratePerM2: 0.1114, fixedBase: 0.254 },
+  best:   { ratePerM2: 0.1114, fixedBase: 3.642 },
+};
+
+const COVERAGE_PER_M2 = 650; // EUR coverage per m²
+
+// Regional multipliers (ZIP-specific, München = 1.0 reference)
+const REGION_MULTIPLIERS: Record<string, number> = {
+  "54290": 0.768,  // Trier
+  "90402": 0.788,  // Nürnberg
+  "01067": 0.966,  // Dresden
+  "80331": 1.000,  // München (reference)
+  "24103": 1.078,  // Kiel
+  "50667": 1.312,  // Köln
+  "20095": 1.365,  // Hamburg
+  "10117": 1.365,  // Berlin
+};
+const DEFAULT_REGION_MULTIPLIER = 1.0;
+
+// Factor multipliers
+const FLOOR_FACTORS: Record<string, number> = {
+  keller: 1.104, erdgeschoss: 1.104,
+  "1og": 1.0, "2og": 1.0, "3og_plus": 1.0,
+};
+const BUILDING_TYPE_FACTORS: Record<string, number> = {
+  mehrfamilienhaus: 1.0, einfamilienhaus: 1.060,
+};
+const AGE_FACTOR = { under36: 0.870, default: 1.0 };
+const DEDUCTIBLE_FACTORS: Record<string, number> = {
+  none: 1.0, "300": 0.927,
+};
+const CONTRACT_DURATION_FACTORS: Record<string, number> = {
+  "1": 1.111, "3": 1.0,
+};
+
+export function calculateMonthlyPrice(
+  livingSpaceM2: number,
+  plan: "smart" | "best",
+  zip: string,
+  floor: string = "2og",
+  buildingType: string = "mehrfamilienhaus",
+  age: number = 40,
+  deductible: string = "none",
+  contractYears: string = "3",
+  paymentModeDiscount: number = 1.0,
+): number {
+  const tier = TIER_CONFIG[plan];
+  const basePrice = tier.ratePerM2 * livingSpaceM2 + tier.fixedBase;
+  const regionMult = REGION_MULTIPLIERS[zip] ?? DEFAULT_REGION_MULTIPLIER;
+  const floorMult = FLOOR_FACTORS[floor] ?? 1.0;
+  const buildingMult = BUILDING_TYPE_FACTORS[buildingType] ?? 1.0;
+  const ageMult = age < 36 ? AGE_FACTOR.under36 : AGE_FACTOR.default;
+  const deductibleMult = DEDUCTIBLE_FACTORS[deductible] ?? 1.0;
+  const contractMult = CONTRACT_DURATION_FACTORS[contractYears] ?? 1.0;
+  const price = basePrice * regionMult * floorMult * buildingMult * ageMult * deductibleMult * contractMult * paymentModeDiscount;
+  return Math.round(price * 100) / 100;
+}
+
+export function getCoverageFromM2(m2: number): number {
+  return m2 * COVERAGE_PER_M2;
+}
+```
+
+### Common utilities (all templates)
+
+```typescript
 export function calculatePaymentDuration(age: number): number {
   // Formula varies by product:
-  // Life/BU/Pflege: retirementAge - age (e.g., 67 - age)
-  // Funeral: 85 - age
-  // Property/Liability: 1 (annual renewal)
-  // Fixed term: policyTerm
+  // Funeral: 90 - age (min 5)
+  // Life/BU/Pflege: 67 - age
+  // Property/Liability: 1 (annual renewal) or 3 (3-year contract)
+  // Term life: policyTerm (1-50 years)
+  // Pet: Ongoing (display "laufend")
   return __PAYMENT_DURATION_FORMULA__;
 }
 
@@ -135,12 +319,12 @@ The base rates are calibrated so that a "typical" customer sees realistic-lookin
 
 | Product | Typical customer | Komfort price | Reality check |
 |---------|-----------------|---------------|---------------|
-| Sterbegeld | 44yo, €8k | ~€30/mo | ✓ ERGO charges €25-35 |
+| Sterbegeld | 44yo, €8k | ~€27.45/mo | ✓ ERGO charges exactly €27.45 (researched 2026-04-13) |
 | BU | 30yo desk worker, €2k/mo | ~€55/mo | ✓ Market range €40-80 |
 | Zahnzusatz | 35yo, flat rate | ~€21.70/mo | ✓ ERGO DS90 charges exactly €21.70 |
-| Hausrat | 50m² urban, €50k | ~€8/mo | ✓ Market range €5-15 |
+| Hausrat | 80m², München, MFH 2.OG | Smart €9.01, Best €12.40 | ✓ ERGO exact (researched 2026-04-13, additive tier model) |
 | Haftpflicht | Single, €10M | ~€6/mo | ✓ Market range €4-10 |
-| Risikoleben | 35yo non-smoker, €200k | ~€12/mo | ✓ Market range €8-20 |
+| Risikoleben | 35yo NS 10+, €200k, 20yr | ~€9.54/mo | ✓ ERGO charges exactly €9.54 Komfort (researched 2026-04-13) |
 | Tierkranken | Dog age 3, €5k budget | ~€35/mo | ✓ Market range €25-60 |
 | Kfz | 35yo, midsize, SF 10 | ~€65/mo | ✓ Market range €40-100 |
 
@@ -159,14 +343,16 @@ Products that have risk classes use multipliers that shift the base rate:
 
 The multiplier applies uniformly across all tiers. So if a smoker pays 1.8× the non-smoker rate, that applies to Grundschutz, Komfort, and Premium equally.
 
+**Exception — Risikoleben**: The smoker multiplier is **age-dependent** (1.87× at age 25 to 3.92× at age 50), not constant. This product uses Template B (lookup table) which handles this via interpolation. There are also 3 smoker classes (Nichtraucher 10+, Nichtraucher 1+, Raucher), not just 2.
+
 ## Payment Duration
 
 The payment duration affects how long the customer pays, which appears on the plan selection page. It varies by product:
 
 | Product type | Formula | Example |
 |-------------|---------|---------|
-| Funeral | 85 − age | 44yo → 41 years |
+| Funeral | 90 − age (min 5) | 44yo → 46 years |
 | BU / Pflege / Krankentagegeld | 67 − age | 30yo → 37 years |
-| Term life | Fixed term (10-30 years) | 20 years → 20 years |
+| Term life | Fixed term (1-50 years) | 20 years → 20 years |
 | Property / Liability / Travel | 1 (annual) | Always 1 year |
 | Pet | Ongoing (no fixed end) | Display "laufend" |

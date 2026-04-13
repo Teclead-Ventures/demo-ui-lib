@@ -483,3 +483,58 @@ export function calculatePaymentDuration(age: number): number {
 - Navigate through ALL wizard steps to reach price display
 - Use `#ppzApp` selector for ERGO calculator content extraction
 - Expect structural differences from our assumptions — ERGO products may not match our model architecture
+
+## Run: 2026-04-13 (ergo-researcher, Batch: Sterbegeld + Risikoleben + Hausrat — Mode B-lite parallel)
+
+### Result: SUCCESS (all 3 products)
+
+### Self-Assessment
+
+**Metrics**:
+- Duration: ~87 min total (3 agents in parallel)
+- Products researched: 3 (Sterbegeld, Risikoleben, Hausrat)
+- Data points: 258 total (160 + 75 + 23)
+- Agent durations: Sterbegeld ~87min, Risikoleben ~52min, Hausrat ~42min
+- Coverage linearity R²: Sterbegeld 0.978-0.997, Hausrat 0.998
+- Age curve fit: Sterbegeld cubic R²=0.990-0.997, Risikoleben cubic R²=0.995
+- Confidence: HIGH for all 3 products
+
+**What worked**:
+- **Parallel execution**: All 3 agents ran concurrently in worktrees with separate playwright sessions (-s=sterbegeld, -s=risikoleben, -s=hausrat). No session conflicts.
+- **Zahnzusatz learnings applied**: Full wizard navigation, cookie dismissal, and 5-second wait patterns all worked across all 3 products. The methodology transfer was smooth.
+- **Data quality**: 258 data points total with high R² values. Each agent systematically varied the relevant dimensions.
+- **Structural discovery**: Each product revealed structural differences from our assumptions — the research is producing genuinely new information, not just validating prices.
+
+**What failed / was suboptimal**:
+- **No Beitragstabelle found** for any of the 3 products — the Zahnzusatz shortcut was unique to that product. All 3 required full calculator scraping. — ROOT CAUSE: Beitragstabelle appears to be a Zahnzusatz-specific feature, not a common pattern — SEVERITY: low (methodology still worked, just slower)
+- **Sterbegeld agent was slowest** (87 min vs 42-52 min for others) — it collected the most data points (160) by varying many coverage amounts. — ROOT CAUSE: Sampled too many coverage variations for a product where coverage scaling is linear — SEVERITY: low (data quality is great, but 50 points would have been sufficient)
+- **Hausrat had fewest data points** (23) but the model is well-determined because the pricing dimensions (m², region, floor, building type, age) are mostly independent multipliers — SEVERITY: none (23 is enough for this model type)
+- **Risikoleben quadratic R²=0.958** — confirms the polynomial model is inadequate for exponential mortality curves. Cubic R²=0.995 is better but lookup table is the right approach. — ROOT CAUSE: Our pricing-model.md assumes all products use a quadratic age curve — SEVERITY: high (Risikoleben needs a lookup table, not polynomial)
+
+**Improvements applied**:
+- [x] products.md: Sterbegeld — corrected payment duration (90−age), coverage step (€500), default (€7k), base rates (age-dependent lookup table), Aufbauzeit per tier, fixed fee component
+- [x] products.md: Risikoleben — complete rewrite with lookup table, 3 smoker classes, age-dependent smoker multipliers, employment/occupation fields, add-ons, term scaling
+- [x] products.md: Hausrat — complete rewrite: 2 tiers (Smart/Best), additive tier model, per-m² pricing, ZIP-specific regional multipliers, floor/building type factors, under-36 Startbonus, add-on modules
+- [x] pricing-model.md: Added lookup table pricing section, additive tier model section, per-m² coverage model section. Updated age curve table and calibration table for all 3 products.
+- [x] ergo-product-urls.md: All 3 URLs confirmed with calculator details
+
+### Comparison: Our Assumptions vs ERGO Reality
+
+| Product | Our calibration | ERGO actual | Delta | Key structural difference |
+|---------|----------------|-------------|-------|--------------------------|
+| Sterbegeld | €30/mo (44yo, 8k, Komfort) | €27.45/mo | −8.5% | Payment 90−age (not 85), coverage step €500, age-dependent tier multipliers |
+| Risikoleben | €12/mo (35yo, NS, 200k, Komfort) | €9.54/mo | −20% | Exponential age curve, 3 smoker classes, age-dependent smoker multiplier 1.87-3.92× |
+| Hausrat | €8/mo (50k, Zone 3, Komfort) | €12.40 (80m², München, Best) | Model mismatch | Only 2 tiers, additive not multiplicative, per-m² pricing, ZIP-specific |
+
+### Questions for the user
+1. Risikoleben needs a lookup table — our polynomial formula can't model it. Should we extend pricing.ts with a lookup table interpolation function?
+2. Hausrat has only 2 tiers. Should we keep our 3-tier demo structure (adding a synthetic Premium) or match ERGO's 2-tier model?
+3. The additive tier model for Hausrat (Best = Smart + €3.39 fixed) is fundamentally different from our multiplicative model. Should we add a separate pricing function for property products?
+
+### Impact on next run
+- Beitragstabelle is Zahnzusatz-specific — don't waste time looking for it on other products, but still check (it's a 10-second check)
+- For products with exponential age curves (Risikoleben, potentially Pflege), plan for lookup table approach from the start
+- Property products (Hausrat, Wohngebäude) may use additive tier models and per-m² pricing — verify Wohngebäude when researched
+- Sterbegeld's fixed fee component (~€1.80/month) is a new pattern — check for this in other products
+- Regional multipliers are ZIP-specific, not zone-based — collect at least 5-8 ZIP codes to characterize the distribution
+- 50 data points is sufficient for well-behaved products; 160 was overkill for Sterbegeld's linear coverage scaling

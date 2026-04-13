@@ -14,25 +14,49 @@ When the user names a product, find the matching entry and use it as the startin
 | **Category** | person |
 | **Insured event** | death |
 | **Age range** | 40–85 |
-| **Coverage** | €1.000–€20.000, step €1.000, default €8.000 |
+| **Coverage** | €1.000–€20.000, step €500, default €7.000 |
 | **Coverage unit** | per €1.000 |
 | **Risk class** | None (age only) |
-| **Payment duration** | 85 − age |
-| **Waiting period** | Grundschutz: 18 months, Komfort: 18 months, Premium: 3 months |
+| **Payment duration** | 90 − age (min 5, max 46 years) |
+| **Waiting period** | Grundschutz: 36 months (Aufbauzeit), Komfort: 18 months, Premium: 18 months |
 
-**Base rates** (per €1k/month): Grundschutz €3.68, Komfort €4.49, Premium €5.53
-**Age curve**: base=0.65, linear=0.15, quadratic=0.55 (exponential growth after 60)
-**Loading**: 25%
-**Calibration**: 44yo, €8k, Komfort → ~€30/month ✓
+**Base rates** (per €1k/month, age-dependent — see lookup table):
+
+| Age | Grundschutz | Komfort | Premium |
+|-----|-------------|---------|---------|
+| 40 | €3.12 | €3.19 | €3.65 |
+| 45 | €3.44 | €3.51 | €4.01 |
+| 50 | €3.90 | €3.99 | €4.56 |
+| 55 | €4.49 | €4.62 | €5.29 |
+| 60 | €5.27 | €5.45 | €6.24 |
+| 65 | €6.34 | €6.60 | €7.56 |
+| 70 | €7.94 | €8.36 | €9.58 |
+| 75 | €10.59 | €11.40 | €13.09 |
+| 80 | €15.36 | €16.99 | €19.49 |
+| 85 | N/A | €29.04 | €33.08 |
+
+**Age curve** (cubic, better fit than quadratic): base=1.0, linear=−1.62, quadratic=5.47 (quadratic R²=0.978, cubic R²=0.997 for Grundschutz)
+**Coverage scaling**: Linear with small fixed fee (~€1.80/month) — price = rate_per_1k × (coverage/1000) + 1.80
+**Loading**: Built into base rates (no separate loading factor needed)
+**Calibration**: 44yo, €8k, Komfort → €27.45/month ✓
+
+**Note — Age-dependent tier multipliers**: Tier ratios are NOT constant. Komfort/Grundschutz ranges from 1.02× (age 40) to 1.11× (age 80). Premium/Grundschutz ranges from 1.17× (age 40) to 1.27× (age 80). For demo purposes, using the lookup table above is more accurate than applying fixed multipliers.
+
+**Payment mode discounts**: Monthly 0%, Quarterly 0.4%, Semi-annual 1.0%, Annual 3.4%
 
 **Tiers**:
-- **Grundschutz**: Guaranteed death benefit, surplus participation ×1.32, 18-month waiting
-- **Komfort**: Same + higher surplus ×1.50, Unfall-Sofortschutz ab Tag 1
-- **Premium**: Same + surplus ×1.74, 3-month waiting, severe illness early payout, coverage >€15k
+- **Grundschutz**: Guaranteed death benefit, Aufbauzeit 36 Monate, surplus participation, Flex-Option nachträglich wählbar
+- **Komfort**: Same + Aufbauzeit 18 Monate, Doppelte Leistung bei Unfalltod, Vorsorge-Ordner, kostenlose Rechtsberatung
+- **Premium**: Same + Aufbauzeit 18 Monate, vorgezogene Leistung bei schwerer Krankheit, Leistung bei Pflegebedürftigkeit, Best Doctors, Bestattungspakete bis 20% günstiger, digitaler Nachlass-Verwalter, coverage >€15k
 
-**Wizard steps**: Birth date → Insurance start → Coverage slider → Plan selection → Dynamic adjustment → Personal data → Summary
+**Wizard steps**: Birth date → Insurance start → Coverage slider → Plan selection (with payment mode, coverage, and payment duration adjustable on same page) → Personal data → Summary
 
-**Form fields**: birthDate, insuranceStart (3 radio options: 1st of next 3 months), coverageAmount (slider), plan (segmented), dynamicAdjustment, salutation, firstName, lastName, street, zip, city, birthPlace, nationality
+**Form fields**: birthDate (spinbutton: Tag/Monat/Jahr), insuranceStart (3 radio options: 1st of next 3 months), coverageAmount (slider+textbox, €1k-€20k, step €500), plan (tabs: Grundschutz/Komfort/Premium), zahlweise (dropdown: monatlich/vierteljährlich/halbjährlich/jährlich), beitragszahlungsdauer (dropdown: 5 to 90−age years), salutation, firstName, lastName, street, zip, city
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/sterbegeld/screenshots/, research/sterbegeld/price-matrix.json
+**Confidence**: HIGH (160 data points, cubic R²=0.990-0.997)
+**Discrepancies from previous entry**: Payment duration 90−age (was 85−age). Coverage step €500 (was €1.000), default €7.000 (was €8.000). Aufbauzeit differs by tier (36mo Grund vs 18mo Komfort/Premium, was 18/18/3). Base rates are age-dependent lookup table (was single rate). Calibration €27.45 (was ~€30). Fixed fee component ~€1.80/month discovered.
 
 ---
 
@@ -114,26 +138,64 @@ When the user names a product, find the matching entry and use it as the startin
 | **ID** | hausrat |
 | **Category** | property |
 | **Insured event** | damage/loss of household contents (fire, water, storm, theft) |
-| **Age range** | 18–99 (age-independent pricing) |
-| **Coverage** | €10.000–€150.000, step €5.000, default €50.000 |
-| **Coverage unit** | per €5.000 |
-| **Risk class** | Region: Zone 1 (0.85, rural), Zone 2 (1.0, suburban), Zone 3 (1.25, urban), Zone 4 (1.5, high-risk urban) |
-| **Payment duration** | Annual renewal |
+| **Age range** | 18–99 (binary: under-36 gets 13% Startbonus) |
+| **Coverage** | Derived from m²: 650 EUR/m², range 10–384 m² (€6.500–€249.600) |
+| **Coverage unit** | per m² (NOT per €5k) |
+| **Risk class** | ZIP-code specific (not zone-based). Sampled range: 0.77× (Trier) to 1.37× (Hamburg/Berlin) |
+| **Payment duration** | 1 year or 3 years (3yr = ~10% discount) |
 | **Waiting period** | None |
 
-**Base rates** (per €5k/month): Grundschutz €0.44, Komfort €0.53, Premium €0.66
-**Age curve**: base=1.0, linear=0.0, quadratic=0.0 (flat — age doesn't matter)
-**Loading**: 20%
-**Calibration**: €50k urban (Zone 3, 1.25×), Komfort → ~€8/month ✓
+**Note — Only 2 tiers**: ERGO Hausrat has 2 tiers (Smart/Best), NOT 3. No Premium equivalent exists.
 
-**Tiers**:
-- **Grundschutz**: Fire, water, storm, basic theft. Selbstbeteiligung €500
-- **Komfort**: Same + Elementarschäden (flooding), Fahrraddiebstahl bis €3.000, Selbstbeteiligung €250
-- **Premium**: Same + Glasbruch, grobe Fahrlässigkeit, Überspannungsschäden, keine Selbstbeteiligung
+**Pricing model: Linear per-m² with ADDITIVE tier difference** (NOT multiplicative):
+```
+Smart_monthly = (0.1114 × m² + 0.254) × regionMult × floorMult × buildingMult × ageFactor
+Best_monthly  = (0.1114 × m² + 3.642) × regionMult × floorMult × buildingMult × ageFactor
+```
 
-**Wizard steps**: Address/Region → Living space → Coverage amount → Plan selection → Personal data → Summary
+Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplier.
 
-**Form fields**: zip (for region lookup), livingSpace (number, m²), buildingType (select: Mehrfamilienhaus/Einfamilienhaus/Reihenhaus), floor (select: EG/OG/DG), coverageAmount (slider), plan, salutation, firstName, lastName, street, city
+**Regional multipliers** (sampled, München=reference):
+
+| City | ZIP | Multiplier |
+|------|-----|-----------|
+| Trier | 54290 | 0.77× |
+| Nürnberg | 90402 | 0.79× |
+| Dresden | 01067 | 0.97× |
+| München | 80331 | 1.00× |
+| Kiel | 24103 | 1.08× |
+| Köln | 50667 | 1.31× |
+| Hamburg | 20095 | 1.37× |
+| Berlin | 10117 | 1.37× |
+
+**Floor factor** (MFH only): Keller/EG = 1.10×, 1.OG+ = 1.00×
+**Building type**: EFH = 1.06×, MFH = 1.00×
+**Age factor**: Under 36 = 0.87× (13% Startbonus), 36+ = 1.00×
+**Deductible**: None = 1.00×, €300 = 0.93×
+**Contract duration**: 1yr = 1.11×, 3yr = 1.00×
+**Payment mode**: Monthly = 1.00×, Annual = 0.94×
+
+**Calibration**: 80m², München, MFH 2.OG, age 36+, no SB, 3yr, monthly → Smart €9.01, Best €12.40 ✓
+
+**Tiers** (ERGO names: Smart / Best):
+- **Smart** (→ grundschutz): Leistungsstarke Absicherung, Feuer/Wasser/Sturm/Einbruch, optional Diebstahl €10k
+- **Best** (→ komfort): Topschutz, grobe Fahrlässigkeit 100%, einfacher Diebstahl €10k inkl., Bestseller
+
+**Add-on modules** (separate pricing, not included in base tiers):
+- Haus- und Wohnungsschutzbrief (~€1.71/month)
+- Glasversicherung (~€2.52/month for 48m²)
+- Weitere Naturgefahren/Elementar (~€1.12/month for 48m²)
+- Unbenannte Gefahren (~€5.82/month, requires Naturgefahren)
+- Fahrrad- und E-Bike-Schutz (from €1.85/month)
+
+**Wizard steps**: Building type (MFH/EFH) → Floor (MFH only, 5 options) → Living space (m²) → Address (street+nr+ZIP+city, validated) → Insurance start → Birth date → Plan selection (Smart/Best, with add-ons, SB, payment mode, contract duration on same page)
+
+**Form fields**: buildingType (radio: Wohnung in MFH/In einem EFH), floor (radio: Keller/EG/1.OG/2.OG/3.OG+, MFH only), livingSpace (number, m²), street (text, validated), houseNumber (text), zip (text), city (auto-populated), insuranceStart (radio: Morgen/Nächsten Monat/Anderes Datum), birthDate (spinbutton: Tag/Monat/Jahr), plan (tabs: Smart/Best), selbstbeteiligung (dropdown: Keine/€300/€300 Flexi-SB), zahlweise (dropdown), vertragslaufzeit (dropdown: 1/3 Jahre), addOns (checkboxes: Glasversicherung/Naturgefahren/Unbenannte Gefahren/Fahrradschutz/Wohnungsschutzbrief)
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/hausrat/screenshots/, research/hausrat/price-matrix.json
+**Confidence**: HIGH (23 data points, coverage linearity R²=0.998)
+**Discrepancies from previous entry**: Only 2 tiers (was 3). Coverage from m² (was user-entered €10k-€150k). Tier model additive (was multiplicative). ZIP-specific pricing (was 4 broad zones). Age is binary under-36 discount (was flat). Floor and building type affect pricing (not modeled before). Deductible, contract duration, and add-on modules discovered. Street-level address validation required.
 
 ---
 
@@ -231,25 +293,59 @@ When the user names a product, find the matching entry and use it as the startin
 | **Category** | person |
 | **Insured event** | death during policy term |
 | **Age range** | 18–65 |
-| **Coverage** | €25.000–€1.000.000, step €25.000, default €200.000 |
-| **Coverage unit** | per €25.000 |
-| **Risk class** | Smoker: Nichtraucher (1.0), Raucher (1.80) |
-| **Payment duration** | Fixed term: 10, 15, 20, 25, or 30 years |
-| **Waiting period** | None (but health check for >€300k) |
+| **Coverage** | €50.000–€500.000, free-form with slider, default €150.000 |
+| **Coverage unit** | per €1.000 (near-linear with small fixed base fee ~€0.91) |
+| **Risk class** | Smoker: Nichtraucher 10+ (1.0), Nichtraucher 1+ (~1.17), Raucher (1.87–3.92×, age-dependent) |
+| **Payment duration** | 1–50 years continuous slider, default 20 |
+| **Waiting period** | None |
 
-**Base rates** (per €25k/month): Grundschutz €1.71, Komfort €2.08, Premium €2.56
-**Age curve**: base=0.40, linear=0.20, quadratic=0.80 (exponential after 50)
-**Loading**: 25%
-**Calibration**: 35yo non-smoker, €200k, Komfort → ~€12/month ✓
+**Pricing model: Lookup table** (age curve too steep for polynomial — quadratic R²=0.958, cubic R²=0.995)
+
+**Reference prices (€200k, 20yr, Nichtraucher 10+, monthly):**
+
+| Age | Grundschutz | Komfort | Premium |
+|-----|-------------|---------|---------|
+| 25 | €3.94 | €4.97 | €7.50 |
+| 30 | €5.15 | €6.51 | €9.54 |
+| 35 | €7.54 | €9.54 | €13.54 |
+| 40 | €12.16 | €15.42 | €21.30 |
+| 45 | €20.32 | €25.82 | €35.02 |
+| 50 | €34.34 | €43.65 | €58.53 |
+| 55 | €60.94 | €77.48 | €103.11 |
+| 60 | €121.61 | €154.68 | €204.46 |
+
+**Smoker multipliers** (age-dependent, applied to Nichtraucher 10+ base):
+
+| Age | 25 | 30 | 35 | 40 | 45 | 50 | 55 | 60 |
+|-----|----|----|----|----|----|----|----|----|
+| Raucher/NS10+ | 1.87× | 2.23× | 2.65× | 3.02× | 3.46× | 3.92× | 3.83× | 3.19× |
+
+**Nichtraucher 1+ multiplier**: ~1.17× (slightly age-dependent, 1.13-1.24)
+
+**Tier ratios** (stable across ages): Komfort/Grundschutz ~1.27×, Premium/Grundschutz ~1.70-1.90× (decreases with age)
+
+**Term scaling** (relative to 20yr at age 35, Komfort): 10yr=0.63×, 15yr=0.77×, 20yr=1.00×, 25yr=1.38×, 30yr=1.95×
+
+**Coverage scaling**: Near-linear. price ≈ fixedFee + rate × coverage. Simpler: scale linearly from 200k reference, accept ~5% error.
+
+**Loading**: Built into base rates
+**Calibration**: 35yo Nichtraucher 10+, €200k, 20yr, Komfort → €9.54/month ✓
 
 **Tiers**:
-- **Grundschutz**: Todesfallschutz, konstante Summe
-- **Komfort**: + Nachversicherungsgarantie (bei Heirat, Geburt, Hauskauf), vorgezogene Leistung bei terminaler Krankheit
-- **Premium**: + fallende + konstante Summe wählbar, Dynamik, Beitragsbefreiung bei BU, weltweiter Schutz
+- **Grundschutz**: Todesfallschutz, konstante Summe, vorläufiger Versicherungsschutz, Nachversicherungsgarantie (basic)
+- **Komfort**: + erweiterte Nachversicherungsgarantie, vorübergehende Erhöhung, Soforthilfe bei Tod (default selection)
+- **Premium**: + Waisenschutz (€250/Monat pro Kind), Pflegebonus, Verlängerungsoption
 
-**Wizard steps**: Birth date → Smoker status → Coverage amount → Policy term → Plan selection → Personal data → Summary
+**Optional add-ons**: Dread Disease (critical illness benefit), Sicherheit Plus (guaranteed level premiums), Beitragsdynamik (3% annual dynamic increase)
 
-**Form fields**: birthDate, smokerStatus (inline-radio: Nichtraucher/Gelegenheitsraucher/Raucher), coverageAmount (slider), policyTerm (segmented: 10/15/20/25/30 Jahre), plan, salutation, firstName, lastName, street, zip, city, beneficiary (text)
+**Wizard steps**: Versicherte Person (Ich/Jemand anders) → Birth date → Absicherungsform (konstant/fallend) → Coverage amount → Policy term → Berufliche Situation (employment+occupation) → Smoker status (3 options) → Insurance start → Plan selection (with adjustable coverage/term on same page) → Personal data → Summary
+
+**Form fields**: versichertePerson (radio: Mich selbst/Jemand anders), birthDate (spinbutton: Tag/Monat/Jahr), absicherungsform (radio: Familien-Partnerabsicherung/Kredit-Darlehensabsicherung), coverageAmount (combobox+slider, €50k-€500k), policyTerm (combobox+slider, 1-50 years), beschaeftigungsverhaeltnis (dropdown: 12 options), ausgeuebterBeruf (autocomplete combobox), smokerStatus (radio: Nichtraucher 10+/Nichtraucher 1+/Raucher), insuranceStart (radio: 3 dates), plan (radio: Grundschutz/Komfort/Premium), dreadDisease (checkbox), sicherheitPlus (checkbox), beitragsdynamik (checkbox), zahlweise (dropdown), salutation, firstName, lastName, street, zip, city
+
+**Source**: ergo.de — researched 2026-04-13
+**Evidence**: research/risikoleben/screenshots/, research/risikoleben/price-matrix.json
+**Confidence**: HIGH (75 data points, verified against ERGO website examples)
+**Discrepancies from previous entry**: Coverage €50k-€500k (was €25k-€1M). Term 1-50 continuous (was fixed 10/15/20/25/30). 3 smoker classes (was 2). Smoker multiplier age-dependent 1.87-3.92× (was fixed 1.80×). Calibration €9.54 (was ~€12, off by 20%). Age curve exponential (quadratic inadequate). Employment type + occupation fields added. Absicherungsform (constant/falling) added. Add-ons (Dread Disease, Sicherheit Plus, Beitragsdynamik) discovered.
 
 ---
 

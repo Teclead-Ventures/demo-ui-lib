@@ -2,20 +2,20 @@
 
 Known URLs for ERGO's online tariff calculators. Updated by the scout agent at the start of each research run.
 
-**Last updated**: 2026-04-12 (Zahnzusatz confirmed)
+**Last updated**: 2026-04-13 (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat confirmed)
 
 ## Consumer portal (ergo.de)
 
 | Product | Product page | Calculator likely? |
 |---------|-------------|-------------------|
 | Zahnzusatz | https://www.ergo.de/de/Produkte/Zahnzusatzversicherung/zahnersatz | CONFIRMED — 3 separate calculators: abschluss_DS75, abschluss_DS90, abschluss_DS100. Beitragstabelle dialog available on product page with all prices by age band. |
-| Sterbegeld | https://www.ergo.de/de/Produkte/Sterbegeldversicherungen/Sterbegeldversicherung | Yes — Beitragsrechner |
+| Sterbegeld | https://www.ergo.de/de/Produkte/Sterbegeldversicherungen/Sterbegeldversicherung | CONFIRMED — Calculator at /abschluss, 4-step wizard. No Beitragstabelle. 160 data points collected 2026-04-13. |
 | Kfz (Auto) | https://www.ergo.de/de/Produkte/KFZ-Versicherung/Autoversicherung | Yes — full Tarifrechner |
-| Hausrat | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung/Hausratversicherung | Yes |
+| Hausrat | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung/Hausratversicherung | CONFIRMED — Calculator at /abschluss, 7-step wizard. Only 2 tiers (Smart/Best). Per-m² coverage model. 23 data points collected 2026-04-13. |
 | Haftpflicht | https://www.ergo.de/de/Produkte/Haftpflichtversicherung | Likely |
 | Rechtsschutz | https://www.ergo.de/de/Produkte/Rechtsschutzversicherung | Yes |
 | BU | https://www.ergo.de/de/Produkte/Berufsunfaehigkeitsversicherung | Possibly broker-only |
-| Risikoleben | https://www.ergo.de/de/Produkte/Lebensversicherung/Risikolebensversicherung | Yes — online Abschluss |
+| Risikoleben | https://www.ergo.de/de/Produkte/Lebensversicherung/Risikolebensversicherung | CONFIRMED — Calculator at /abschluss, 8-step wizard + price page. 3 smoker classes (not 2). Employment+occupation fields. 75 data points collected 2026-04-13. |
 | Unfall | https://www.ergo.de/de/Produkte/Unfallversicherung | Likely |
 | Reise | https://www.ergo.de/de/Produkte/Reiseversicherung | Likely |
 | Wohngebäude | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung | Possibly combined with Hausrat |

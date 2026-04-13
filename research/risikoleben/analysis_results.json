@@ -1,0 +1,75 @@
+{
+  "product": "risikoleben",
+  "pricing_model": {
+    "type": "exponential_age_curve",
+    "formula": "price = baseRate * (coverage/25000) * exp(growthRate * age) * smokerMultiplier * termFactor",
+    "note": "Exponential fits better than quadratic due to steep age curve",
+    "komfort_exponential": {
+      "a": 0.335792,
+      "b": 0.098873,
+      "r_squared": 0.956197
+    },
+    "komfort_quadratic": {
+      "base": 47.1793,
+      "linear": -288.6833,
+      "quadratic": 439.5752,
+      "r_squared": 0.95805
+    }
+  },
+  "reference_prices_200k_20yr_ns10": {
+    "grundschutz": {
+      "25": 3.94,
+      "30": 5.15,
+      "35": 7.54,
+      "40": 12.16,
+      "45": 20.32,
+      "50": 34.34,
+      "55": 60.94,
+      "60": 121.61
+    },
+    "komfort": {
+      "25": 4.97,
+      "30": 6.51,
+      "35": 9.54,
+      "40": 15.42,
+      "45": 25.82,
+      "50": 43.65,
+      "55": 77.48,
+      "60": 154.68
+    },
+    "premium": {
+      "25": 7.5,
+      "30": 9.54,
+      "35": 13.54,
+      "40": 21.3,
+      "45": 35.02,
+      "50": 58.53,
+      "55": 103.11,
+      "60": 204.46
+    }
+  },
+  "tier_ratios_at_35": {
+    "komfort_vs_grundschutz": 1.2653,
+    "premium_vs_grundschutz": 1.7958,
+    "premium_vs_komfort": 1.4193
+  },
+  "smoker_multipliers_komfort": {
+    "raucher_avg": 3.022,
+    "raucher_by_age": {
+      "25": 1.869,
+      "30": 2.233,
+      "35": 2.649,
+      "40": 3.024,
+      "45": 3.456,
+      "50": 3.923,
+      "55": 3.829,
+      "60": 3.19
+    },
+    "note": "Smoker multiplier increases with age - NOT constant"
+  },
+  "base_rates_per_25k_at_35_ns10_20yr": {
+    "grundschutz": 0.9425,
+    "komfort": 1.1925,
+    "premium": 1.6925
+  }
+}

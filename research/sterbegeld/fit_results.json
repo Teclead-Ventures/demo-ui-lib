@@ -1,0 +1,91 @@
+{
+  "product": "sterbegeld",
+  "sampled_at": "2026-04-13",
+  "data_points": 160,
+  "ages_sampled": [
+    40,
+    44,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85
+  ],
+  "age_range": {
+    "min": 40,
+    "max": 85
+  },
+  "coverage_range": {
+    "min": 1000,
+    "max": 20000,
+    "step": 500,
+    "default": 7000
+  },
+  "payment_duration": {
+    "formula": "90 - entry_age",
+    "min": 5,
+    "max": 46
+  },
+  "tiers": {
+    "grundschutz": {
+      "base_rate_per_1k": 3.7132,
+      "age_curve_quadratic": 5.4712,
+      "age_curve_linear": -1.623,
+      "age_curve_base": 1.0,
+      "r_squared": 0.977736,
+      "raw_coefficients": [
+        20.3157,
+        -6.0266,
+        3.7132
+      ]
+    },
+    "komfort": {
+      "base_rate_per_1k": 4.9883,
+      "age_curve_quadratic": 8.0887,
+      "age_curve_linear": -3.9626,
+      "age_curve_base": 1.0,
+      "r_squared": 0.942643,
+      "raw_coefficients": [
+        40.3487,
+        -19.7666,
+        4.9883
+      ]
+    },
+    "premium": {
+      "base_rate_per_1k": 5.6881,
+      "age_curve_quadratic": 8.0689,
+      "age_curve_linear": -3.9362,
+      "age_curve_base": 1.0,
+      "r_squared": 0.944255,
+      "raw_coefficients": [
+        45.8967,
+        -22.3895,
+        5.6881
+      ]
+    }
+  },
+  "tier_multipliers_at_age_50_8k": {
+    "grundschutz": 1.0,
+    "komfort": 1.0221,
+    "premium": 1.1699
+  },
+  "coverage_scaling": "linear (price proportional to coverage)",
+  "payment_mode_discounts": {
+    "monthly": 1.0,
+    "quarterly_factor": 0.9959,
+    "semiannual_factor": 0.9899,
+    "annual_factor": 0.9657
+  },
+  "calibration_point": {
+    "age": 44,
+    "coverage": 8000,
+    "tier": "komfort",
+    "expected": 27.45,
+    "our_assumption": 30.0,
+    "delta_pct": -8.5
+  }
+}

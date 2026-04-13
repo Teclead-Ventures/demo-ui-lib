@@ -1,0 +1,922 @@
+{
+  "product": "risikoleben",
+  "sampled_at": "2026-04-13",
+  "source_url": "https://www.ergo.de/de/Produkte/Lebensversicherung/Risikolebensversicherung/abschluss",
+  "ergo_tier_names": {
+    "grundschutz": "Grundschutz",
+    "komfort": "Komfort",
+    "premium": "Premium"
+  },
+  "tier_mapping": {
+    "grundschutz": "Grundschutz",
+    "komfort": "Komfort",
+    "premium": "Premium"
+  },
+  "smoker_classes": {
+    "nichtraucher_10plus": "Nichtraucher (nie/10+ Jahre)",
+    "nichtraucher_1plus": "Nichtraucher (1+ Jahr)",
+    "raucher": "Raucher"
+  },
+  "data_points": [
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 7.54
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 9.54
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 13.54
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 100000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 4.14
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 100000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 5.23
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 100000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 7.85
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 400000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 14.32
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 400000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 18.18
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 400000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 24.94
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 10
+      },
+      "output": {
+        "monthly_price": 4.76
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 10
+      },
+      "output": {
+        "monthly_price": 6.0
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 10
+      },
+      "output": {
+        "monthly_price": 8.86
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 30
+      },
+      "output": {
+        "monthly_price": 14.61
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 30
+      },
+      "output": {
+        "monthly_price": 18.55
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 30
+      },
+      "output": {
+        "monthly_price": 25.43
+      }
+    },
+    {
+      "inputs": {
+        "age": 25,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 3.94
+      }
+    },
+    {
+      "inputs": {
+        "age": 25,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 4.97
+      }
+    },
+    {
+      "inputs": {
+        "age": 25,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 7.5
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 5.15
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 6.51
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 9.54
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 12.16
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 15.42
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 21.3
+      }
+    },
+    {
+      "inputs": {
+        "age": 45,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 20.32
+      }
+    },
+    {
+      "inputs": {
+        "age": 45,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 25.82
+      }
+    },
+    {
+      "inputs": {
+        "age": 45,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 35.02
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 34.34
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 43.65
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 58.53
+      }
+    },
+    {
+      "inputs": {
+        "age": 55,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 60.94
+      }
+    },
+    {
+      "inputs": {
+        "age": 55,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 77.48
+      }
+    },
+    {
+      "inputs": {
+        "age": 55,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 103.11
+      }
+    },
+    {
+      "inputs": {
+        "age": 60,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 121.61
+      }
+    },
+    {
+      "inputs": {
+        "age": 60,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 154.68
+      }
+    },
+    {
+      "inputs": {
+        "age": 60,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 204.46
+      }
+    },
+    {
+      "inputs": {
+        "age": 25,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 7.18
+      }
+    },
+    {
+      "inputs": {
+        "age": 25,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 9.29
+      }
+    },
+    {
+      "inputs": {
+        "age": 25,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 13.48
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 11.2
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 14.54
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 20.57
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 19.43
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 25.27
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 35.06
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 35.8
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 46.63
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 63.88
+      }
+    },
+    {
+      "inputs": {
+        "age": 45,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 68.47
+      }
+    },
+    {
+      "inputs": {
+        "age": 45,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 89.23
+      }
+    },
+    {
+      "inputs": {
+        "age": 45,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 121.3
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 131.33
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 171.24
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 231.56
+      }
+    },
+    {
+      "inputs": {
+        "age": 55,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 227.38
+      }
+    },
+    {
+      "inputs": {
+        "age": 55,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 296.64
+      }
+    },
+    {
+      "inputs": {
+        "age": 55,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 399.89
+      }
+    },
+    {
+      "inputs": {
+        "age": 60,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 377.92
+      }
+    },
+    {
+      "inputs": {
+        "age": 60,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 493.38
+      }
+    },
+    {
+      "inputs": {
+        "age": 60,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "raucher",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 663.3
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 5.8
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 7.34
+      }
+    },
+    {
+      "inputs": {
+        "age": 30,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 10.63
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 14.16
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 17.98
+      }
+    },
+    {
+      "inputs": {
+        "age": 40,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 24.68
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 42.58
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 54.14
+      }
+    },
+    {
+      "inputs": {
+        "age": 50,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_1plus",
+        "term_years": 20
+      },
+      "output": {
+        "monthly_price": 72.4
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 15
+      },
+      "output": {
+        "monthly_price": 5.84
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 15
+      },
+      "output": {
+        "monthly_price": 7.38
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 15
+      },
+      "output": {
+        "monthly_price": 10.69
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "grundschutz",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 25
+      },
+      "output": {
+        "monthly_price": 10.35
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "komfort",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 25
+      },
+      "output": {
+        "monthly_price": 13.13
+      }
+    },
+    {
+      "inputs": {
+        "age": 35,
+        "coverage": 200000,
+        "tier": "premium",
+        "smoker": "nichtraucher_10plus",
+        "term_years": 25
+      },
+      "output": {
+        "monthly_price": 18.28
+      }
+    }
+  ]
+}

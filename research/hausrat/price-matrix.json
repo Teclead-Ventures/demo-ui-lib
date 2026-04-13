@@ -1,0 +1,150 @@
+{
+  "product": "hausrat",
+  "sampled_at": "2026-04-13",
+  "source_url": "https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung/Hausratversicherung/abschluss",
+  "ergo_tier_names": {
+    "smart": "Smart",
+    "best": "Best"
+  },
+  "tier_mapping": {
+    "smart": "grundschutz",
+    "best": "komfort"
+  },
+  "defaults": {
+    "building_type": "Mehrfamilienhaus",
+    "floor": "2. Obergeschoss",
+    "deductible": "Keine Selbstbeteiligung",
+    "payment_frequency": "monatlich",
+    "contract_duration": "3 Jahre",
+    "coverage_per_m2": 650
+  },
+  "regional_data_points": [
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "50667", "city": "Köln", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 11.82, "best_monthly": 15.20, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "01067", "city": "Dresden", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 8.70, "best_monthly": 12.08, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "24103", "city": "Kiel", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.71, "best_monthly": 13.10, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "54290", "city": "Trier", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 6.92, "best_monthly": 10.30, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "20095", "city": "Hamburg", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 12.30, "best_monthly": 15.68, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "10117", "city": "Berlin", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 12.30, "best_monthly": 15.68, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "90402", "city": "Nürnberg", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 7.10, "best_monthly": 10.48, "coverage": 52000}
+    }
+  ],
+  "coverage_linearity_data": [
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 40, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 4.89, "best_monthly": 8.27, "coverage": 26000}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 60, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 6.78, "best_monthly": 10.17, "coverage": 39000}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40, "coverage": 52000}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 100, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 11.49, "best_monthly": 14.87, "coverage": 65000}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 120, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 13.68, "best_monthly": 17.06, "coverage": 78000}
+    }
+  ],
+  "floor_data": [
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "Keller", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.95, "best_monthly": 13.33}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "Erdgeschoss", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.95, "best_monthly": 13.33}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "1.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "3.OG+", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40}
+    }
+  ],
+  "building_type_data": [
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "N/A", "building_type": "EFH", "birth_year": 1990},
+      "output": {"smart_monthly": 9.55, "best_monthly": 12.93}
+    }
+  ],
+  "age_data": [
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1995, "age_at_start": 31},
+      "output": {"smart_monthly": 7.84, "best_monthly": 10.79}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990, "age_at_start": 36},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40}
+    },
+    {
+      "inputs": {"zip": "80331", "city": "München", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1980, "age_at_start": 46},
+      "output": {"smart_monthly": 9.01, "best_monthly": 12.40}
+    }
+  ],
+  "payment_mode_data": {
+    "base_case": {"zip": "80331", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990},
+    "best_prices": {
+      "monthly": 12.40,
+      "annual": 140.38,
+      "annual_equivalent_of_monthly": 148.80,
+      "annual_discount_factor": 0.9434
+    },
+    "smart_prices": {
+      "monthly": 9.01,
+      "annual": 102.08,
+      "annual_equivalent_of_monthly": 108.12,
+      "annual_discount_factor": 0.9441
+    }
+  },
+  "deductible_data": {
+    "base_case": {"zip": "80331", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990, "tier": "Best", "payment": "monthly"},
+    "no_deductible": 12.40,
+    "deductible_300": 11.50,
+    "deductible_factor": 0.9274
+  },
+  "contract_duration_data": {
+    "base_case": {"zip": "80331", "m2": 80, "floor": "2.OG", "building_type": "MFH", "birth_year": 1990, "tier": "Best", "payment": "monthly"},
+    "duration_3_years": 12.40,
+    "duration_1_year": 13.78,
+    "three_year_discount_factor": 0.8998
+  }
+}
