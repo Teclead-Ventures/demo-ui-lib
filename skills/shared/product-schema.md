@@ -24,7 +24,7 @@ N = sequential number. Used for reference only.
 | Parameter | Value |
 |-----------|-------|
 | **ID** | kebab-case-id |
-| **Category** | person | property | liability | animal | travel |
+| **Category** | person | property | liability | animal | travel | motor |
 | **Insured event** | what triggers payout |
 | **Age range** | min–max |
 | **Coverage** | €min–€max, step €step, default €default |
@@ -81,6 +81,18 @@ Choose the format that matches the product's pricing template (see pricing-model
 **Pricing formula**: `price = bausteinSum × familyMult × sbDiscount × contractDiscount × youthDiscount`
 **Factor multipliers**: [family, SB, contract, youth/senior]
 **Calibration**: [typical config] → €XX.XX/month ✓
+```
+
+**Template E (Kfz-specific — additive component model with SF lookup tables):**
+```markdown
+**Pricing model: Template E** (Kfz-specific additive components — no age curve)
+**Pricing formula**: `monthlyPremium = HP_base × HP_SF%/100 + VK_base × VK_SF%/100 + tierAddon`
+**Base rates** (at 100% SF, reference vehicle, reference region):
+[table of component × tier base rates]
+**SF lookup tables**: [HP SF table, VK SF table — 51 levels each]
+**Coverage types**: [HP only / HP+TK / HP+VK]
+**Factor multipliers**: [mileage, region, SB, payment mode]
+**Calibration**: [reference vehicle, region, SF level, tier] → €XX.XX/month ✓
 ```
 
 The calibration line is CRITICAL — it's the sanity check. The formula with the stated parameters MUST produce a price within 5% of the calibration target for the stated customer profile.
@@ -191,6 +203,7 @@ Before accepting a product entry (whether from ergo-researcher or manual creatio
 8. [ ] For Template B: Lookup table covers the full age range at 5-year intervals
 9. [ ] For Template C: Regional multipliers sampled for at least 5 ZIP codes
 10. [ ] For Template D: Baustein additivity verified (error ≤ €0.01), all factor multipliers present
+10b. [ ] For Template E: SF lookup tables provided for HP and VK, component additivity verified, base rates at 100% SF documented
 11. [ ] Risk class multipliers in 0.5–4.0 range (extended from 3.0 — Risikoleben smoker reaches 3.92×)
 12. [ ] If risk multipliers are age-dependent, per-age values documented
 13. [ ] Tier benefits meaningfully differentiate (not just price)

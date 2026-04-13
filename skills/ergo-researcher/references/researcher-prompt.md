@@ -25,13 +25,25 @@ And the pricing model:
 
 Your job is to verify or correct these assumptions with real data.
 
-## Phase A: Structure crawl (~3 min)
+## Phase 0: URL existence check (~10 seconds)
 
-1. Open the calculator:
+Before investing time in a full research run, verify the product page actually exists. Some products (e.g., Tierkranken) have no online presence — all URLs return 404. A quick check saves wasting an entire agent slot.
+
+```bash
+playwright-cli -s={{PRODUCT_ID}} open {{CALCULATOR_URL}} --headed
+playwright-cli -s={{PRODUCT_ID}} eval "document.title"
+```
+
+If the page returns a 404, "Seite nicht gefunden", or redirects to the ERGO homepage, report STATUS: FAILED with "No online calculator exists" and stop. Don't spend 30 minutes trying alternative URLs — check 2-3 variants max and move on.
+
+## Phase A: Structure crawl (~5 min)
+
+1. Open the calculator (or use the page from Phase 0 if it loaded successfully):
 ```bash
 playwright-cli -s={{PRODUCT_ID}} open {{CALCULATOR_URL}} --headed
 playwright-cli -s={{PRODUCT_ID}} snapshot
 ```
+   **Note**: Always use `--headed` so the user can watch the browser. This is important for trust and debugging.
 
 2. **Dismiss cookie consent banner first** — look for "Alle akzeptieren" or "Alle Cookies akzeptieren" in the snapshot. Click it before doing anything else.
 
@@ -59,7 +71,9 @@ playwright-cli -s={{PRODUCT_ID}} screenshot --filename=research/{{PRODUCT_ID}}/s
    - Is there a coverage slider/input, or is coverage fixed by tier? (Rechtsschutz: fixed)
    - Does coverage use a standard unit (EUR) or something else (EUR/day, m²)?
    - Are there toggleable modules/Bausteine? (Rechtsschutz: Privat/Beruf/Wohnen/Verkehr)
-   - Is there an age input? (Rechtsschutz: only for youth discount, not pricing)
+   - Is there an age input? (Rechtsschutz: only for youth discount, not pricing. Kfz: collected but zero pricing effect.)
+   - Is pricing vehicle-specific via HSN/TSN? (Kfz: cascading dropdowns for Hersteller→Modell→Kraftstoff→Leistung)
+   - Are there separate factor lookup tables for different coverage components? (Kfz: separate SF tables for HP and VK)
    - What brand is the calculator? (Usually ERGO, but Pflegezusatz is DKV)
 
 8. Write the structure to `research/{{PRODUCT_ID}}/structure.md`:
@@ -81,7 +95,7 @@ playwright-cli -s={{PRODUCT_ID}} screenshot --filename=research/{{PRODUCT_ID}}/s
 
 ## Phase B: Price sampling (~8 min)
 
-Systematically fill the form with varied inputs. Goal: build a price matrix with 50-100 data points.
+Systematically fill the form with varied inputs. Goal: build a price matrix with 16-50 data points (16 is enough for simple models like binary step + linear coverage; 50 for complex ones).
 
 ### Sampling grid
 
@@ -120,7 +134,7 @@ For each data point:
 6. If the price page shows all tiers at once, record ALL tier prices (saves restarts)
 7. Start fresh for the next data point
 
-**Beitragstabelle note**: Of the 7 products researched (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz), only Zahnzusatz had a Beitragstabelle dialog. None of the other 6 had one. Still check (10-second effort), but don't count on it.
+**Beitragstabelle note**: Of 10 products researched, only Zahnzusatz had a Beitragstabelle dialog. The other 9 did not. Still check (10-second effort), but don't count on it.
 
 **Timing**: Wait 5 seconds between page loads:
 ```bash
@@ -134,21 +148,19 @@ playwright-cli -s={{PRODUCT_ID}} eval "await new Promise(r => setTimeout(r, 5000
 
 ### Save raw data
 
-Write to `research/{{PRODUCT_ID}}/price-matrix.json`:
+Write to `research/{{PRODUCT_ID}}/price-matrix.json` (adapt the schema to match the product — most have 2 tiers, some have 3, some have separate products or GOT variants):
 ```json
 {
   "product": "{{PRODUCT_ID}}",
   "sampled_at": "YYYY-MM-DD",
   "source_url": "{{CALCULATOR_URL}}",
   "ergo_tier_names": {
-    "tier1": "Basis",
-    "tier2": "Smart",
-    "tier3": "Best"
+    "tier1": "Smart",
+    "tier2": "Best"
   },
   "tier_mapping": {
     "tier1": "grundschutz",
-    "tier2": "komfort",
-    "tier3": "premium"
+    "tier2": "komfort"
   },
   "data_points": [
     {
@@ -228,7 +240,7 @@ Write to `research/{{PRODUCT_ID}}/analysis.md`:
 # ERGO {{PRODUCT_NAME}} — Pricing Analysis
 
 ## Derived Parameters
-- Base rates: Grundschutz €X.XX, Komfort €X.XX, Premium €X.XX (per [unit])
+- Base rates: [use ERGO's actual tier names, e.g., Smart €X.XX, Best €X.XX — most products have 2 tiers, not 3] (per [unit])
 - Age curve: base=X.XX, linear=X.XX, quadratic=X.XX
 - Age curve R²: X.XX
 - Risk class multipliers: [class]: [multiplier], ...

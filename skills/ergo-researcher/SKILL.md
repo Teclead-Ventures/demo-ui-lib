@@ -101,11 +101,13 @@ Agent(
   Read: the current products.md entry for comparison.
   
   Challenge:
-  1. Does the age curve make actuarial sense?
+  1. Does the age curve make actuarial sense? (Or is there no age curve — Template D/E?)
   2. Are there outlier data points suggesting a non-polynomial model?
-  3. Does the Python curve fit have R² > 0.95?
-  4. Are ALL fields ERGO collects documented?
-  5. Is the products-entry.md complete per product-schema.md?
+  3. For Template A/B: Does the Python curve fit have R² > 0.95?
+  4. For Template D: Is Baustein/module additivity verified (error < €0.02)?
+  5. For Template E: Are component lookup tables (e.g., SF%) verified against actual prices?
+  6. Are ALL fields ERGO collects documented?
+  7. Is the products-entry.md complete per product-schema.md?
   
   Output: reviewed analysis with corrections + final products-entry.md."
 )
@@ -167,7 +169,7 @@ Run the full feedback cycle for the overall research effort:
 - Which products were easy vs hard to research?
 - Where is confidence low?
 - What methodology improvements should persist for next time?
-- What changes should be made to pricing-model.md (e.g., support for age bands)?
+- Were any new template types discovered that need adding to pricing-model.md?
 
 ---
 
@@ -297,6 +299,7 @@ print(json.dumps({
     "base_price_at_min_age": round(float(base_price), 2),
     "recommendation": "Use lookup table (Template B)" if results["quadratic"]["r_squared"] < 0.96
                        else "Use polynomial (Template A)",
+    "note": "This stub only checks A vs B. The authoritative fit_pricing.py in researcher-prompt.md Phase C checks all 6 templates (A, A+step, B, C, D, E). Use that, not this stub.",
 }, indent=2))
 ```
 
@@ -328,8 +331,8 @@ ERGO's wizards are React SPAs. Back-navigation is unreliable for early-step chan
 - Review: ~3 min
 - **Total per product: ~25-50 min**
 
-With 3 parallel sessions (Mode B): Actual batch of 3 took ~87 min (limited by slowest agent, Sterbegeld).
-Projected for remaining 10 products: ~4 batches × ~90 min = ~6 hours.
+With 3 parallel sessions (Mode B): Batches took ~40-87 min (batch 4 was ~37 min, batch 2 was ~87 min limited by Sterbegeld's 160 data points).
+Projected for remaining 6 products: ~2 batches × ~40 min = ~80 min. Some products (BU) may not have online calculators — check URL first.
 
 **Data point targets** (learned 2026-04-13):
 - Products with linear coverage scaling: 50 points is enough, don't over-sample coverage variants
