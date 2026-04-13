@@ -183,15 +183,17 @@ Before accepting a product entry (whether from ergo-researcher or manual creatio
 
 1. [ ] All required sections present
 2. [ ] ID is unique and kebab-case
-3. [ ] Pricing template identified (A=polynomial, B=lookup, C=property)
+3. [ ] Pricing template identified (A, A+step, B, C, or D)
 4. [ ] Calibration target price matches within 5% using stated parameters
 5. [ ] Tier pricing order: cheapest tier < most expensive tier
 6. [ ] For Template A: Age curve produces positive values across entire age range
-7. [ ] For Template B: Lookup table covers the full age range at 5-year intervals
-8. [ ] For Template C: Regional multipliers sampled for at least 5 ZIP codes
-9. [ ] Risk class multipliers in 0.5–4.0 range (extended from 3.0 — Risikoleben smoker reaches 3.92×)
-10. [ ] If risk multipliers are age-dependent, per-age values documented
-11. [ ] Tier benefits meaningfully differentiate (not just price)
-12. [ ] Wizard steps match ERGO's actual flow (verified via screenshots)
-13. [ ] Form fields cover all data needed for the Supabase table columns
-14. [ ] Tier count matches ERGO (2 or 3 — don't assume 3)
+7. [ ] For Template A+step: Step threshold age documented, both band multipliers verified in data
+8. [ ] For Template B: Lookup table covers the full age range at 5-year intervals
+9. [ ] For Template C: Regional multipliers sampled for at least 5 ZIP codes
+10. [ ] For Template D: Baustein additivity verified (error ≤ €0.01), all factor multipliers present
+11. [ ] Risk class multipliers in 0.5–4.0 range (extended from 3.0 — Risikoleben smoker reaches 3.92×)
+12. [ ] If risk multipliers are age-dependent, per-age values documented
+13. [ ] Tier benefits meaningfully differentiate (not just price)
+14. [ ] Wizard steps match ERGO's actual flow, or "N/A (single-page configurator)" if no wizard
+15. [ ] Form fields cover all data needed for the Supabase table columns
+16. [ ] Tier count and structure matches ERGO (2 tiers, 3 tiers, or separate products — don't assume 3)

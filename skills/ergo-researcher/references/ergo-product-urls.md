@@ -18,11 +18,12 @@ Known URLs for ERGO's online tariff calculators. Updated by the scout agent at t
 | Pflegezusatz | https://www.ergo.de/de/Produkte/Pflegeversicherung/Pflegezusatzversicherung | /abschluss-tagegeld | CONFIRMED — DKV-branded single-page configurator. 3 separate products (PTG/PZU/KFP). PTG exponential age curve. 82 data points. Researched 2026-04-13. |
 | Haftpflicht | https://www.ergo.de/de/Produkte/Haftpflichtversicherung | likely /abschluss | Unconfirmed |
 | BU | https://www.ergo.de/de/Produkte/Berufsunfaehigkeitsversicherung | unknown | Unconfirmed — possibly broker-only |
-| Unfall | https://www.ergo.de/de/Produkte/Unfallversicherung | Likely |
-| Reise | https://www.ergo.de/de/Produkte/Reiseversicherung | Likely |
-| Wohngebäude | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung | Possibly combined with Hausrat |
-| Pflege | https://www.ergo.de/de/Produkte/Pflegeversicherung | Possibly |
-| Motorrad | https://www.ergo.de/de/Produkte/KFZ-Versicherung/Motorradversicherung | Yes |
+| Reise | https://www.ergo.de/de/Produkte/Reiseversicherung | likely /abschluss | Unconfirmed |
+| Wohngebäude | https://www.ergo.de/de/Produkte/Hausrat-und-Gebaeudeversicherung | likely /abschluss | Unconfirmed — possibly combined with Hausrat |
+| Tierkranken | https://www.ergo.de/de/Produkte/Tierversicherung | unknown | Unconfirmed — may be DKV-branded |
+| Motorrad | https://www.ergo.de/de/Produkte/KFZ-Versicherung/Motorradversicherung | likely /abschluss | Unconfirmed |
+| Cyber | unknown | unknown | Unconfirmed — may not exist on ergo.de |
+| Krankentagegeld | unknown | unknown | Unconfirmed — may be DKV-branded |
 
 ## Broker portal (makler.ergo.de)
 

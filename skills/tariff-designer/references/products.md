@@ -239,7 +239,7 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 | **Insured event** | legal disputes (lawyer fees, court costs) |
 | **Age range** | 18+ (no upper limit; under-25 gets 10% Startbonus) |
 | **Coverage** | Fixed by tier: Smart = €2M, Best = unlimited. No user-selectable coverage. |
-| **Coverage unit** | N/A (no coverage selection) |
+| **Coverage unit** | flat rate (no user-selectable coverage; Smart=€2M cap, Best=unlimited) |
 | **Risk class** | None |
 | **Payment duration** | 1 year or 3 years (3yr = 10% Dauernachlass) |
 | **Waiting period** | None |
@@ -325,6 +325,8 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 
 **Form fields**: versichertePerson (radio: Mich selbst/Jemand anders), birthDate (spinbutton: Tag/Monat/Jahr), occupation (autocomplete combobox), selfEmployed (radio: Ja/Nein), coverageAmount (slider, €10k-€300k), plan (tabs: Basic/Smart/Best), addOns (checkboxes), vertragslaufzeit (dropdown: 1-4 Jahre), zahlweise (dropdown)
 
+**Validation**: Age 18-75, coverage €10k-€300k step €5k, occupation required (autocomplete accepts specific job titles only — some trigger follow-up questions e.g. Polizist)
+
 **Source**: ergo.de — researched 2026-04-13
 **Evidence**: research/unfall/screenshots/, research/unfall/price-matrix.json
 **Confidence**: HIGH (16 data points, coverage linearity R²=1.0, occupation multipliers verified constant)
@@ -377,6 +379,8 @@ Tier difference is a fixed ~€3.39/month (additive), not a percentage multiplie
 
 **Loading**: Built into base rates
 **Calibration**: 35yo Nichtraucher 10+, €200k, 20yr, Komfort → €9.54/month ✓
+
+**Note — ERGO tier names**: ERGO's calculator labels these as Grundschutz/Komfort/Premium (verified in batch 2 research screenshots). Unlike Unfall (Basic/Smart/Best) and Hausrat (Smart/Best), Risikoleben uses standard tier names.
 
 **Tiers**:
 - **Grundschutz**: Todesfallschutz, konstante Summe, vorläufiger Versicherungsschutz, Nachversicherungsgarantie (basic)
@@ -445,9 +449,11 @@ Full per-year rates for ages 20-99 available in research/pflegezusatz/products-e
 
 **Optional features**: Inflationsschutz (auto-increase every 3 years), Erhöhungsoption (increase on life events without health check), Pflege Schutz Paket (24h Versorgungsgarantie, €1.000 Einmalzahlung ab PG2)
 
-**Calculator**: Single-page configurator (NOT a wizard) — just Geburtsjahr dropdown + Tagegeldhöhe dropdown → instant price
+**Wizard steps**: N/A (single-page configurator — no wizard steps. Just Geburtsjahr dropdown + Tagegeldhöhe dropdown → instant price display.)
 
 **Form fields**: birthYear (dropdown), dailyBenefit (dropdown: €5-€160 in €5 steps)
+
+**Validation**: birthYear range 1925–2026, dailyBenefit €5–€160 in €5 steps only
 
 **Source**: ergo.de — researched 2026-04-13
 **Evidence**: research/pflegezusatz/screenshots/, research/pflegezusatz/price-matrix.json

@@ -120,7 +120,7 @@ For each data point:
 6. If the price page shows all tiers at once, record ALL tier prices (saves restarts)
 7. Start fresh for the next data point
 
-**Beitragstabelle note**: Of the 4 products researched so far, only Zahnzusatz had a Beitragstabelle dialog. Sterbegeld, Risikoleben, and Hausrat did NOT have one. Still check (10-second effort), but don't count on it.
+**Beitragstabelle note**: Of the 7 products researched (Zahnzusatz, Sterbegeld, Risikoleben, Hausrat, Rechtsschutz, Unfall, Pflegezusatz), only Zahnzusatz had a Beitragstabelle dialog. None of the other 6 had one. Still check (10-second effort), but don't count on it.
 
 **Timing**: Wait 5 seconds between page loads:
 ```bash

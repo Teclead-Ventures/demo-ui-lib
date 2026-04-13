@@ -310,7 +310,7 @@ ERGO's wizards are React SPAs. Back-navigation is unreliable for early-step chan
 **Realistic timing per product** (updated 2026-04-13 from batch run):
 - Structure crawl: ~5 min (navigate all steps, screenshot, document)
 - Price sampling: ~15-40 min depending on product complexity
-  - Simple (Sterbegeld, 50 points): ~17 min
+  - Simple (Sterbegeld: ran 160 pts in ~87 min; 50 pts recommended, ~17 min)
   - Complex (Risikoleben, 75 points with 2 risk classes): ~30 min
   - Property (Hausrat, 23 points with ZIP/floor/building variations): ~15 min
 - Analysis (Python script): ~2 min

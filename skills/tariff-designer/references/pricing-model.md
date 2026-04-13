@@ -54,7 +54,7 @@ function calculateAgeFactor(
 
 | Product | base | linear | quadratic | Shape | Why |
 |---------|------|--------|-----------|-------|-----|
-| Sterbegeld | 1.00 | −1.62 | 5.47 | Cubic preferred (R²=0.997 vs 0.978 quadratic) | Mortality rises steeply with age; use lookup table for best accuracy |
+| Sterbegeld | ~~1.00~~ | ~~−1.62~~ | ~~5.47~~ | **Template B — DO NOT use polynomial**. Lookup table in products.md. | Age-dependent tier multipliers + fixed fee make polynomial inaccurate |
 | BU | 0.70 | 0.50 | −0.15 | Bell curve ~45-50 | Disability risk peaks mid-career, drops near retirement |
 | Zahnzusatz | 0.13 | 3.08 | −0.52 | Steep near-linear | ERGO uses discrete age bands; polynomial is smooth approximation (R²=0.997) |
 | Risikoleben | N/A | N/A | N/A | **Lookup table required** (quadratic R²=0.958 inadequate) | 60yo pays 31× of 25yo; smoker multiplier is age-dependent (1.87-3.92×) — polynomial cannot model this |
@@ -74,7 +74,7 @@ Some products (Haftpflicht, Rechtsschutz, Kfz, Cyber) have flat-rate pricing whe
 | Product | coverageUnit | Why |
 |---------|-------------|-----|
 | Haftpflicht | = defaultCoverage (€10M) | Premium is flat, coverage just sets the liability cap |
-| Rechtsschutz | = defaultCoverage (€300k) | Premium depends on legal areas covered, not the cap |
+| Rechtsschutz | N/A — uses Template D | No coverage unit; pricing is per-Baustein toggle, not per-coverage-amount |
 | Kfz | = 1 | Premium is per vehicle, not per coverage euro |
 | Cyber | = defaultCoverage (€25k) | Premium is flat, coverage sets the max payout |
 | Zahnzusatz | = 1 (flat rate) | Tariff name (DS75/DS90/DS100) IS the coverage level (reimbursement %). No user-selectable coverage amount. |
@@ -118,7 +118,7 @@ The demo pipeline uses one of these templates depending on the product's pricing
 
 ### Template A: Polynomial age curve (most person products)
 
-Used by: BU, Zahnzusatz (age-band approx.), Pflege, Tierkranken, Unfall, Krankentagegeld
+Used by: BU, Zahnzusatz (age-band approx.), Tierkranken, Krankentagegeld. NOT Unfall (uses A+step) or Pflege (uses B).
 
 ```typescript
 // src/lib/data/pricing.ts — Template A (polynomial)
@@ -162,7 +162,7 @@ export function calculateMonthlyPrice(
 
 ### Template B: Lookup table with interpolation (steep/complex age curves)
 
-Used by: Risikoleben (exponential + age-dependent smoker), Sterbegeld (age-dependent tier multipliers + fixed fee). Potentially Pflege if research shows R² < 0.96.
+Used by: Risikoleben, Sterbegeld, Pflegezusatz/PTG. Each has a different function signature — the TypeScript below is Risikoleben-specific. For Sterbegeld, use the per-age base rate table from products.md + fixed fee. For Pflegezusatz, use `price = ageRate(age) × dailyBenefit` with the per-year rate table from products.md (no tiers, no risk class).
 
 ```typescript
 // src/lib/data/pricing.ts — Template B (lookup table)
