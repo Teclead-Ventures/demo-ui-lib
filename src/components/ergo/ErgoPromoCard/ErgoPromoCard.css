@@ -19,7 +19,7 @@
 
 .ergo-promo--vertical .ergo-promo__image-container {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
 }
 

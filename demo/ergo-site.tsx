@@ -8,8 +8,8 @@ import { ErgoSectionHeader } from "../src/components/ergo/ErgoSectionHeader";
 import { ErgoPromoCard } from "../src/components/ergo/ErgoPromoCard";
 import { ErgoTileCard } from "../src/components/ergo/ErgoTileCard";
 import { ErgoCarousel } from "../src/components/ergo/ErgoCarousel";
-import { ErgoAccordion } from "../src/components/ergo/ErgoAccordion";
 import { ErgoReviewSection } from "../src/components/ergo/ErgoReviewSection";
+import { ErgoCtaButton } from "../src/components/ergo/ErgoCtaButton";
 import { ErgoArticleTeaser } from "../src/components/ergo/ErgoArticleTeaser";
 import { ErgoFooter } from "../src/components/ergo/ErgoFooter";
 
@@ -121,21 +121,24 @@ function ErgoSitePage() {
                 headline="Zahnzusatzversicherungen im Vergleich"
                 description="Ausgezeichnete Leistungen für Ihr Lächeln: bis zu 100 % Premium-Schutz."
                 price={{ prefix: "Z. B.", value: "24,70", suffix: "monatlich" }}
-                ctas={[{ href: "#", label: "Jetzt informieren", variant: "pill" }]}
+                badge={`${ERGO_ASSETS}/testurteile/dentaltarif-ds75-ds90-ds100-dvb-dve-25nt40.dam.png`}
+                ctas={[{ href: "#", label: "Jetzt informieren", variant: "filled" }]}
               />
               <ErgoPromoCard
                 image={`${ERGO_ASSETS}/produkte/sach/rechtsschutz/rechtsschutzversicherung.dam.jpg`}
                 headline="Rechtsschutz"
                 description="Stellen Sie sich Ihr Rechtsschutzpaket so zusammen, wie es zu Ihnen passt."
                 price={{ prefix: "Ab", value: "12,17", suffix: "monatlich" }}
-                ctas={[{ href: "#", label: "Jetzt informieren", variant: "pill" }]}
+                badge={`${ERGO_ASSETS}/grafiken/nebenkostenabrechnung-stoerer.dam.svg`}
+                ctas={[{ href: "#", label: "Jetzt informieren", variant: "filled" }]}
               />
               <ErgoPromoCard
                 image={`${ERGO_ASSETS}/produkte/kranken/augenversicherung.dam.jpg`}
                 headline="Augen- und Brillenversicherung"
                 description="Versicherungsschutz für Ihren Durchblick: bis zu 300 € Zuschuss."
                 price={{ prefix: "Z. B.", value: "7,10", suffix: "monatlich" }}
-                ctas={[{ href: "#", label: "Jetzt informieren", variant: "pill" }]}
+                badge={`${ERGO_ASSETS}/testurteile/ekomi_stoerer.dam.png`}
+                ctas={[{ href: "#", label: "Jetzt informieren", variant: "filled" }]}
               />
             </ErgoCarousel>
           </div>
@@ -175,8 +178,58 @@ function ErgoSitePage() {
                   ctaHref="#"
                   bgColor="var(--color-bg-blue)"
                 />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/BrokenArmIcon.svg`}
+                  title="Unfallversicherung"
+                  text="Finanzielle Absicherung bei Unfällen."
+                  ctaLabel="Mehr erfahren"
+                  ctaHref="#"
+                  bgColor="var(--color-bg-blue)"
+                />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/HospitalIcon.svg`}
+                  title="Krankenhauszusatzversicherung"
+                  text="Privatpatient im Krankenhaus."
+                  ctaLabel="Mehr erfahren"
+                  ctaHref="#"
+                  bgColor="var(--color-bg-blue)"
+                />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/HandsMoneyIcon.svg`}
+                  title="Basis-Rente"
+                  text="Steuerlich geförderte Altersvorsorge."
+                  ctaLabel="Mehr erfahren"
+                  ctaHref="#"
+                  bgColor="var(--color-bg-blue)"
+                />
               </ErgoCarousel>
             </div>
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section style={{ padding: "64px 24px", maxWidth: 1440, margin: "0 auto" }}>
+          <ErgoSectionHeader
+            label="SERVICES"
+            heading="Wir sind für Sie da"
+          />
+          <div style={{ marginTop: 40 }}>
+            <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
+              <ErgoPromoCard
+                layout="horizontal"
+                image={`${ERGO_ASSETS}/landingpages/frau-vor-laptop.dam.jpg`}
+                headline="Schaden melden"
+                description="Schnell und unkompliziert Ihren Schaden online melden."
+                ctas={[{ href: "#", label: "Jetzt melden", variant: "filled" }]}
+              />
+              <ErgoPromoCard
+                layout="horizontal"
+                image={`${ERGO_ASSETS}/service/kundenbereich-vertraege-mann-tablet.dam.jpg`}
+                headline="Kundenportal"
+                description="Verträge, Rechnungen und mehr – alles an einem Ort."
+                ctas={[{ href: "#", label: "Zum Portal", variant: "filled" }]}
+              />
+            </ErgoCarousel>
           </div>
         </section>
 
@@ -240,6 +293,62 @@ function ErgoSitePage() {
               />
             </ErgoCarousel>
           </div>
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            <ErgoCtaButton
+              href="#"
+              label="Alle Kontaktmöglichkeiten ansehen"
+              variant="arrow"
+            />
+          </div>
+        </section>
+
+        {/* Wissenswertes Section */}
+        <section style={{ padding: "64px 24px", backgroundColor: "#fef6d2" }}>
+          <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+            <ErgoSectionHeader
+              label="WISSENSWERTES"
+              heading="Gut zu wissen"
+            />
+            <div style={{ marginTop: 40 }}>
+              <ErgoCarousel columns={{ mobile: 1, tablet: 3, desktop: 3 }}>
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/MegaphoneIcon.svg`}
+                  title="Kunden werben Kunden"
+                  text="Empfehlen Sie ERGO weiter und sichern Sie sich Ihre Prämie."
+                  ctaLabel="Mehr erfahren"
+                  ctaHref="#"
+                  bgColor="#fef6d2"
+                />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/BusinessCardIcon.svg`}
+                  title="Newsletter"
+                  text="Regelmäßig informiert über Neuigkeiten und Angebote."
+                  ctaLabel="Jetzt anmelden"
+                  ctaHref="#"
+                  bgColor="#fef6d2"
+                />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/StoreIcon.svg`}
+                  title="Geschäftskunden"
+                  text="Maßgeschneiderte Lösungen für Ihr Unternehmen."
+                  ctaLabel="Mehr erfahren"
+                  ctaHref="#"
+                  bgColor="#fef6d2"
+                />
+              </ErgoCarousel>
+            </div>
+          </div>
+        </section>
+
+        {/* Seasonal Promo */}
+        <section style={{ padding: "64px 24px", maxWidth: 1440, margin: "0 auto" }}>
+          <ErgoPromoCard
+            layout="horizontal"
+            image={`${ERGO_ASSETS}/ratgeber/impuls/jungefrautanztimkirschgarten.dam.jpg`}
+            headline="Frühlings-Check"
+            description="Prüfen Sie jetzt Ihren Versicherungsschutz und starten Sie gut abgesichert in die neue Saison."
+            ctas={[{ href: "#", label: "Jetzt prüfen", variant: "filled" }]}
+          />
         </section>
 
         {/* Ratgeber Section */}
@@ -309,46 +418,6 @@ function ErgoSitePage() {
           </div>
         </section>
 
-        {/* FAQ Accordion */}
-        <section style={{ padding: "64px 24px", maxWidth: 800, margin: "0 auto" }}>
-          <ErgoSectionHeader heading="Häufig gestellte Fragen" />
-          <div style={{ marginTop: 32 }}>
-            <ErgoAccordion
-              items={[
-                {
-                  title: "Was ist eine Zahnzusatzversicherung?",
-                  content: (
-                    <p>
-                      Eine Zahnzusatzversicherung ergänzt die Leistungen Ihrer
-                      gesetzlichen Krankenversicherung für Zahnbehandlungen,
-                      Zahnersatz und Kieferorthopädie.
-                    </p>
-                  ),
-                },
-                {
-                  title: "Wann zahlt die Zahnzusatzversicherung?",
-                  content: (
-                    <p>
-                      Die Zahnzusatzversicherung zahlt für zahnärztliche
-                      Behandlungen, die über den Leistungskatalog der
-                      gesetzlichen Krankenversicherung hinausgehen.
-                    </p>
-                  ),
-                },
-                {
-                  title: "Gibt es eine Wartezeit?",
-                  content: (
-                    <p>
-                      Bei einigen Tarifen gibt es eine Wartezeit von 8 Monaten.
-                      ERGO bietet auch Tarife mit Sofortschutz ohne Wartezeit an.
-                    </p>
-                  ),
-                },
-              ]}
-              allowMultiple
-            />
-          </div>
-        </section>
       </main>
 
       <ErgoFooter linkGroups={footerLinks} />
