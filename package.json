@@ -12,6 +12,7 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "demo": "vite --config vite.demo.config.ts",
+    "demo:ergo": "vite --config vite.demo.config.ts --port 5174 demo/ergo-site.html",
     "screenshots": "tsx scripts/screenshots.ts",
     "test": "vitest",
     "lint": "eslint src"
