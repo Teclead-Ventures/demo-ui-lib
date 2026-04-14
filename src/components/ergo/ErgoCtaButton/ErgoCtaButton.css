@@ -1,0 +1,72 @@
+.ergo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition),
+    border-color var(--transition);
+}
+
+/* Pill variant (outline) */
+.ergo-cta--pill {
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  background: transparent;
+  border-radius: var(--border-radius-pill);
+  padding: 10px 24px;
+}
+
+.ergo-cta--pill:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.ergo-cta--pill:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Arrow variant (text link) */
+.ergo-cta--arrow {
+  color: var(--color-text);
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.ergo-cta--arrow:hover {
+  text-decoration: underline;
+}
+
+.ergo-cta--arrow:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.ergo-cta__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Filled variant (solid button) */
+.ergo-cta--filled {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-button);
+  padding: 10px 20px;
+}
+
+.ergo-cta--filled:hover {
+  background-color: var(--color-tertiary);
+}
+
+.ergo-cta--filled:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}

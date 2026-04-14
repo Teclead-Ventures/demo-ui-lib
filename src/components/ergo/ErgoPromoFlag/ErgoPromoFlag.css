@@ -1,0 +1,11 @@
+.ergo-flag {
+  display: inline-block;
+  background-color: var(--color-flag);
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  line-height: 1.3;
+}

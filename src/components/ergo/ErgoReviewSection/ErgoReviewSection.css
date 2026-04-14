@@ -1,0 +1,56 @@
+.ergo-review {
+  text-align: center;
+  font-family: var(--font-family);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-l) var(--space-base);
+}
+
+.ergo-review__quote {
+  font-family: var(--font-family-heading);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin: 0 0 var(--space-base);
+  padding: 0;
+  border: none;
+}
+
+.ergo-review__quote::before {
+  content: "\201C";
+}
+
+.ergo-review__quote::after {
+  content: "\201D";
+}
+
+.ergo-review__rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ergo-review__stars {
+  display: flex;
+  gap: 2px;
+}
+
+.ergo-review__score {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ergo-review__meta {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.ergo-review__company {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}

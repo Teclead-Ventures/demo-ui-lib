@@ -861,3 +861,42 @@ export function calculatePaymentDuration(age: number): number {
 
 ### Research complete
 All 14 ERGO products have been surveyed. 11 have online calculators with verified pricing models. 3 have no online calculator (Tierkranken, BU, Cyber). The "universal polynomial formula" assumption has been thoroughly disproven — Template A covers 1/14 products.
+
+---
+
+## Run: 2026-04-13 (Full site research — 8 pages, ergo-site-researcher)
+
+### Self-Assessment
+- **Result**: SUCCESS
+- Pages analyzed: 8 (Homepage, Products, Zahnzusatz, Kfz, Sterbegeld, Haftpflicht, Rechtsschutz, Ratgeber)
+- Firecrawl scrapes: 8 of 500
+- Components cataloged: 22 unique
+- Design tokens extracted: Full set (colors, typography, spacing, shadows, breakpoints)
+- Deliverables: CATALOG.md, BUILD_SPEC.md, 8 structure.md files
+
+### What worked
+- Mode B batching after proving methodology on 2 pages
+- Component type scanning via `[class*=cmp-]` + Set dedup
+- Differential analysis (only extract NEW component styles)
+- Parallel agents for Zahnzusatz + Kfz
+- ERGO uses Splide carousel library (identified from class names)
+
+### User Feedback
+- Match ERGO's layout exactly, no visual improvements
+- Google Fonts alternatives (DM Sans, Source Serif Pro)
+- SectionHeader as standalone component
+- Use existing component libraries (Embla, Radix)
+
+### Applied Improvements
+- [x] CATALOG.md: 22 components with full style specs
+- [x] BUILD_SPEC.md: 5-phase build plan with per-component instructions
+- [x] 8 page structure.md files
+- [x] User decisions saved to memory
+
+### Key findings
+- PromoCard is the most versatile component (vertical + horizontal variants)
+- TileCard has 4+ variants (icon, stat, contact, link)
+- ERGO uses AEM CMS with BEM-like `cmp-{component}__{element}` naming
+- StickyFooter on product pages needs IntersectionObserver
+- MegaMenu is 3-column with sub-category drill-down
+- All 22 components need new ergo/ implementations — 0 reuse from existing ui/

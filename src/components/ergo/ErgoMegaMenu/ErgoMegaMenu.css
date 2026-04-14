@@ -1,0 +1,143 @@
+.ergo-mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--box-shadow-medium);
+  font-family: var(--font-family);
+  z-index: 999;
+}
+
+.ergo-mega__container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-base);
+}
+
+.ergo-mega__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-s);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-s);
+}
+
+.ergo-mega__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ergo-mega__close {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: var(--color-text-muted);
+  padding: 4px 8px;
+  border-radius: var(--border-radius);
+}
+
+.ergo-mega__close:hover {
+  color: var(--color-text);
+}
+
+.ergo-mega__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 300px;
+  gap: var(--space-base);
+  min-height: 300px;
+}
+
+.ergo-mega__categories {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ergo-mega__cat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--color-text);
+  text-align: left;
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+.ergo-mega__cat-btn:hover {
+  background-color: #fbf4f4;
+}
+
+.ergo-mega__cat-btn--active {
+  border-left-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.ergo-mega__subitems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-left: 1px solid var(--color-border);
+  padding-left: var(--space-base);
+}
+
+.ergo-mega__sublink {
+  display: block;
+  padding: 10px 0;
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 16px;
+  transition: color var(--transition);
+}
+
+.ergo-mega__sublink:hover {
+  color: var(--color-primary);
+}
+
+.ergo-mega__promo {
+  background-color: var(--color-bg-disabled);
+  border-radius: var(--border-radius-large);
+  padding: var(--space-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.ergo-mega__promo-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ergo-mega__promo-price {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .ergo-mega__body {
+    grid-template-columns: 1fr;
+  }
+
+  .ergo-mega__promo {
+    display: none;
+  }
+}

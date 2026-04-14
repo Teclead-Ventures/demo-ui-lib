@@ -1,0 +1,27 @@
+.ergo-promo-banner {
+  background-color: var(--color-bg-yellow);
+  padding: var(--space-xs) var(--space-base);
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.ergo-promo-banner__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.ergo-promo-banner__link:hover {
+  color: var(--color-primary);
+}
+
+.ergo-promo-banner__link:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

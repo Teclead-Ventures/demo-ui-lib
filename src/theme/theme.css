@@ -2,17 +2,41 @@
   /* ERGO brand: Weinrot #8e0038, secondary red #bf1528 */
   --color-primary: #8e0038;
   --color-secondary: #bf1528;
+  --color-tertiary: #71022e;
   --color-text: #333333;
   --color-text-muted: #737373;
   --color-border: #d9d9d9;
+  --color-border-card: #c9c5c7;
   --color-bg-disabled: #f2f2f2;
   --color-text-disabled: #aeaeae;
   --border-radius: 4px;
   --border-radius-large: 8px;
+  --border-radius-pill: 100px;
+  --border-radius-button: 16px;
   --transition: 150ms ease;
-  --font-family: "FS Me", Arial, Helvetica, sans-serif;
-  --font-family-heading: "Fedra Serif", Georgia, "Times New Roman", serif;
+  --font-family: "DM Sans", Arial, Helvetica, sans-serif;
+  --font-family-heading: "Source Serif 4", Georgia, "Times New Roman", serif;
   --box-shadow-small: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
   --box-shadow-medium: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
   --color-focus: #326ec8;
+
+  /* ERGO site section backgrounds */
+  --color-bg-blue: #ccebed;
+  --color-bg-green: #d3ebe5;
+  --color-bg-yellow: #fef6d2;
+  --color-bg-magenta: #f5e1eb;
+  --color-flag: #c34a89;
+
+  /* Spacing scale */
+  --space-xxs: 4px;
+  --space-xs: 12px;
+  --space-s: 16px;
+  --space-base: 24px;
+  --space-m: 32px;
+  --space-l: 48px;
+  --space-xl: 64px;
+  --space-xxl: 96px;
+
+  /* Layout */
+  --max-width: 1440px;
 }

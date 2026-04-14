@@ -1,0 +1,53 @@
+.ergo-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--font-family);
+  color: var(--color-text);
+}
+
+.ergo-price__prefix {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ergo-price__value {
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.ergo-price__currency {
+  font-weight: 700;
+}
+
+.ergo-price__suffix {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Size: auto (hero) */
+.ergo-price--auto .ergo-price__value {
+  font-size: 40px;
+}
+
+.ergo-price--auto .ergo-price__currency {
+  font-size: 24px;
+}
+
+/* Size: medium (cards) */
+.ergo-price--medium .ergo-price__value {
+  font-size: 28px;
+}
+
+.ergo-price--medium .ergo-price__currency {
+  font-size: 18px;
+}
+
+/* Size: small (compact) */
+.ergo-price--small .ergo-price__value {
+  font-size: 20px;
+}
+
+.ergo-price--small .ergo-price__currency {
+  font-size: 14px;
+}

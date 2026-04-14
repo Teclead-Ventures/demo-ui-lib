@@ -1,0 +1,87 @@
+.ergo-carousel {
+  position: relative;
+}
+
+.ergo-carousel__track {
+  display: grid;
+  gap: var(--carousel-gap, 24px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ergo-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.ergo-carousel__track > * {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+/* Desktop columns */
+@media (min-width: 769px) {
+  .ergo-carousel__track {
+    grid-template-columns: repeat(
+      var(--carousel-cols-desktop, 3),
+      1fr
+    );
+  }
+}
+
+/* Tablet columns */
+@media (min-width: 481px) and (max-width: 768px) {
+  .ergo-carousel__track {
+    grid-template-columns: repeat(
+      var(--carousel-cols-tablet, 2),
+      1fr
+    );
+  }
+}
+
+/* Mobile columns */
+@media (max-width: 480px) {
+  .ergo-carousel__track {
+    grid-template-columns: repeat(
+      var(--carousel-cols-mobile, 1),
+      1fr
+    );
+  }
+}
+
+.ergo-carousel__nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: var(--space-base);
+}
+
+.ergo-carousel__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.ergo-carousel__btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.ergo-carousel__btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.ergo-carousel__btn:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}

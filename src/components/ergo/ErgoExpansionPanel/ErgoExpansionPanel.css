@@ -1,0 +1,56 @@
+.ergo-expansion {
+  font-family: var(--font-family);
+}
+
+.ergo-expansion__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+  padding: var(--space-s) 0;
+}
+
+.ergo-expansion__button:hover {
+  text-decoration: underline;
+}
+
+.ergo-expansion__button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.ergo-expansion__icon {
+  transition: transform 0.2s ease-in-out;
+}
+
+.ergo-expansion--open .ergo-expansion__icon {
+  transform: rotate(180deg);
+}
+
+.ergo-expansion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease-in-out;
+}
+
+.ergo-expansion--open .ergo-expansion__panel {
+  grid-template-rows: 1fr;
+}
+
+.ergo-expansion__content {
+  overflow: hidden;
+  font-size: 16px;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.ergo-expansion--open .ergo-expansion__content {
+  padding-bottom: var(--space-base);
+}
