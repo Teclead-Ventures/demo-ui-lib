@@ -13,6 +13,8 @@ export interface ErgoHeroBannerProps {
   ctas?: ErgoCtaButtonProps[];
   storerImage?: string;
   variant?: "full" | "short";
+  textPosition?: "left" | "right";
+  bgColor?: string;
   className?: string;
 }
 
@@ -26,13 +28,16 @@ export const ErgoHeroBanner: React.FC<ErgoHeroBannerProps> = ({
   ctas = [],
   storerImage,
   variant = "full",
+  textPosition = "right",
+  bgColor,
   className,
 }) => {
   return (
     <div
-      className={["ergo-hero", `ergo-hero--${variant}`, className]
+      className={["ergo-hero", `ergo-hero--${variant}`, textPosition === "left" ? "ergo-hero--text-left" : "", className]
         .filter(Boolean)
         .join(" ")}
+      style={bgColor ? { backgroundColor: bgColor } : undefined}
     >
       <div className="ergo-hero__image">
         <img src={image} alt={imageAlt} loading="eager" />

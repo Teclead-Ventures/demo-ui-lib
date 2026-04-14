@@ -18,6 +18,20 @@
   min-height: 360px;
 }
 
+.ergo-hero--text-left .ergo-hero__teaser {
+  grid-column: 1;
+  background-color: transparent;
+}
+
+.ergo-hero--text-left .ergo-hero__image {
+  grid-column: 2;
+}
+
+.ergo-hero--text-left .ergo-hero__headline {
+  color: var(--color-primary);
+  font-style: italic;
+}
+
 .ergo-hero__image {
   grid-column: 1 / -1;
   grid-row: 1;

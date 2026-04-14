@@ -14,6 +14,7 @@ export interface ErgoPromoCardProps {
   flag?: string;
   ctas?: ErgoCtaButtonProps[];
   layout?: "vertical" | "horizontal";
+  bgColor?: string;
   className?: string;
 }
 
@@ -27,6 +28,7 @@ export const ErgoPromoCard: React.FC<ErgoPromoCardProps> = ({
   flag,
   ctas = [],
   layout = "vertical",
+  bgColor,
   className,
 }) => {
   return (
@@ -38,6 +40,7 @@ export const ErgoPromoCard: React.FC<ErgoPromoCardProps> = ({
       ]
         .filter(Boolean)
         .join(" ")}
+      style={bgColor ? { backgroundColor: bgColor, borderColor: "transparent" } : undefined}
     >
       <div className="ergo-promo__image-container">
         <img
