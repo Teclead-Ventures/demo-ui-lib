@@ -211,25 +211,34 @@ function ErgoSitePage() {
         <section style={{ padding: "64px 24px", maxWidth: 1440, margin: "0 auto" }}>
           <ErgoSectionHeader
             label="SERVICES"
-            heading="Wir sind für Sie da"
+            heading="Sparen Sie Zeit durch einfache Online-Services"
+            subtitle="Informationen und Wissenswertes für ERGO Kunden und Interessierte"
           />
           <div style={{ marginTop: 40 }}>
             <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
               <ErgoPromoCard
-                layout="horizontal"
+                layout="vertical"
                 image={`${ERGO_ASSETS}/landingpages/frau-vor-laptop.dam.jpg`}
-                headline="Schaden melden"
-                description="Schnell und unkompliziert Ihren Schaden online melden."
-                ctas={[{ href: "#", label: "Jetzt melden", variant: "filled" }]}
+                headline="Schaden oder Leistungsfall melden"
+                description="Rechnungen einreichen, Schäden oder Leistungsfälle melden? Hier sind Sie richtig. Oder rufen Sie an."
+                ctas={[{ href: "#", label: "Rechnung einreichen", variant: "arrow" }]}
               />
               <ErgoPromoCard
-                layout="horizontal"
+                layout="vertical"
                 image={`${ERGO_ASSETS}/service/kundenbereich-vertraege-mann-tablet.dam.jpg`}
-                headline="Kundenportal"
-                description="Verträge, Rechnungen und mehr – alles an einem Ort."
-                ctas={[{ href: "#", label: "Zum Portal", variant: "filled" }]}
+                headline="Ihr ERGO Kundenportal"
+                description="Behalten Sie Ihre Versicherungen im Blick! Hier finden Sie viele Services, Ihr digitales Postfach und können bei Gewinnspielen mitmachen."
+                badge={`https://assets.ergo.com/content/dam/ergo/grafiken/3-mio-kunden.dam.svg`}
+                ctas={[{ href: "#", label: "Zum Kundenportal", variant: "pill" }]}
               />
             </ErgoCarousel>
+          </div>
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            <ErgoCtaButton
+              href="#"
+              label="Alle Services ansehen"
+              variant="arrow"
+            />
           </div>
         </section>
 
@@ -307,31 +316,32 @@ function ErgoSitePage() {
           <div style={{ maxWidth: 1440, margin: "0 auto" }}>
             <ErgoSectionHeader
               label="WISSENSWERTES"
-              heading="Gut zu wissen"
+              heading="Rundum gut informiert mit ERGO"
+              subtitle="Ihr Plus an Serviceleistungen"
             />
             <div style={{ marginTop: 40 }}>
               <ErgoCarousel columns={{ mobile: 1, tablet: 3, desktop: 3 }}>
                 <ErgoTileCard
                   icon={`${ERGO_ICONS}/MegaphoneIcon.svg`}
                   title="Kunden werben Kunden"
-                  text="Empfehlen Sie ERGO weiter und sichern Sie sich Ihre Prämie."
-                  ctaLabel="Mehr erfahren"
+                  text="Für jeden neu geworbenen Kunden erhalten Sie eine Geldprämie von bis zu 150 € und sichern sich die Gewinnchance auf einen von 3 kleinen Goldbarren."
+                  ctaLabel="Gleich mitmachen"
                   ctaHref="#"
                   bgColor="#fef6d2"
                 />
                 <ErgoTileCard
                   icon={`${ERGO_ICONS}/BusinessCardIcon.svg`}
-                  title="Newsletter"
-                  text="Regelmäßig informiert über Neuigkeiten und Angebote."
+                  title="Der ERGO Newsletter"
+                  text="Nichts mehr verpassen und immer top informiert."
                   ctaLabel="Jetzt anmelden"
                   ctaHref="#"
                   bgColor="#fef6d2"
                 />
                 <ErgoTileCard
                   icon={`${ERGO_ICONS}/StoreIcon.svg`}
-                  title="Geschäftskunden"
-                  text="Maßgeschneiderte Lösungen für Ihr Unternehmen."
-                  ctaLabel="Mehr erfahren"
+                  title="Extra für Geschäftskunden"
+                  text="Eine passgenaue, breite Produktpalette für Gewerbe."
+                  ctaLabel="Zum Geschäftskundenbereich"
                   ctaHref="#"
                   bgColor="#fef6d2"
                 />
