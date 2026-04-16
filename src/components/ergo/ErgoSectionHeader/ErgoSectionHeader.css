@@ -22,6 +22,10 @@
   margin: 0 0 12px;
 }
 
+.ergo-section-header__heading--primary {
+  color: var(--color-primary);
+}
+
 .ergo-section-header__subtitle {
   font-family: var(--font-family);
   font-size: 18px;

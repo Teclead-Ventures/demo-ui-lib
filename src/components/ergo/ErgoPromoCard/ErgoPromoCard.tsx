@@ -5,7 +5,7 @@ import { ErgoPromoFlag } from "../ErgoPromoFlag";
 import "./ErgoPromoCard.css";
 
 export interface ErgoPromoCardProps {
-  image: string;
+  image?: string;
   imageAlt?: string;
   headline: string;
   description?: string;
@@ -42,6 +42,7 @@ export const ErgoPromoCard: React.FC<ErgoPromoCardProps> = ({
         .join(" ")}
       style={bgColor ? { backgroundColor: bgColor, borderColor: "transparent" } : undefined}
     >
+      {image && (
       <div className="ergo-promo__image-container">
         <img
           className="ergo-promo__image"
@@ -63,6 +64,7 @@ export const ErgoPromoCard: React.FC<ErgoPromoCardProps> = ({
           </div>
         )}
       </div>
+      )}
 
       <div className="ergo-promo__content">
         <h3 className="ergo-promo__headline">{headline}</h3>

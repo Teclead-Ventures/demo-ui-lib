@@ -5,7 +5,6 @@ import type { ErgoMegaMenuCategory } from "../src/components/ergo/ErgoMegaMenu";
 import { ErgoHeroBanner } from "../src/components/ergo/ErgoHeroBanner";
 import { ErgoPromoCard } from "../src/components/ergo/ErgoPromoCard";
 import { ErgoTileCard } from "../src/components/ergo/ErgoTileCard";
-import { ErgoCarousel } from "../src/components/ergo/ErgoCarousel";
 import { ErgoSectionHeader } from "../src/components/ergo/ErgoSectionHeader";
 import { ErgoFooter } from "../src/components/ergo/ErgoFooter";
 
@@ -76,24 +75,34 @@ const footerLinks = [
   },
 ];
 
+const BG_TEAL = "var(--color-bg-blue)";
+const BG_PEACH = "#fce8e4";
+const BG_YELLOW = "var(--color-bg-yellow)";
+const BG_PINK = "var(--color-bg-magenta)";
+
 interface ProductCategory {
   heading: string;
-  description: string;
+  tagline: string;
+  description?: string;
   image: string;
   badge?: string;
+  bgColor?: string;
   productName: string;
   productDesc: string;
   price?: { prefix: string; value: string; suffix: string };
+  onlyInfoCta?: boolean;
   subProducts: string[];
 }
 
 const productCategories: ProductCategory[] = [
   {
     heading: "ZAHNZUSATZVERSICHERUNGEN",
+    tagline: "Schutz nach Maß für Ihr Lächeln.",
     description:
-      "Schutz nach Maß für Ihr Lächeln. Möchten Sie hohe Zahnarztrechnungen für Zahnerhalt, Zahnersatz, Kieferorthopädie oder bereits begonnene Behandlungen vermeiden? Vergleichen Sie die Leistungen der ERGO Zahnversicherungen ohne Gesundheitsfragen für passgenauen Schutz.",
+      "Möchten Sie hohe Zahnarztrechnungen für Zahnerhalt, Zahnersatz, Kieferorthopädie oder bereits begonnene Behandlungen vermeiden? Vergleichen Sie die Leistungen der ERGO Zahnversicherungen ohne Gesundheitsfragen für passgenauen Schutz.",
     image: `${ERGO_ASSETS}/produkte/kranken/zahnzusatzversicherungen/zahnzusatzversicherung-im-vergleich.dam.jpg`,
     badge: `${ERGO_ASSETS}/testurteile/dentaltarif-ds75-ds90-ds100-dvb-dve-25nt40.dam.png`,
+    bgColor: BG_PEACH,
     productName: "Individueller Zahnschutz",
     productDesc:
       "Ausgezeichnete Leistungen für Ihr schönstes Lachen. Bis zu 100 % Premiumschutz. Wählen Sie Ihre individuelle Zahnversicherung und zahlen Sie nur für Leistungen, die Sie auch wirklich brauchen.",
@@ -103,17 +112,19 @@ const productCategories: ProductCategory[] = [
       "Dental-Schutz für Zahnersatz",
       "Zahnzusatzversicherung mit Sofortschutz ohne Wartezeit",
       "Kieferorthopädie Sofortschutz für Kinder",
-      "Zahnzusatzversicherung (DKV)",
+      "Zahnzusatzversicherung (DKV Deutsche Krankenversicherung AG)",
       "Zahnersatzversicherung mit Implantaten",
       "Zahnersatzversicherung mit verdoppeltem Festzuschuss",
     ],
   },
   {
     heading: "LEBENSVERSICHERUNGEN",
+    tagline: "Damit Ihre Liebsten finanziell abgesichert sind.",
     description:
-      "Damit Ihre Liebsten finanziell abgesichert sind. Sind Sie und Ihre Lieben für jede Lebenslage finanziell abgesichert? Stellen Sie sich diese Frage rechtzeitig, damit es später kein böses Erwachen gibt – für Jung und Alt.",
+      "Sind Sie und Ihre Lieben für jede Lebenslage finanziell abgesichert? Stellen Sie sich diese Frage rechtzeitig, damit es später kein böses Erwachen gibt – für Jung und Alt.",
     image: `${ERGO_ASSETS}/produkte/leben/risikolebensversicherung-aktion.dam.jpg`,
     badge: `${ERGO_ASSETS}/testurteile/risikolebensversicherung-fm.dam.png`,
+    bgColor: BG_TEAL,
     productName: "Risikolebensversicherung",
     productDesc: "Exklusiv bei ERGO: Mit Waisenschutz im Premiumtarif.",
     price: { prefix: "Ab", value: "1,97", suffix: "monatlich" },
@@ -121,9 +132,11 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "RECHTSSCHUTZVERSICHERUNGEN",
+    tagline: "Damit Sie Ihr gutes Recht bekommen.",
     description:
-      "Damit Sie Ihr gutes Recht bekommen. Die ERGO Rechtsschutzversicherungen bieten umfassenden Schutz vor finanziellen Risiken durch rechtliche Auseinandersetzungen. Machen Sie kurzen Prozess mit dem Kostenrisiko bei einem Rechtsstreit.",
+      "Die ERGO Rechtsschutzversicherungen bieten umfassenden Schutz vor finanziellen Risiken durch rechtliche Auseinandersetzungen. Machen Sie kurzen Prozess mit dem Kostenrisiko bei einem Rechtsstreit.",
     image: `${ERGO_ASSETS}/produkte/sach/rechtsschutz/rechtsschutzversicherung.dam.jpg`,
+    bgColor: BG_TEAL,
     productName: "Rechtsschutzversicherung",
     productDesc:
       "Ob für Singles, Alleinerziehende, Paare und Familien: Stellen Sie sich Ihr Rechtsschutzpaket so zusammen, wie es zu Ihrer Lebenssituation und Ihren Wünschen passt.",
@@ -135,13 +148,16 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "RENTENVERSICHERUNGEN",
+    tagline: "Flexible Vorsorge für eine entspannte Zukunft.",
     description:
-      "Flexible Vorsorge für eine entspannte Zukunft. Die ausgezeichneten privaten Rentenversicherungen von ERGO ermöglichen Ihnen schon mit kleinen Beiträgen ein finanzielles Polster für Ihre Altersvorsorge. Je früher Sie beginnen, desto besser.",
+      "Die ausgezeichneten privaten Rentenversicherungen von ERGO ermöglichen Ihnen schon mit kleinen Beiträgen ein finanzielles Polster für Ihre Altersvorsorge. Je früher Sie beginnen, desto besser.",
     image: `${ERGO_ASSETS}/produkte/leben/rente/private-rente.dam.jpg`,
+    bgColor: BG_TEAL,
     productName: "Private Rentenversicherung",
     productDesc:
       "Für jeden Vorsorgetyp gibt es das passende Anlagekonzept: von renditestark bis sicherheitsorientiert.",
     price: { prefix: "Ab", value: "25,00", suffix: "monatlich" },
+    onlyInfoCta: true,
     subProducts: [
       "ERGO Chance Familie",
       "ERGO Balance Familie",
@@ -151,10 +167,12 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "KRANKENVERSICHERUNGEN",
+    tagline: "Die optimale Ergänzung für gesetzlich Krankenversicherte.",
     description:
-      "Die optimale Ergänzung für gesetzlich Krankenversicherte. Fangen Sie Mehrkosten ab, die Sie sonst aus eigener Tasche zahlen müssen. Ergänzen Sie die Leistungen Ihrer gesetzlichen Krankenversicherung, z. B. mit einer Krankenhauszusatzversicherung oder Krankentagegeld.",
+      "Fangen Sie Mehrkosten ab, die Sie sonst aus eigener Tasche zahlen müssen. Ergänzen Sie die Leistungen Ihrer gesetzlichen Krankenversicherung, z. B. mit einer Krankenhauszusatzversicherung oder Krankentagegeld. Damit Sie schneller und entspannter gesund werden.",
     image: `${ERGO_ASSETS}/produkte/kranken/krankenhauszusatzversicherung-dkv.dam.jpg`,
     badge: `${ERGO_ASSETS}/grafiken/wartezeitverzicht-stoerer.dam.svg`,
+    bgColor: BG_TEAL,
     productName: "DKV Krankenhauszusatzversicherung",
     productDesc:
       "Werden Sie schnell wieder gesund: mit Chefarztbehandlung, Ein- oder Zweibettzimmer oder Krankenhaustagegeld.",
@@ -170,10 +188,12 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "HAFTPFLICHTVERSICHERUNGEN",
+    tagline: "Damit aus kleinen Missgeschicken kein großer Ärger wird.",
     description:
-      "Damit aus kleinen Missgeschicken kein großer Ärger wird. Was auch immer passiert: Sichern Sie sich finanziell mit einer Haftpflichtversicherung ab, die zu Ihrer Lebenssituation passt – zum Beispiel für Sie selbst, Ihre Familie oder Ihren Hund.",
+      "Was auch immer passiert: Sichern Sie sich finanziell mit einer Haftpflichtversicherung ab, die zu Ihrer Lebenssituation passt – zum Beispiel für Sie selbst, Ihre Familie oder Ihren Hund.",
     image: `${ERGO_ASSETS}/produkte/sach/phv/private-haftpflichtversicherung.dam.jpg`,
     badge: `${ERGO_ASSETS}/testurteile/privathaftpflichtversicherung-23UZ65.dam.jpg`,
+    bgColor: BG_PEACH,
     productName: "Private Haftpflichtversicherung",
     productDesc:
       "Gegen dumm gelaufen hilft nur klug versichert. Denn dann sind Sie vor den finanziellen Folgen kleiner und großer Missgeschicke geschützt.",
@@ -189,12 +209,13 @@ const productCategories: ProductCategory[] = [
     ],
   },
   {
-    heading:
-      "UNFALL-, BERUFSUNFÄHIGKEITS- UND GRUNDFÄHIGKEITSVERSICHERUNG",
+    heading: "UNFALL-, BERUFSUNFÄHIGKEITS- UND GRUNDFÄHIGKEITSVERSICHERUNG",
+    tagline: "Absicherung Ihres Körpers und Ihrer Arbeitskraft.",
     description:
-      "Absicherung Ihres Körpers und Ihrer Arbeitskraft. Passiert ein Unfall, kann man seinen Beruf nicht mehr ausüben oder fallen Grundfähigkeiten des Körpers aus, fehlen Einkommen und Lebensqualität. Die ERGO Unfallversicherung bietet sinnvolle und wichtige Leistungen für Sie und Ihre Kinder.",
+      "Passiert ein Unfall, kann man seinen Beruf nicht mehr ausüben oder fallen Grundfähigkeiten des Körpers aus, fehlen Einkommen und Lebensqualität. Stellen Sie sich finanziell sicher auf. Die ERGO Unfallversicherung bietet sinnvolle und wichtige Leistungen für Sie und Ihre Kinder.",
     image: `${ERGO_ASSETS}/produkte/sach/unfall/unfallversicherung.dam.jpg`,
     badge: `${ERGO_ASSETS}/grafiken/ohne-gesundheitsfragen-stoerer.dam.svg`,
+    bgColor: BG_PEACH,
     productName: "Unfallversicherung",
     productDesc:
       "Individueller Schutz im Baukastensystem für finanzielle und praktische Hilfe nach einem Unfall, z. B. im Haushalt.",
@@ -206,9 +227,11 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "PFLEGEVERSICHERUNGEN",
+    tagline: "Damit Sie im Pflegefall Hilfe und Unterstützung bekommen.",
     description:
-      "Damit Sie im Pflegefall Hilfe und Unterstützung bekommen. Denken Sie daran: Pflegebedürftigkeit kann nicht nur ältere Menschen plötzlich und unerwartet treffen. Rechtzeitige Vorsorge in eine private Pflegeversicherung zahlt sich aus.",
+      "Denken Sie daran: Pflegebedürftigkeit kann nicht nur ältere Menschen plötzlich und unerwartet treffen. Rechtzeitige Vorsorge in eine private Pflegeversicherung zahlt sich aus. Finanzielle Leistungen bei Pflegebedürftigkeit sind enorm wichtig.",
     image: `${ERGO_ASSETS}/produkte/kranken/pflegezusatzversicherung-li.c327x0x800x600.dam.jpg`,
+    bgColor: BG_TEAL,
     productName: "Pflegezusatzversicherung",
     productDesc:
       "Die Kosten im Pflegefall sind enorm. Hier ist private Vorsorge gefragt. Auch der Staat unterstützt Sie mit einem Zuschuss.",
@@ -219,9 +242,11 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "KFZ-VERSICHERUNGEN",
+    tagline: "Unterwegs immer gut versichert.",
     description:
-      "Unterwegs immer gut versichert. Schützen Sie Ihre Fahrzeuge entspannt vor hohen Kosten, die durch Unfälle, Diebstahl oder sonstige Schäden entstehen können.",
+      "Schützen Sie Ihre Fahrzeuge entspannt vor hohen Kosten, die durch Unfälle, Diebstahl oder sonstige Schäden entstehen können. Egal, wie Sie motorisiert sind: Bei ERGO finden Sie alles, von A wie Autoversicherung, über E-Bike- und Motorradversicherung bis W wie Wohnmobilversicherung.",
     image: `${ERGO_ASSETS}/produkte/sach/autoversicherung.dam.jpg`,
+    bgColor: BG_TEAL,
     productName: "Autoversicherung",
     productDesc:
       "Schneller Schadenservice. Hohe Versicherungssummen. Umfangreicher Versicherungsschutz.",
@@ -237,13 +262,15 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "HAUSRAT- UND GEBÄUDEVERSICHERUNGEN",
+    tagline: "Schützen Sie, was Ihnen gehört.",
     description:
-      "Schützen Sie, was Ihnen gehört. Dinge, die Ihnen lieb und teuer sind, bedürfen besonderer Aufmerksamkeit. Sichern Sie Ihren Besitz mit einer ERGO Hausrat- und einer Glasversicherung ab.",
+      "Dinge, die Ihnen lieb und teuer sind, bedürfen besonderer Aufmerksamkeit. Sichern Sie Ihren Besitz mit einer ERGO Hausrat- und einer Glasversicherung ab. Als Hauseigentümer ist die Gebäudeversicherung ebenfalls unverzichtbar.",
     image: `${ERGO_ASSETS}/produkte/sach/hausratversicherung.dam.jpg`,
     badge: `${ERGO_ASSETS}/grafiken/einfacher-online-abschluss-stoerer.dam.svg`,
+    bgColor: BG_PEACH,
     productName: "Hausratversicherung",
     productDesc:
-      "Damit sichern Sie Ihr Hab und Gut finanziell ab gegen Schäden, z. B. durch Brand, Leitungswasser oder Einbruchdiebstahl. ERGO erstattet den Neuwert Ihres Hausrats.",
+      "Damit sichern Sie Ihr Hab und Gut finanziell ab gegen Schäden, z. B. durch Brand, Leitungswasser oder Einbruchdiebstahl. ERGO erstattet den Neuwert Ihres Hausrats. Wählen Sie individuelle Zusatzbausteine wie Fahrradschutz.",
     price: { prefix: "Z. B.", value: "3,90", suffix: "monatlich" },
     subProducts: [
       "Wohngebäudeversicherung",
@@ -256,9 +283,11 @@ const productCategories: ProductCategory[] = [
   },
   {
     heading: "REISEVERSICHERUNGEN",
+    tagline: "Urlaub? Aber sicher!",
     description:
-      "Urlaub? Aber sicher! Genießen Sie die schönste Zeit des Jahres in vollen Zügen! Und falls doch mal eine Krankheit dazwischen kommen sollte, haben Sie mit einer Reiseversicherung vorausschauend vorgesorgt.",
+      "Genießen Sie die schönste Zeit des Jahres in vollen Zügen! Und falls doch mal eine Krankheit dazwischen kommen sollte, haben Sie mit einer Reiseversicherung vorausschauend vorgesorgt – auch z. B. bei Reiserücktritt oder Reiseabbruch.",
     image: `${ERGO_ASSETS}/produkte/sach/reise/reiseversicherung_mann_surfbrett.dam.jpg`,
+    bgColor: BG_YELLOW,
     productName: "Auslandskrankenversicherung",
     productDesc:
       "Krank im Urlaub? Sichern Sie sich bessere medizinische Versorgung und kompetente Ansprechpartner für optimale Hilfe im Notfall. Für alle Reisen im Jahr.",
@@ -272,17 +301,20 @@ const productCategories: ProductCategory[] = [
       "Gruppenreiseversicherung",
       "Ticketversicherung",
       "Campingversicherung",
-      "Selbstbeteiligungs-Schutz für Wohnmobile",
+      "Selbstbeteiligungs-Schutz für gemietete Wohnmobile (CDW)",
     ],
   },
   {
     heading: "BAUSPAREN UND FINANZPRODUKTE",
+    tagline: "Individuelle und zielgerichtete Finanzlösungen.",
     description:
-      "Individuelle und zielgerichtete Finanzlösungen. Finanzielle Sicherheit und Vorsorge für später sehen für jeden Menschen in unterschiedlichen Lebenssituationen anders aus.",
+      "Finanzielle Sicherheit und Vorsorge für später sehen für jeden Menschen in unterschiedlichen Lebenssituationen anders aus. Finden Sie bei ERGO die für Sie optimalen Produkte für Immobilienfinanzierung, Geldanlage, Bausparvertrag und finanzielle Absicherung.",
     image: `${ERGO_ASSETS}/produkte/leben/rente/kidspolicen.dam.jpg`,
+    bgColor: BG_PINK,
     productName: "ERGO Kidspolicen",
     productDesc:
       "Schenken Sie Zukunft und schaffen Sie für Ihre Kinder, Enkel oder Patenkinder ein attraktives Startkapital. Z. B. für den Führerschein oder ein Auslandssemester.",
+    onlyInfoCta: true,
     subProducts: [
       "Bausparvertrag",
       "Immobilienfinanzierung",
@@ -292,11 +324,6 @@ const productCategories: ProductCategory[] = [
     ],
   },
 ];
-
-function splitTagline(desc: string): [string, string] {
-  const i = desc.search(/[.!?]\s[A-Z]/);
-  return i >= 0 ? [desc.slice(0, i + 1), desc.slice(i + 2)] : [desc, ""];
-}
 
 function ErgoProduktePage() {
   return (
@@ -317,8 +344,7 @@ function ErgoProduktePage() {
 
         {/* Product Categories */}
         {productCategories.map((cat, idx) => {
-          const isLastCategory = idx === productCategories.length - 1;
-          const ctas = isLastCategory
+          const ctas = cat.onlyInfoCta
             ? [{ href: "#", label: "Jetzt informieren", variant: "pill" as const }]
             : [
                 { href: "#", label: "Jetzt informieren", variant: "pill" as const },
@@ -330,19 +356,25 @@ function ErgoProduktePage() {
               key={idx}
               style={{ padding: "48px 24px", maxWidth: 1440, margin: "0 auto" }}
             >
-              {(() => {
-                const [tagline, longDesc] = splitTagline(cat.description);
-                return (
-                  <>
-                    <ErgoSectionHeader label={cat.heading} heading={tagline} />
-                    {longDesc && (
-                      <p style={{ fontSize: 16, color: "#333", lineHeight: 1.5, textAlign: "center", maxWidth: 900, margin: "8px auto 0" }}>
-                        {longDesc}
-                      </p>
-                    )}
-                  </>
-                );
-              })()}
+              <ErgoSectionHeader
+                label={cat.heading}
+                heading={cat.tagline}
+                headingPrimary
+              />
+              {cat.description && (
+                <p
+                  style={{
+                    fontSize: 16,
+                    color: "#333",
+                    lineHeight: 1.5,
+                    textAlign: "center",
+                    maxWidth: 900,
+                    margin: "8px auto 0",
+                  }}
+                >
+                  {cat.description}
+                </p>
+              )}
 
               <div style={{ marginTop: 24 }}>
                 <ErgoPromoCard
@@ -352,29 +384,29 @@ function ErgoProduktePage() {
                   description={cat.productDesc}
                   price={cat.price}
                   badge={cat.badge}
+                  bgColor={cat.bgColor}
                   ctas={ctas}
                 />
               </div>
 
               {cat.subProducts.length > 0 && (
-                <div style={{ marginTop: 24 }}>
-                  <ErgoCarousel
-                    columns={{
-                      mobile: 1,
-                      tablet: 2,
-                      desktop: 2,
-                    }}
-                  >
-                    {cat.subProducts.map((sub, subIdx) => (
-                      <ErgoTileCard
-                        key={subIdx}
-                        title={sub}
-                        variant="link"
-                        ctaLabel="mehr lesen"
-                        ctaHref="#"
-                      />
-                    ))}
-                  </ErgoCarousel>
+                <div
+                  style={{
+                    marginTop: 16,
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 12,
+                  }}
+                >
+                  {cat.subProducts.map((sub, subIdx) => (
+                    <ErgoTileCard
+                      key={subIdx}
+                      title={sub}
+                      variant="quicklink"
+                      bordered
+                      ctaHref="#"
+                    />
+                  ))}
                 </div>
               )}
             </section>

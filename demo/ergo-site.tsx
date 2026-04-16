@@ -99,7 +99,7 @@ function ErgoSitePage() {
           image={`${ERGO_ASSETS}/produkte/leben/sterbegeldversicherung.dam.jpg`}
           title="ERGO Sterbevorsorge"
           headline="Entlasten Sie Ihre Lieben"
-          description="Der Abschied ist schon schwer genug. Machen Sie Ihrer Familie zumindest das Finanzielle leicht."
+          description="Der Abschied ist schon schwer genug. Machen Sie Ihrer Familie zumindest das Finanzielle leicht und schützen Sie sie vor hohen Bestattungskosten."
           price={{ prefix: "Z. B.", value: "27,02", suffix: "monatlich" }}
           ctas={[
             { href: "#", label: "Jetzt informieren", variant: "pill" },
@@ -107,12 +107,45 @@ function ErgoSitePage() {
           ]}
         />
 
+        {/* Persönliche Empfehlungen */}
+        <section style={{ padding: "64px 24px", maxWidth: 1440, margin: "0 auto" }}>
+          <ErgoSectionHeader
+            label="IHRE VERSICHERUNGEN"
+            heading="Persönliche Empfehlungen für Sie"
+            subtitle="Passende Produkte für Ihren Bedarf"
+            headingPrimary
+          />
+          <div style={{ marginTop: 40 }}>
+            <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }}>
+              <ErgoPromoCard
+                headline="Zahnersatzversicherung mit Implantaten"
+                description="Mit Zahn-Zuschuss-Plus kostet Sie Ihr Zahnersatz im besten Fall 0 Euro. Und pro Implantat gibts bis zu 500 Euro Zuschuss."
+                price={{ prefix: "z.B.", value: "3,90", suffix: "monatlich" }}
+                ctas={[{ href: "#", label: "Jetzt informieren", variant: "filled" }]}
+              />
+              <ErgoPromoCard
+                headline="Sterbevorsorge"
+                description="Zur Trauer sollen nicht auch noch finanzielle Sorgen kommen. Regeln Sie bereits jetzt alles nach Ihren Vorstellungen."
+                price={{ prefix: "z.B.", value: "27,02", suffix: "monatlich" }}
+                ctas={[{ href: "#", label: "Jetzt informieren", variant: "filled" }]}
+              />
+              <ErgoPromoCard
+                headline="Reisekrankenversicherung"
+                description="Krank im Ausland? Sichern Sie kostspielige Medikamente, ärztliche Behandlungen und Klinikaufenthalte vorher günstig ab."
+                price={{ prefix: "ab", value: "9,90", suffix: "jährlich" }}
+                ctas={[{ href: "#", label: "Jetzt informieren", variant: "filled" }]}
+              />
+            </ErgoCarousel>
+          </div>
+        </section>
+
         {/* Bestseller Section */}
         <section style={{ padding: "64px 24px", maxWidth: 1440, margin: "0 auto" }}>
           <ErgoSectionHeader
             label="BESTSELLER"
             heading="Die beliebtesten Produkte"
             subtitle="Zuverlässige Vorsorge für Sie: ganz einfach mit ERGO."
+            headingPrimary
           />
           <div style={{ marginTop: 40 }}>
             <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }}>
@@ -142,65 +175,75 @@ function ErgoSitePage() {
               />
             </ErgoCarousel>
           </div>
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            <ErgoCtaButton href="#" label="Alle Produkte ansehen" variant="pill" />
+          </div>
         </section>
 
         {/* Aktuelles Section */}
-        <section style={{ padding: "64px 24px", backgroundColor: "var(--color-bg-blue)" }}>
+        <section style={{ padding: "64px 24px", backgroundColor: "var(--color-bg-magenta)" }}>
           <div style={{ maxWidth: 1440, margin: "0 auto" }}>
             <ErgoSectionHeader
               label="AKTUELLES"
               heading="Aktionen und Produktangebote"
               subtitle="Wissenswertes für Sie"
+              headingPrimary
             />
             <div style={{ marginTop: 40 }}>
-              <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }}>
+              <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
                 <ErgoTileCard
+                  variant="quicklink"
+                  bordered
                   icon={`${ERGO_ICONS}/RiskIcon.svg`}
                   title="Risikolebensversicherung"
                   text="Für alle, die Ihnen am Herzen liegen."
-                  ctaLabel="Mehr erfahren"
+                  ctaLabel="→"
                   ctaHref="#"
-                  bgColor="var(--color-bg-blue)"
                 />
                 <ErgoTileCard
+                  variant="quicklink"
+                  bordered
                   icon={`${ERGO_ICONS}/DentalOrthodonticsIcon.svg`}
                   title="Kieferorthopädie Sofort für Kinder"
                   text="Rundum sicher vor hohen Zuzahlungen."
-                  ctaLabel="Mehr erfahren"
+                  ctaLabel="→"
                   ctaHref="#"
-                  bgColor="var(--color-bg-blue)"
                 />
                 <ErgoTileCard
+                  variant="quicklink"
+                  bordered
                   icon={`${ERGO_ICONS}/HobbyIcon.svg`}
                   title="Berufsunfähigkeitsversicherung"
                   text="Flexibler Schutz, der Ihre Karriere begleitet."
-                  ctaLabel="Mehr erfahren"
+                  ctaLabel="→"
                   ctaHref="#"
-                  bgColor="var(--color-bg-blue)"
                 />
                 <ErgoTileCard
+                  variant="quicklink"
+                  bordered
                   icon={`${ERGO_ICONS}/BrokenArmIcon.svg`}
                   title="Unfallversicherung"
-                  text="Finanzielle Absicherung bei Unfällen."
-                  ctaLabel="Mehr erfahren"
+                  text="Weltweiter Schutz – rund um die Uhr."
+                  ctaLabel="→"
                   ctaHref="#"
-                  bgColor="var(--color-bg-blue)"
                 />
                 <ErgoTileCard
+                  variant="quicklink"
+                  bordered
                   icon={`${ERGO_ICONS}/HospitalIcon.svg`}
                   title="Krankenhauszusatzversicherung"
-                  text="Privatpatient im Krankenhaus."
-                  ctaLabel="Mehr erfahren"
+                  text="Für die beste Behandlung im Krankenhaus."
+                  ctaLabel="→"
                   ctaHref="#"
-                  bgColor="var(--color-bg-blue)"
                 />
                 <ErgoTileCard
+                  variant="quicklink"
+                  bordered
                   icon={`${ERGO_ICONS}/HandsMoneyIcon.svg`}
                   title="Basis-Rente"
-                  text="Steuerlich geförderte Altersvorsorge."
-                  ctaLabel="Mehr erfahren"
+                  text="Sicher und flexibel im Alter – bereits ab 25 € monatlich."
+                  ctaLabel="→"
                   ctaHref="#"
-                  bgColor="var(--color-bg-blue)"
                 />
               </ErgoCarousel>
             </div>
@@ -213,6 +256,7 @@ function ErgoSitePage() {
             label="SERVICES"
             heading="Sparen Sie Zeit durch einfache Online-Services"
             subtitle="Informationen und Wissenswertes für ERGO Kunden und Interessierte"
+            headingPrimary
           />
           <div style={{ marginTop: 40 }}>
             <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
@@ -221,7 +265,7 @@ function ErgoSitePage() {
                 image={`${ERGO_ASSETS}/landingpages/frau-vor-laptop.dam.jpg`}
                 headline="Schaden oder Leistungsfall melden"
                 description="Rechnungen einreichen, Schäden oder Leistungsfälle melden? Hier sind Sie richtig. Oder rufen Sie an."
-                ctas={[{ href: "#", label: "Rechnung einreichen", variant: "arrow" }]}
+                ctas={[{ href: "#", label: "Rechnung einreichen", variant: "filled" }]}
               />
               <ErgoPromoCard
                 layout="vertical"
@@ -229,16 +273,12 @@ function ErgoSitePage() {
                 headline="Ihr ERGO Kundenportal"
                 description="Behalten Sie Ihre Versicherungen im Blick! Hier finden Sie viele Services, Ihr digitales Postfach und können bei Gewinnspielen mitmachen."
                 badge={`https://assets.ergo.com/content/dam/ergo/grafiken/3-mio-kunden.dam.svg`}
-                ctas={[{ href: "#", label: "Zum Kundenportal", variant: "pill" }]}
+                ctas={[{ href: "#", label: "Zum Kundenportal", variant: "filled" }]}
               />
             </ErgoCarousel>
           </div>
           <div style={{ marginTop: 32, textAlign: "center" }}>
-            <ErgoCtaButton
-              href="#"
-              label="Alle Services ansehen"
-              variant="arrow"
-            />
+            <ErgoCtaButton href="#" label="Alle Services ansehen" variant="pill" />
           </div>
         </section>
 
@@ -249,13 +289,17 @@ function ErgoSitePage() {
               label="KUNDENBEWERTUNGEN"
               heading="Das sagen ERGO Kunden"
               subtitle="Nützliches Feedback und Erfahrungen für Sie"
+              headingPrimary
             />
             <ErgoReviewSection
-              quote="Ich habe meine Zahnarztrechnungen an Ergo geschickt und sie haben mir direkt das Geld überwiesen. Top. Bin sehr zufrieden."
+              quote="Das Einsenden, bzw. Fotografieren der Rechnungsunterlagen mit der APP war sehr einfach. Besonders positiv fand ich auch die schnelle Bearbeitung und die darauffolgende Überweisung auf mein Konto."
               rating={4.6}
               reviewCount="387.143"
               companyName="ERGO Krankenversicherung AG"
             />
+            <div style={{ marginTop: 24, textAlign: "center" }}>
+              <ErgoCtaButton href="#" label="Zu den Kundenbewertungen" variant="arrow" />
+            </div>
           </div>
         </section>
 
@@ -275,6 +319,7 @@ function ErgoSitePage() {
                 ctaLabel="Zum Kontaktformular"
                 ctaHref="#"
                 variant="contact"
+                bgColor="var(--color-bg-green)"
               />
               <ErgoTileCard
                 icon={`${ERGO_ICONS}/ChatIcon.svg`}
@@ -283,6 +328,7 @@ function ErgoSitePage() {
                 ctaLabel="Chat öffnen"
                 ctaHref="#"
                 variant="contact"
+                bgColor="var(--color-bg-blue)"
               />
               <ErgoTileCard
                 icon={`${ERGO_ICONS}/LocationIcon.svg`}
@@ -291,6 +337,7 @@ function ErgoSitePage() {
                 ctaLabel="Zum Berater"
                 ctaHref="#"
                 variant="contact"
+                bgColor="var(--color-bg-magenta)"
               />
               <ErgoTileCard
                 icon={`${ERGO_ICONS}/PhoneIcon.svg`}
@@ -299,15 +346,12 @@ function ErgoSitePage() {
                 ctaLabel="0800 / 3746 095"
                 ctaHref="tel:08003746095"
                 variant="contact"
+                bgColor="#ffe0cb"
               />
             </ErgoCarousel>
           </div>
           <div style={{ marginTop: 32, textAlign: "center" }}>
-            <ErgoCtaButton
-              href="#"
-              label="Alle Kontaktmöglichkeiten ansehen"
-              variant="arrow"
-            />
+            <ErgoCtaButton href="#" label="Alle Kontaktmöglichkeiten ansehen" variant="pill" />
           </div>
         </section>
 
@@ -318,6 +362,7 @@ function ErgoSitePage() {
               label="WISSENSWERTES"
               heading="Rundum gut informiert mit ERGO"
               subtitle="Ihr Plus an Serviceleistungen"
+              headingPrimary
             />
             <div style={{ marginTop: 40 }}>
               <ErgoCarousel columns={{ mobile: 1, tablet: 3, desktop: 3 }}>
@@ -327,7 +372,7 @@ function ErgoSitePage() {
                   text="Für jeden neu geworbenen Kunden erhalten Sie eine Geldprämie von bis zu 150 € und sichern sich die Gewinnchance auf einen von 3 kleinen Goldbarren."
                   ctaLabel="Gleich mitmachen"
                   ctaHref="#"
-                  bgColor="#fef6d2"
+                  bordered
                 />
                 <ErgoTileCard
                   icon={`${ERGO_ICONS}/BusinessCardIcon.svg`}
@@ -335,7 +380,7 @@ function ErgoSitePage() {
                   text="Nichts mehr verpassen und immer top informiert."
                   ctaLabel="Jetzt anmelden"
                   ctaHref="#"
-                  bgColor="#fef6d2"
+                  bordered
                 />
                 <ErgoTileCard
                   icon={`${ERGO_ICONS}/StoreIcon.svg`}
@@ -343,7 +388,7 @@ function ErgoSitePage() {
                   text="Eine passgenaue, breite Produktpalette für Gewerbe."
                   ctaLabel="Zum Geschäftskundenbereich"
                   ctaHref="#"
-                  bgColor="#fef6d2"
+                  bordered
                 />
               </ErgoCarousel>
             </div>
@@ -356,8 +401,8 @@ function ErgoSitePage() {
             layout="horizontal"
             image={`${ERGO_ASSETS}/ratgeber/impuls/jungefrautanztimkirschgarten.dam.jpg`}
             headline="Frühlings-Check"
-            description="Prüfen Sie jetzt Ihren Versicherungsschutz und starten Sie gut abgesichert in die neue Saison."
-            ctas={[{ href: "#", label: "Jetzt prüfen", variant: "filled" }]}
+            description="Wenn draußen alles neu beginnt. Längere Tage, erste Sonnenstrahlen, Fahrräder auf den Straßen. Der Frühling bringt Bewegung in den Alltag."
+            ctas={[{ href: "#", label: "Mehr erfahren", variant: "filled" }]}
           />
         </section>
 
@@ -368,29 +413,33 @@ function ErgoSitePage() {
               label="RATGEBER"
               heading="Tipps der Redaktion"
               subtitle="Lesen lohnt sich!"
+              headingPrimary
             />
             <div style={{ marginTop: 40 }}>
-              <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }}>
+              <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }} showDots>
                 <ErgoArticleTeaser
                   headline="Zahnwurzelentzündung"
                   subhead="Erreger im Zahn"
-                  text="Wenn Karies oder Parodontitis unbehandelt bleibt, kann sich das Innere eines Zahnes entzünden."
+                  text="Wenn Karies oder Parodontitis unbehandelt bleibt, kann sich das Innere eines Zahnes entzünden. Was tun?"
                   ctaLabel="Mehr lesen"
                   ctaHref="#"
+                  bgColor="var(--color-bg-magenta)"
                 />
                 <ErgoArticleTeaser
-                  headline="Der Organspendeausweis"
-                  subhead="Leben retten mit Organspende"
-                  text="Die Unsicherheit beim Thema Organspende ist oft groß."
+                  headline="Schnarchschienen: Therapie und Hilfe bei Schnarchen"
+                  subhead="Endlich wieder ruhig schlafen?"
+                  text="Mit einer Schnarchschiene lassen sich Atemwege offenhalten und Schnarchgeräusche mindern."
                   ctaLabel="Mehr lesen"
                   ctaHref="#"
+                  bgColor="var(--color-bg-blue)"
                 />
                 <ErgoArticleTeaser
                   headline="Professionelle Zahnreinigung"
                   subhead="Was ist PZR?"
-                  text="Drei Buchstaben umfassend erklärt."
+                  text="Drei Buchstaben umfassend erklärt: Lesen Sie, was es mit der professionellen Zahnreinigung auf sich hat."
                   ctaLabel="Mehr lesen"
                   ctaHref="#"
+                  bgColor="var(--color-bg-green)"
                 />
               </ErgoCarousel>
             </div>
@@ -398,33 +447,36 @@ function ErgoSitePage() {
         </section>
 
         {/* Warum ERGO */}
-        <section style={{ padding: "64px 24px", maxWidth: 1440, margin: "0 auto" }}>
-          <ErgoSectionHeader
-            label="WARUM ERGO?"
-            heading="Einfach, weil's wichtig ist."
-            subtitle="Ihr verlässlicher Partner für Versicherungen."
-          />
-          <div style={{ marginTop: 40 }}>
-            <ErgoCarousel columns={{ mobile: 1, tablet: 3, desktop: 3 }}>
-              <ErgoTileCard
-                icon={`${ERGO_ICONS}/GlobeIcon.svg`}
-                title="Weltweit"
-                stat="in über 20 Ländern"
-                variant="stat"
-              />
-              <ErgoTileCard
-                icon={`${ERGO_ICONS}/GroupIcon.svg`}
-                title="31 Mio."
-                stat="zufriedene Kunden"
-                variant="stat"
-              />
-              <ErgoTileCard
-                icon={`${ERGO_ICONS}/HandshakeIcon.svg`}
-                title="100+ Jahre"
-                stat="Erfahrung"
-                variant="stat"
-              />
-            </ErgoCarousel>
+        <section style={{ padding: "64px 24px", backgroundColor: "var(--color-bg-blue)" }}>
+          <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+            <ErgoSectionHeader
+              label="WARUM ERGO?"
+              heading="Einfach, weil's wichtig ist."
+              subtitle="Ihr verlässlicher Partner für Versicherungen."
+              headingPrimary
+            />
+            <div style={{ marginTop: 40 }}>
+              <ErgoCarousel columns={{ mobile: 1, tablet: 3, desktop: 3 }}>
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/GlobeIcon.svg`}
+                  stat="Weltweit"
+                  title="in über 20 Ländern"
+                  variant="stat"
+                />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/GroupIcon.svg`}
+                  stat="31 Mio."
+                  title="zufriedene Kunden"
+                  variant="stat"
+                />
+                <ErgoTileCard
+                  icon={`${ERGO_ICONS}/HandshakeIcon.svg`}
+                  stat="100+ Jahre"
+                  title="Erfahrung"
+                  variant="stat"
+                />
+              </ErgoCarousel>
+            </div>
           </div>
         </section>
 

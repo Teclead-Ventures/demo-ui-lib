@@ -3,7 +3,8 @@
 }
 
 .ergo-carousel__track {
-  display: grid;
+  display: flex;
+  flex-wrap: nowrap;
   gap: var(--carousel-gap, 24px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -15,37 +16,30 @@
   display: none;
 }
 
+/* Desktop: N items visible, each item = (100% - (N-1)*gap) / N */
 .ergo-carousel__track > * {
   scroll-snap-align: start;
+  flex: 0 0 calc(
+    (100% - (var(--carousel-cols-desktop, 3) - 1) * var(--carousel-gap, 24px)) /
+    var(--carousel-cols-desktop, 3)
+  );
   min-width: 0;
 }
 
-/* Desktop columns */
-@media (min-width: 769px) {
-  .ergo-carousel__track {
-    grid-template-columns: repeat(
-      var(--carousel-cols-desktop, 3),
-      1fr
-    );
-  }
-}
-
-/* Tablet columns */
 @media (min-width: 481px) and (max-width: 768px) {
-  .ergo-carousel__track {
-    grid-template-columns: repeat(
-      var(--carousel-cols-tablet, 2),
-      1fr
+  .ergo-carousel__track > * {
+    flex: 0 0 calc(
+      (100% - (var(--carousel-cols-tablet, 2) - 1) * var(--carousel-gap, 24px)) /
+      var(--carousel-cols-tablet, 2)
     );
   }
 }
 
-/* Mobile columns */
 @media (max-width: 480px) {
-  .ergo-carousel__track {
-    grid-template-columns: repeat(
-      var(--carousel-cols-mobile, 1),
-      1fr
+  .ergo-carousel__track > * {
+    flex: 0 0 calc(
+      (100% - (var(--carousel-cols-mobile, 1) - 1) * var(--carousel-gap, 24px)) /
+      var(--carousel-cols-mobile, 1)
     );
   }
 }
@@ -53,6 +47,7 @@
 .ergo-carousel__nav {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 12px;
   margin-top: var(--space-base);
 }
@@ -69,6 +64,7 @@
   cursor: pointer;
   color: var(--color-text);
   transition: border-color var(--transition), color var(--transition);
+  flex-shrink: 0;
 }
 
 .ergo-carousel__btn:hover:not(:disabled) {
@@ -84,4 +80,29 @@
 .ergo-carousel__btn:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+.ergo-carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ergo-carousel__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color var(--transition);
+}
+
+.ergo-carousel__dot--active {
+  background: var(--color-primary);
+}
+
+.ergo-carousel__dot:hover:not(.ergo-carousel__dot--active) {
+  background: #aaaaaa;
 }

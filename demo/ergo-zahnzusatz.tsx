@@ -85,7 +85,7 @@ const h2Style: React.CSSProperties = {
   fontFamily: "'Source Serif 4', serif",
   fontSize: 28,
   fontWeight: 700,
-  color: "#333",
+  color: "#8e0038",
   lineHeight: 1.3,
   margin: 0,
   textAlign: "center",
@@ -345,7 +345,7 @@ const quickLinks = [
 function ErgoZahnzusatzPage() {
   return (
     <div style={{ fontFamily: "var(--font-family)", color: "var(--color-text)" }}>
-      <ErgoHeader categories={categories} />
+      <ErgoHeader categories={categories} phoneNumber="0800 / 3746 420" />
 
       <main style={{ marginTop: 97 }}>
         {/* Hero */}
@@ -458,7 +458,7 @@ function ErgoZahnzusatzPage() {
           <div style={{ marginTop: 16 }}>
             <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
               <ErgoTileCard
-                variant="link"
+                variant="card"
                 title="Dental-Vorsorge (DVB DVE)"
                 text="Wer früher vorsorgt, lächelt länger: zuverlässiger Schutz für Ihren Zahnerhalt."
                 ctaLabel="zum Produkt"
@@ -474,21 +474,21 @@ function ErgoZahnzusatzPage() {
           <div style={{ marginTop: 16 }}>
             <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
               <ErgoTileCard
-                variant="link"
+                variant="card"
                 title="Verdoppelter Festzuschuss bei Zahnersatz (ZEF)"
                 text="Reduzieren Sie den Eigenanteil bei Zahnersatz."
                 ctaLabel="zum Produkt"
                 ctaHref="#"
               />
               <ErgoTileCard
-                variant="link"
+                variant="card"
                 title="Dental-Schutz (DS75 DS90 DS100)"
                 text="Mit den ERGO Dental-Schutz Tarifen bei Zahnersatz bis zu 100 % sparen – ohne Gesundheitsprüfung."
                 ctaLabel="zum Produkt"
                 ctaHref="#"
               />
               <ErgoTileCard
-                variant="link"
+                variant="card"
                 title="Zahnersatz mit Implantaten (ZZP)"
                 text="Verdoppelung bei Zahnersatz wie Brücken, Kronen oder Prothesen und je Implantat bis zu 500 €."
                 ctaLabel="zum Produkt"
@@ -506,14 +506,14 @@ function ErgoZahnzusatzPage() {
           <div style={{ marginTop: 16 }}>
             <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 2 }}>
               <ErgoTileCard
-                variant="link"
+                variant="card"
                 title="Zahnzusatzversicherung mit Sofortschutz (ZEK)"
                 text="Abschließen, auch wenn es eigentlich schon zu spät ist."
                 ctaLabel="zum Produkt"
                 ctaHref="#"
               />
               <ErgoTileCard
-                variant="link"
+                variant="card"
                 title="Kieferorthopädie Sofort (KFO)"
                 text="Einzigartiger Schutz mit Sofortleistung für Kinder."
                 ctaLabel="zum Produkt"
@@ -542,13 +542,14 @@ function ErgoZahnzusatzPage() {
         <section style={sectionStyle}>
           <h2 style={h2Style}>Ihr Lächeln ist uns wichtig!</h2>
           <div style={{ marginTop: 24 }}>
-            <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }}>
+            <ErgoCarousel columns={{ mobile: 1, tablet: 2, desktop: 3 }} showDots>
               {quickLinks.map((link, i) => (
                 <ErgoTileCard
                   key={i}
+                  variant="quicklink"
                   icon={`${ERGO_ICONS}/${link.icon}.svg`}
                   title={link.title}
-                  ctaLabel="weiter"
+                  ctaLabel="→"
                   ctaHref="#"
                   bgColor={link.bgColor}
                 />
@@ -560,7 +561,7 @@ function ErgoZahnzusatzPage() {
         {/* Contact */}
         <section style={sectionStyle}>
           <h2 style={h2Style}>Nicht sicher, was Sie benötigen?</h2>
-          <p style={bodyStyle}>
+          <p style={{ ...bodyStyle, color: "#555555" }}>
             Dann lassen Sie sich helfen. Die Experten von ERGO sind gern für
             Sie da.
           </p>
@@ -570,8 +571,8 @@ function ErgoZahnzusatzPage() {
                 icon={`${ERGO_ICONS}/PhoneIcon.svg`}
                 title="7-24 Uhr (gebührenfrei)"
                 text="Rufen Sie an!"
-                ctaLabel="0800 / 999 4580"
-                ctaHref="tel:08009994580"
+                ctaLabel="0800 / 3746 420"
+                ctaHref="tel:080037464200"
                 variant="contact"
               />
               <ErgoTileCard

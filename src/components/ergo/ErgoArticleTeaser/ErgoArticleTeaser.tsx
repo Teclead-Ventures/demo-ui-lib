@@ -8,6 +8,7 @@ export interface ErgoArticleTeaserProps {
   text?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  bgColor?: string;
   className?: string;
 }
 
@@ -17,11 +18,13 @@ export const ErgoArticleTeaser: React.FC<ErgoArticleTeaserProps> = ({
   text,
   ctaLabel,
   ctaHref,
+  bgColor,
   className,
 }) => {
   return (
     <div
       className={["ergo-article-teaser", className].filter(Boolean).join(" ")}
+      style={bgColor ? { backgroundColor: bgColor } : undefined}
     >
       <h3 className="ergo-article-teaser__headline">{headline}</h3>
       {subhead && (

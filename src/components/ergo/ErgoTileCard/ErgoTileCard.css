@@ -70,6 +70,50 @@
   border-radius: 2px;
 }
 
+/* Bordered modifier */
+.ergo-tile--bordered {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+/* Quicklink variant: horizontal compact card with icon left, title right, arrow far right */
+.ergo-tile--quicklink {
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ergo-tile--quicklink:hover {
+  filter: brightness(0.96);
+}
+
+.ergo-tile--quicklink .ergo-tile__icon {
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.ergo-tile--quicklink .ergo-tile__icon img {
+  height: 32px;
+}
+
+.ergo-tile--quicklink .ergo-tile__title {
+  font-size: 15px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.ergo-tile--quicklink .ergo-tile__cta {
+  margin-top: 0;
+  color: var(--color-text);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
 /* Link variant: minimal style for sub-product lists */
 .ergo-tile--link {
   background: transparent;
@@ -86,9 +130,61 @@
   background-color: var(--color-bg-disabled);
 }
 
+/* Card variant: bordered vertical card for product sub-lists */
+.ergo-tile--card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  align-items: flex-start;
+  text-align: left;
+  gap: 8px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.ergo-tile--card:hover {
+  filter: none;
+  border-color: #999;
+}
+
+.ergo-tile--card .ergo-tile__title {
+  font-size: 16px;
+}
+
+.ergo-tile--card .ergo-tile__text {
+  font-size: 15px;
+  color: #555;
+}
+
+.ergo-tile--card .ergo-tile__cta {
+  margin-top: 12px;
+}
+
 /* Contact variant */
 .ergo-tile--contact {
   background-color: #ffffff;
+}
+
+.ergo-tile--contact .ergo-tile__cta {
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: var(--border-radius-pill);
+  padding: 8px 20px;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 12px;
+}
+
+.ergo-tile--contact .ergo-tile__cta:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.ergo-tile--contact .ergo-tile__cta svg {
+  display: none;
 }
 
 /* Stat variant */

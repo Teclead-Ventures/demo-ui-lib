@@ -8,8 +8,9 @@ export interface ErgoTileCardProps {
   stat?: string;
   ctaLabel?: string;
   ctaHref?: string;
-  variant?: "icon" | "stat" | "contact" | "link";
+  variant?: "icon" | "stat" | "contact" | "link" | "card" | "quicklink";
   bgColor?: string;
+  bordered?: boolean;
   className?: string;
 }
 
@@ -22,11 +23,12 @@ export const ErgoTileCard: React.FC<ErgoTileCardProps> = ({
   ctaHref,
   variant = "icon",
   bgColor,
+  bordered = false,
   className,
 }) => {
   return (
     <div
-      className={["ergo-tile", `ergo-tile--${variant}`, className]
+      className={["ergo-tile", `ergo-tile--${variant}`, bordered ? "ergo-tile--bordered" : "", className]
         .filter(Boolean)
         .join(" ")}
       style={bgColor ? { backgroundColor: bgColor } : undefined}
@@ -39,9 +41,9 @@ export const ErgoTileCard: React.FC<ErgoTileCardProps> = ({
       {stat && <div className="ergo-tile__stat">{stat}</div>}
       <div className="ergo-tile__title">{title}</div>
       {text && <div className="ergo-tile__text">{text}</div>}
-      {ctaLabel && ctaHref && (
+      {((ctaLabel && ctaHref) || (variant === "quicklink" && ctaHref)) && (
         <a href={ctaHref} className="ergo-tile__cta">
-          <span>{ctaLabel}</span>
+          {ctaLabel && <span>{ctaLabel}</span>}
           <svg
             width="16"
             height="16"
