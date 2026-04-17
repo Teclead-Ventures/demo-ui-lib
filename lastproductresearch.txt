@@ -1,0 +1,34 @@
+ Found the issues. Here's the review:
+
+  ---
+  Skill Review: ergo-researcher (post-batch 5, final)
+
+  Issues Found: 8
+
+  ┌─────┬──────────────────────────┬──────────────────────────────────────────────────────────────────────┬─────────────────────────────────┐
+  │  #  │           File           │                                Issue                                 │            Severity             │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 1   │ researcher-prompt.md:224 │ Template selection says "6 options" — should be 7 (missing Template  │ High — agents won't know about  │
+  │     │                          │ F)                                                                   │ Template F                      │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 2   │ researcher-prompt.md:230 │ Template E described as "no age curve" — Motorrad proved E can have  │ Medium — misleading for future  │
+  │     │                          │ age curve                                                            │ motor products                  │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 3   │ product-schema.md:88     │ Template E description says "no age curve" and "51 levels each" —    │ Medium                          │
+  │     │                          │ Motorrad has age curve and 22 levels                                 │                                 │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 4   │ product-schema.md:198    │ Validation checklist says "A, A+step, B, C, or D" — missing E, F     │ Medium                          │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 5   │ product-schema.md:187    │ "Base rates: Grundschutz < Komfort < Premium (always)" — most        │ Low                             │
+  │     │                          │ products have Smart/Best, not 3 tiers                                │                                 │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 6   │ SKILL.md:191             │ Tier count says "4/10 products" have 2 tiers — should be updated for │ Medium                          │
+  │     │                          │  14 products total                                                   │                                 │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 7   │ SKILL.md:215             │ Beitragstabelle note says "9 other products" — should be 13          │ Low                             │
+  ├─────┼──────────────────────────┼──────────────────────────────────────────────────────────────────────┼─────────────────────────────────┤
+  │ 8   │ SKILL.md:208-212         │ Kfz-specific section header doesn't mention Motorrad — it's now a    │ Low                             │
+  │     │                          │ "Motor" section                                                      │                                 │
+  └─────┴──────────────────────────┴──────────────────────────────────────────────────────────────────────┴─────────────────────────────────┘
+
+  Want me to fix all 8?

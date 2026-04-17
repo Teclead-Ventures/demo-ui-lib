@@ -151,6 +151,12 @@ After applying improvements to shared files (products.md, pricing-model.md):
 - After all research: comprehensive comparison of our assumptions vs reality
 - Improvements go to: products.md (the main output), pricing-model.md (if formula needs changes)
 
+### ergo-site-researcher
+- After each page analyzed: self-assess component identification quality, style extraction accuracy
+- After all pages: comprehensive catalog review — are there duplicates? missing components?
+- Improvements go to: component catalog, BUILD_SPEC.md, style extraction methodology
+- Key question: "Would a builder agent have enough info to recreate this page from my spec?"
+
 ---
 
 ## Cross-run improvement tracking
