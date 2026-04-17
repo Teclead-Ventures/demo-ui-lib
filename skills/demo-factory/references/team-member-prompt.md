@@ -27,18 +27,13 @@ This contains the setup script, UI component library, skills, and ticket templat
 
 ## Your process
 
-### Step 1: Design the tariff
+### Step 1: Read the product specification
 
-Read the tariff-designer's product knowledge directly from these files:
-- `skills/tariff-designer/references/products.md` — find {{PRODUCT_ID}} and extract all parameters
-- `skills/tariff-designer/references/pricing-model.md` — understand the pricing formula
-- `skills/tariff-designer/references/ticket-templates.md` — understand how to generate tickets
+Read the tariff-designer's product knowledge directly:
+- `skills/tariff-designer/references/products.md` — find {{PRODUCT_ID}} and extract ALL parameters (base rates, age curve, risk classes, tiers, fields, wizard steps, validation)
+- `skills/tariff-designer/references/pricing-model.md` — understand the pricing formula and how to implement pricing.ts
 
-Based on the product entry in products.md, generate:
-1. A `tariff-spec.json` with the complete product definition
-2. All pipeline ticket files (EXECUTE.md, 01-foundation.md, per-page tickets, dashboard, validation, etc.)
-
-Write the generated tickets to a temp location first (e.g., `/tmp/{{PROJECT_NAME}}-tickets/`).
+You do NOT generate separate ticket files. You build directly into the shared project using products.md as your specification.
 
 {{#if PASS_2_IMPROVEMENTS}}
 ### IMPORTANT: Pass 2 improvements to apply
@@ -154,11 +149,12 @@ Return this EXACT format:
 ```
 TEAM_MEMBER_REPORT:
   PRODUCT: {{PRODUCT_ID}}
-  PROJECT_NAME: {{PROJECT_NAME}}
+  PROJECT: ergo-tarife
   PASS: {{PASS_NUMBER}}
   STATUS: SUCCESS | PARTIAL | FAILED
 
-  PRODUCTION_URL: <vercel URL or "none">
+  WIZARD_URL: <vercel URL>/wizard/{{PRODUCT_ID}}
+  DASHBOARD_URL: <vercel URL>/dashboard/{{PRODUCT_ID}}
 
   BUILD_PHASES:
     Phase 0 (Setup):       PASS | FAIL — <notes>

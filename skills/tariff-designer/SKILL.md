@@ -47,7 +47,7 @@ Present a human-readable summary covering:
 
 Read `references/pricing-model.md` for the pricing formula and calibration data. The sample price should be in the right ballpark for the German market.
 
-### Step 3: Detect mode (single-product vs multi-product)
+### Step 3: Detect mode
 
 Check if you're adding to an existing project or starting fresh:
 
@@ -84,50 +84,41 @@ When the user confirms (or says "looks good"), read `references/ticket-templates
 
 Also write `tariff-spec.json` as the canonical machine-readable reference.
 
-### Step 4: Scaffold the project
+### Step 5: Scaffold or add to project
 
-Run the setup script to create the project directory:
+**If multi-product mode** (adding to an existing project):
+1. Create `src/lib/products/<product-id>/` with TariffContext.tsx, pricing.ts, planData.ts
+2. Create `src/app/wizard/[product]/pages/<product-id>/` with wizard page components
+3. Update `src/lib/products/registry.ts` — add the new product entry
+4. Update `src/app/wizard/[product]/page.tsx` — add import case for this product
+5. Create Supabase tables for this product
+6. Commit: `git commit -m "feat: add <product-name> tariff"`
+7. Redeploy: `vercel deploy --yes --scope teclead-ventures --prod`
 
+**If single-product mode** (new repo from scratch):
 ```bash
 cd /Users/malte/Desktop/Repositories/tlv/demo-ui-lib
 ./setup-demo.sh <product-id>
-# e.g., ./setup-demo.sh bu-versicherung
 ```
+Then copy generated tickets into the project and proceed to Step 6.
 
-This creates the project at `/Users/malte/Desktop/Repositories/tlv/<product-id>/` with:
-- Base Next.js template
-- UI component library
-- Theme CSS
-- Dependencies installed
-- Git initialized
+### Step 6: Create GitHub repo (single-product only)
 
-Then copy the generated ticket files into the new project:
-
-```bash
-# Copy generated tickets (overwriting the template tickets)
-cp -r <generated-tickets>/* /Users/malte/Desktop/Repositories/tlv/<product-id>/tickets/
-
-# Copy the tariff-spec.json as reference
-cp tariff-spec.json /Users/malte/Desktop/Repositories/tlv/<product-id>/
-```
-
-### Step 5: Create GitHub repository
-
-Create a GitHub repo and push the initial commit:
+Only needed for single-product mode. Multi-product repos already exist.
 
 ```bash
 cd /Users/malte/Desktop/Repositories/tlv/<product-id>
-
-# Create under teclead-ventures org (Pro account)
 gh repo create teclead-ventures/<product-id> --private --source=. --push
 ```
 
-### Step 6: Hand off to build session
+### Step 7: Hand off
 
-Tell the user:
+**Multi-product**: "Product added to the project. Visit the landing page to see it: `<vercel-url>`"
+
+**Single-product**: Tell the user:
 
 > Project ready at `/Users/malte/Desktop/Repositories/tlv/<product-id>/`
-> GitHub: `https://github.com/malteherberg/<product-id>`
+> GitHub: `https://github.com/teclead-ventures/<product-id>`
 >
 > To build the demo, open a new Claude Code session in the project directory and say:
 >
@@ -136,8 +127,6 @@ Tell the user:
 > Use parallel agents with worktrees for Phase 2. Use the playwright-cli skill for all
 > browser validation (always --headed). Use opus for all subagents.
 > ```
->
-> This will autonomously build the complete wizard, deploy to Vercel, and run production validation.
 
 ---
 
@@ -225,21 +214,19 @@ interface TariffSpec {
   // Demo mode: pre-filled values for click-through presentations
   // Activated via URL parameter ?demo=true
   demoDefaults: Record<string, unknown>;
-  // Example for Sterbegeld:
+  // Example for Zahnzusatz:
   // {
-  //   birthDate: { day: "23", month: "06", year: "1982" },
-  //   insuranceStart: "01.06.2026",
-  //   coverageAmount: 8000,
+  //   birthDate: { day: "15", month: "03", year: "1990" },
+  //   coverageAmount: 1500,
+  //   dentalStatus: "gut",
+  //   missingTeeth: 0,
   //   plan: "komfort",
-  //   dynamicAdjustment: "standard",
-  //   salutation: "herr",
-  //   firstName: "Max",
-  //   lastName: "Mustermann",
-  //   street: "Musterstr. 1",
-  //   zip: "10115",
-  //   city: "Berlin",
-  //   birthPlace: "Hamburg",
-  //   nationality: "deutsch"
+  //   salutation: "frau",
+  //   firstName: "Anna",
+  //   lastName: "Schmidt",
+  //   street: "Berliner Str. 12",
+  //   zip: "80331",
+  //   city: "München",
   // }
 }
 
@@ -313,6 +300,11 @@ Every wizard must support `?demo=true` as a URL parameter. When active, TariffCo
 - `references/products.md` — 15 insurance products with full defaults. **Read first** when the user names a product.
 - `references/pricing-model.md` — Pricing formula, TypeScript template, calibration data.
 - `references/ticket-templates.md` — Templates for generating pipeline ticket files. **Read when generating tickets.**
+
+## Shared contracts (cross-skill)
+
+- `../shared/product-schema.md` — Canonical format for product entries. Any product entry you create or modify MUST match this schema. The ergo-researcher writes this format, you read it.
+- `../shared/feedback-loop.md` — Self-improvement protocol. After every execution, run the reflection cycle: self-assess → ask user → apply improvements → persist to feedback-log.md.
 
 ---
 

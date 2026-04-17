@@ -1,0 +1,76 @@
+⏺ All done. Here's the final summary:
+
+  ---
+  ERGO Site Research — Complete
+
+  8 pages analyzed across 3 tiers. Both parallel agents (Zahnzusatz + Kfz) completed successfully with detailed findings.
+
+  Key additions from subagent findings
+
+  - Zahnzusatz agent: Confirmed AccordionFAQ (18 items), identified sub-product categorization (Zahnerhalt/Zahnersatz/Sofortleistung), orange hero variant
+  (#ffe0cb)
+  - Kfz agent: Found BenefitsCard — a custom React component (not AEM core) with .benefits__container class, teal flag label, icon+title+text items. Also
+  confirmed no HTML comparison tables exist — ERGO uses infographic images + accordion groups instead.
+
+  Final deliverables
+
+  ┌────────────────────────────────────────┬────────┐
+  │              Deliverable               │ Status │
+  ├────────────────────────────────────────┼────────┤
+  │ CATALOG.md (23 components)             │ Done   │
+  ├────────────────────────────────────────┼────────┤
+  │ BUILD_SPEC.md (5-phase plan)           │ Done   │
+  ├────────────────────────────────────────┼────────┤
+  │ 8 page structure.md files              │ Done   │
+  ├────────────────────────────────────────┼────────┤
+  │ 15+ screenshots (desktop + responsive) │ Done   │
+  ├────────────────────────────────────────┼────────┤
+  │ 8 Firecrawl raw content dumps          │ Done   │
+  ├────────────────────────────────────────┼────────┤
+  │ Feedback log updated                   │ Done   │
+  ├────────────────────────────────────────┼────────┤
+  │ User decisions saved to memory         │ Done   │
+  └────────────────────────────────────────┴────────┘
+
+  Everything is ready for a builder skill to start implementing.
+
+✻ Churned for 41s
+
+❯ So is there another builder skill? What is the name of it? Can you give me a prompt for a new session, or do you want to do it here?                      
+                                                                                                                                       
+  Searched for 6 patterns, listed 3 directories (ctrl+o to expand)                                                                                          
+                                                                                                                                                            
+⏺ There's no builder skill yet — the ergo-site-researcher references one conceptually but it hasn't been created. Given the amount of work involved (23     
+  components + 5 pages), a fresh session is the right call. 
+                                                                                                                                                            
+  Here's a prompt you can paste into a new session:                                                                                                         
+                                                                                                                                                            
+  ---                                                                                                                                                       
+  Read the ERGO site research at `research/ergo-site/BUILD_SPEC.md` and                                                      
+  `research/ergo-site/components/CATALOG.md`. These contain the full build
+  specification for recreating ERGO's website as React components.                                                                                          
+                                                                                                                                                            
+  Build the ERGO site clone following the 5-phase plan in BUILD_SPEC.md:                                                                                    
+                                                                                                                                                            
+  Phase 1: Design tokens (ergo-theme.css, Google Fonts) + primitives                                                                                        
+           (CTAButton, PriceDisplay, SectionHeader)                                                                                                         
+  Phase 2: Content components (TileCard, PromoCard, AccordionFAQ, etc.)                                                      
+  Phase 3: Layout components (CarouselContainer, HeroBanner, StickyFooter)                                                                                  
+  Phase 4: Global components (ErgoHeader, MegaMenu, ErgoFooter)                                                                                             
+  Phase 5: Page assembly — (site)/page.tsx (homepage),                                                                                                      
+           (site)/produkte/page.tsx, (site)/produkte/[product]/page.tsx                                                                                     
+                                                                                                                                                            
+  Rules:                                                                                                                                                    
+  - All new components go in src/components/ergo/ — never modify existing ui/                                                                               
+  - Use Google Fonts: DM Sans (body), Source Serif Pro (headings)                                                                                           
+  - Use Embla Carousel for carousels, Radix for accordion/tooltip                                                                                           
+  - Match ERGO's layout exactly — no visual improvements                                                                                                    
+  - Reference ERGO's CDN for images, don't download them                                                                                                    
+  - Page content data comes from research/ergo-site/raw/*.md (Firecrawl dumps)                                                                              
+  - Product cards should link to /wizard/<product> for tariff demos                                                                                         
+                                                                                                                                                            
+  Start with Phase 1, show me the theme file, then proceed phase by phase.                                                                                  
+                                                                                                                                                            
+  ---                                                                                                                                                       
+  Alternatively, if you want to turn this into a reusable skill first, I can create skills/ergo-site-builder/SKILL.md so future sessions can invoke it with 
+  /ergo-site-builder. Want me to do that?im

@@ -151,24 +151,24 @@ Print: "Resuming from [product] (X/Y already completed)" and continue.
 
 **If new components are needed:** Build them in demo-ui-lib BEFORE dispatching the team member. Commit to demo-ui-lib so `setup-demo.sh` picks them up.
 
-#### 3b. Pass 1: Build (`<product-id>-v1`)
+#### 3b. Pass 1: Add product to shared project
 
 Read `references/team-member-prompt.md` for the full prompt template. Fill in the placeholders and spawn a **full Agent** (not a sub-agent):
 
 ```
 Agent(
-  description="Build <product-name> v1",
+  description="Add <product-name> to ergo-tarife (Pass 1)",
   model="opus",
-  prompt=<filled template with PASS_NUMBER=1, PROJECT_NAME="<product-id>-v1">
+  prompt=<filled template with PASS_NUMBER=1, PRODUCT_ID="<product-id>">
 )
 ```
 
-The team member is fully autonomous. It:
+The team member works within the existing `ergo-tarife` project. It:
 - Reads the tariff-designer's product knowledge directly
-- Designs the tariff and generates tickets
-- Runs `setup-demo.sh <product-id>-v1`
-- Executes the full build pipeline (spawning its own page agents)
-- Deploys to Vercel
+- Creates product files at `src/lib/products/<product-id>/` and `src/app/wizard/[product]/pages/<product-id>/`
+- Updates the product registry
+- Builds wizard pages (spawning its own page agents if needed)
+- Redeploys to Vercel
 - Reports back with a structured TEAM_MEMBER_REPORT
 
 #### 3c. Pass 1 Review (team lead, after agent returns)
@@ -210,22 +210,22 @@ Based on the Pass 1 review:
 3. **Add/fix components** in demo-ui-lib if needed (commit!)
 4. **Update the team member prompt** with specific fixes
 
-#### 3e. Pass 2: Rebuild (`<product-id>-v2`)
+#### 3e. Pass 2: Improve product in-place
 
-Spawn a NEW Agent for Pass 2. Fresh build from scratch:
+Spawn a NEW Agent for Pass 2. It replaces the product's files within the same `ergo-tarife` project:
 
 ```
 Agent(
-  description="Build <product-name> v2 (improved)",
+  description="Improve <product-name> in ergo-tarife (Pass 2)",
   model="opus",
-  prompt=<filled template with PASS_NUMBER=2, PROJECT_NAME="<product-id>-v2",
+  prompt=<filled template with PASS_NUMBER=2, PRODUCT_ID="<product-id>",
          PASS_2_IMPROVEMENTS=<issues from 3c>,
          PRICING_CORRECTIONS=<if any>,
          NEW_COMPONENTS=<if you added any to demo-ui-lib>>
 )
 ```
 
-This agent runs `setup-demo.sh <product-id>-v2` (picks up any new components you committed to demo-ui-lib). It inherits ALL Pass 1 findings as explicit instructions, plus all accumulated learnings.
+Pass 2 works in the same project — it deletes and replaces the product's files (`src/lib/products/<product-id>/` and `src/app/wizard/[product]/pages/<product-id>/`), then rebuilds them with improvements. The registry entry is updated if needed. Other products in the project are NOT touched.
 
 #### 3f. Pass 2 Review (team lead, quick check)
 
@@ -319,6 +319,11 @@ For 14 products: ~13 hours total.
 ## Reference files
 
 - `references/team-member-prompt.md` — Complete prompt template for team member agents
+
+## Shared contracts (cross-skill)
+
+- `../shared/product-schema.md` — Canonical format for product entries. Validate every product against this before building.
+- `../shared/feedback-loop.md` — Self-improvement protocol. After each product AND after the entire factory run: self-assess → ask user (if available) → apply improvements → persist. The team lead runs the feedback loop, not the team members.
 
 ---
 
