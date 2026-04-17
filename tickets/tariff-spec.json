@@ -1,0 +1,214 @@
+{
+  "product": {
+    "id": "berufsunfaehigkeit",
+    "name": "Berufsunfähigkeitsversicherung",
+    "shortName": "BU",
+    "category": "person",
+    "insuredEvent": "Berufsunfähigkeit (≥50 % arbeitsunfähig im aktuellen Beruf)",
+    "description": "Einkommensabsicherung bei Berufsunfähigkeit — monatliche BU-Rente bis zum Rentenalter"
+  },
+  "target": {
+    "ageRange": [18, 55],
+    "ageLabel": "Eintrittsalter",
+    "description": "Arbeitnehmer und Selbständige, 18–55 Jahre"
+  },
+  "pricing": {
+    "coverageUnit": 100,
+    "coverageUnitLabel": "€/Monat",
+    "baseRates": {
+      "grundschutz": 2.08,
+      "komfort": 2.54,
+      "premium": 3.12
+    },
+    "ageCurve": {
+      "type": "polynomial",
+      "base": 0.70,
+      "linear": 0.50,
+      "quadratic": -0.15
+    },
+    "riskClass": {
+      "field": "occupation",
+      "label": "Berufsgruppe",
+      "classes": [
+        { "id": "buero",       "label": "Bürotätigkeit / kaufmännisch", "multiplier": 1.0 },
+        { "id": "handwerk",    "label": "Handwerk / Techniker",          "multiplier": 1.4 },
+        { "id": "koerperlich", "label": "Schwere körperliche Arbeit",    "multiplier": 1.8 },
+        { "id": "gefahren",    "label": "Gefahrenberufe",                "multiplier": 2.2 }
+      ]
+    },
+    "paymentModes": [
+      { "id": "monatlich",       "label": "Monatlich",       "discount": 1.00 },
+      { "id": "vierteljaehrlich","label": "Vierteljährlich", "discount": 0.98 },
+      { "id": "halbjaehrlich",   "label": "Halbjährlich",    "discount": 0.96 },
+      { "id": "jaehrlich",       "label": "Jährlich",        "discount": 0.95 }
+    ],
+    "loading": 0.28
+  },
+  "coverage": {
+    "min": 500,
+    "max": 5000,
+    "step": 100,
+    "default": 2000,
+    "unit": "€/Monat",
+    "label": "Monatliche BU-Rente",
+    "formatDisplay": "currency"
+  },
+  "plans": {
+    "grundschutz": {
+      "name": "Grundschutz",
+      "benefits": [
+        { "label": "BU-Definition",           "value": "≥ 50 % arbeitsunfähig" },
+        { "label": "Leistungsdauer",           "value": "bis Endalter 67" },
+        { "label": "Karenzzeit",               "value": "6 Monate" },
+        { "label": "Nachversicherungsgarantie","value": "–" }
+      ],
+      "extendedBenefits": [
+        { "label": "Infektionsklausel",         "value": "–" },
+        { "label": "Dienstunfähigkeitsklausel", "value": "–" },
+        { "label": "Weltweiter Schutz",         "value": "–" }
+      ]
+    },
+    "komfort": {
+      "name": "Komfort",
+      "highlight": "Beliebtester Tarif",
+      "benefits": [
+        { "label": "BU-Definition",            "value": "≥ 50 % arbeitsunfähig" },
+        { "label": "Leistungsdauer",            "value": "bis Endalter 67" },
+        { "label": "Karenzzeit",                "value": "3 Monate" },
+        { "label": "Nachversicherungsgarantie", "value": "✓" }
+      ],
+      "extendedBenefits": [
+        { "label": "Infektionsklausel",         "value": "✓" },
+        { "label": "Dienstunfähigkeitsklausel", "value": "–" },
+        { "label": "Weltweiter Schutz",         "value": "–" }
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "benefits": [
+        { "label": "BU-Definition",            "value": "≥ 50 % arbeitsunfähig" },
+        { "label": "Leistungsdauer",           "value": "bis Endalter 67" },
+        { "label": "Karenzzeit",               "value": "keine" },
+        { "label": "Nachversicherungsgarantie","value": "✓" }
+      ],
+      "extendedBenefits": [
+        { "label": "Infektionsklausel",         "value": "✓" },
+        { "label": "Dienstunfähigkeitsklausel", "value": "✓" },
+        { "label": "Umorganisationsverzicht",   "value": "✓" },
+        { "label": "Weltweiter Schutz",         "value": "✓" }
+      ]
+    }
+  },
+  "wizardSteps": [
+    {
+      "step": 1, "label": "Risikoprofil",
+      "subSteps": [
+        { "id": "occupation", "heading": "Was ist Ihr Beruf?",               "fields": ["occupation"] },
+        { "id": "birthDate",  "heading": "Wann wurden Sie geboren?",         "fields": ["birthDate"] },
+        { "id": "coverage",   "heading": "Wie hoch soll Ihre BU-Rente sein?","fields": ["monthlyIncome","coverageAmount"] }
+      ]
+    },
+    {
+      "step": 2, "label": "Tarifauswahl",
+      "subSteps": [
+        { "id": "planSelection",    "heading": "Wählen Sie Ihren Tarif",    "fields": ["plan"] }
+      ]
+    },
+    {
+      "step": 3, "label": "Gesundheit",
+      "subSteps": [
+        { "id": "healthQuestions",  "heading": "Gesundheitsfragen",         "fields": ["smoker","preExistingConditions"] }
+      ]
+    },
+    {
+      "step": 4, "label": "Persönliches",
+      "subSteps": [
+        { "id": "personalData",     "heading": "Ihre persönlichen Daten",   "fields": ["salutation","firstName","lastName","street","zip","city"] }
+      ]
+    },
+    {
+      "step": 5, "label": "Zusammenfassung",
+      "subSteps": [
+        { "id": "summary",          "heading": "Zusammenfassung Ihres Antrags", "fields": [] }
+      ]
+    }
+  ],
+  "fields": [
+    { "id": "occupation",           "type": "radio",        "label": "Berufsgruppe",               "required": true, "defaultValue": "buero",
+      "options": [
+        { "value": "buero",       "label": "Bürotätigkeit / kaufmännisch" },
+        { "value": "handwerk",    "label": "Handwerk / Techniker" },
+        { "value": "koerperlich", "label": "Schwere körperliche Arbeit" },
+        { "value": "gefahren",    "label": "Gefahrenberufe" }
+      ]},
+    { "id": "birthDate",            "type": "date",         "label": "Geburtsdatum",               "required": true },
+    { "id": "monthlyIncome",        "type": "number",       "label": "Monatliches Bruttoeinkommen", "required": true, "defaultValue": 3000,
+      "props": { "min": 500, "max": 20000, "step": 100, "unit": "€" } },
+    { "id": "coverageAmount",       "type": "slider",       "label": "Gewünschte BU-Rente",        "required": true, "defaultValue": 2000,
+      "props": { "min": 500, "max": 5000, "step": 100, "unit": "€/Monat", "note": "max. 75 % des Bruttoeinkommens" } },
+    { "id": "plan",                 "type": "segmented",    "label": "Tarif",                      "required": true, "defaultValue": "komfort" },
+    { "id": "smoker",               "type": "inline-radio", "label": "Raucher?",                   "required": true, "defaultValue": "nein",
+      "options": [{ "value": "nein", "label": "Nein" }, { "value": "ja", "label": "Ja" }] },
+    { "id": "preExistingConditions","type": "inline-radio", "label": "Vorerkrankungen vorhanden?",  "required": true, "defaultValue": "nein",
+      "options": [{ "value": "nein", "label": "Nein" }, { "value": "ja", "label": "Ja" }] },
+    { "id": "salutation",           "type": "select",       "label": "Anrede",                     "required": true, "defaultValue": "",
+      "options": [{ "value": "herr", "label": "Herr" }, { "value": "frau", "label": "Frau" }] },
+    { "id": "firstName",            "type": "text",         "label": "Vorname",                    "required": true, "defaultValue": "" },
+    { "id": "lastName",             "type": "text",         "label": "Nachname",                   "required": true, "defaultValue": "" },
+    { "id": "street",               "type": "text",         "label": "Straße und Hausnummer",       "required": true, "defaultValue": "" },
+    { "id": "zip",                  "type": "text",         "label": "Postleitzahl",                "required": true, "defaultValue": "",
+      "props": { "maxLength": 5 } },
+    { "id": "city",                 "type": "text",         "label": "Ort",                        "required": true, "defaultValue": "" }
+  ],
+  "validation": [
+    { "field": "birthDate",       "rule": "age-range", "params": { "min": 18, "max": 55 }, "errorMessage": "Wir versichern Personen zwischen 18 und 55 Jahren." },
+    { "field": "coverageAmount",  "rule": "custom",    "params": { "maxFactor": 0.75 },    "errorMessage": "Die BU-Rente darf max. 75 % des Bruttoeinkommens betragen." },
+    { "field": "zip",             "rule": "pattern",   "params": { "regex": "^\\d{5}$" },  "errorMessage": "Bitte geben Sie eine gültige Postleitzahl ein." },
+    { "field": "firstName",       "rule": "min-length","params": { "min": 2 },             "errorMessage": "Bitte geben Sie Ihren Vornamen ein." },
+    { "field": "lastName",        "rule": "min-length","params": { "min": 2 },             "errorMessage": "Bitte geben Sie Ihren Nachnamen ein." }
+  ],
+  "rules": {
+    "waitingPeriodByTier": {
+      "grundschutz": "6 Monate",
+      "komfort": "3 Monate",
+      "premium": "keine"
+    },
+    "exclusions": ["Selbstverletzung","Krieg und Terrorismus","Vorerkrankungen ohne Risikoaufschlag"],
+    "paymentDurationFormula": "67 - age"
+  },
+  "database": {
+    "tableSuffix": "bu_applications",
+    "columns": [
+      { "name": "occupation",              "type": "TEXT",    "nullable": false, "check": "occupation IN ('buero','handwerk','koerperlich','gefahren')" },
+      { "name": "birth_date",              "type": "TEXT",    "nullable": false },
+      { "name": "monthly_income",          "type": "TEXT",    "nullable": false },
+      { "name": "coverage_amount",         "type": "TEXT",    "nullable": false },
+      { "name": "plan",                    "type": "TEXT",    "nullable": false, "check": "plan IN ('grundschutz','komfort','premium')" },
+      { "name": "monthly_price",           "type": "TEXT",    "nullable": false },
+      { "name": "payment_duration_years",  "type": "INTEGER", "nullable": false },
+      { "name": "smoker",                  "type": "TEXT",    "nullable": false },
+      { "name": "pre_existing_conditions", "type": "TEXT",    "nullable": false },
+      { "name": "salutation",              "type": "TEXT",    "nullable": false },
+      { "name": "first_name",              "type": "TEXT",    "nullable": false },
+      { "name": "last_name",               "type": "TEXT",    "nullable": false },
+      { "name": "street",                  "type": "TEXT",    "nullable": false },
+      { "name": "zip",                     "type": "TEXT",    "nullable": false },
+      { "name": "city",                    "type": "TEXT",    "nullable": false }
+    ]
+  },
+  "demoDefaults": {
+    "occupation": "buero",
+    "birthDate": { "day": "15", "month": "03", "year": "1990" },
+    "monthlyIncome": 3500,
+    "coverageAmount": 2000,
+    "plan": "komfort",
+    "smoker": "nein",
+    "preExistingConditions": "nein",
+    "salutation": "herr",
+    "firstName": "Markus",
+    "lastName": "Weber",
+    "street": "Friedrichstraße 22",
+    "zip": "10117",
+    "city": "Berlin"
+  }
+}

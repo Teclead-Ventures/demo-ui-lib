@@ -1,152 +1,156 @@
-# Ticket 06: Page 2b — Dynamic Adjustment (Beitragsdynamik)
+# Ticket 06: Page 2b — Gesundheitsfragen (Health Questions)
 
-## Step: 2 (Beitrag) | Sub-step: 2
+## Step: 5 (Gesundheit) | Sub-step: 1 | Agent: E
 
 ## Reference Screenshot
-`screenshots/reference/Screenshot 2026-04-10 171544.png`
+None available.
 
 ## Objective
 
-Build the dynamic contribution adjustment page. The user decides whether their insurance contributions should increase over time to keep pace with inflation.
+Simplified health questionnaire: two inline radio questions (Raucher? / Vorerkrankungen?). If user answers "Ja" to either, show an informational note — but do NOT block progression (demo flow).
 
-## Visual Specification (from reference)
+## Visual Specification
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  (1) Tarifdaten  (2●) Beitrag  (3) ...          │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  ◉ Grundschutz    23,80 €  monatlich            │  ← Plan summary bar (from 2a)
-│  ▼ Mehr Details zeigen                          │  ← Collapsible detail link
-│                                                 │
-│  Soll sich die Absicherung der Zukunft          │  ← Bold heading, centered
-│  anpassen?                                      │
-│                                                 │
-│  Wählen Sie eine Dynamik:                       │  ← Subheading
-│                                                 │
-│  ┌─────────────────────────────────────────┐    │
-│  │  Beitragsdynamik                        │    │
-│  │                                         │    │
-│  │  Die Lebenshaltungskosten steigen        │    │  ← Explanation text block
-│  │  stetig, so verliert das Geld über die   │    │
-│  │  Zeit an Wert. Mit einer freiwilligen    │    │
-│  │  Beitragserhöhung um 5 % erhöhen Sie    │    │
-│  │  jährlich Ihren Versicherungsschutz...   │    │
-│  │                                         │    │
-│  │  Eine Erhöhung kann auch nachträglich    │    │
-│  │  abgeschlossen werden. Auf die Erhöhung │    │
-│  │  kann auch noch verzichtet werden.       │    │
-│  │                                         │    │
-│  │        ┌──────────────────────┐         │    │
-│  │        │ auswählen und weiter │         │    │  ← Primary button
-│  │        └──────────────────────┘         │    │
-│  └─────────────────────────────────────────┘    │
-│                                                 │
-│  ┌─────────────────────────────────────────┐    │
-│  │  Ich möchte keine Beitragsdynamik.      │    │  ← Alternative option
-│  │                             weiter →    │    │
-│  └─────────────────────────────────────────┘    │
-│                                                 │
-│         Angebot anfordern                       │  ← Secondary action link
-│              Zurück                             │
-│                                                 │
+│                                                  │
+│     Gesundheitsfragen                           │  ← H1, serif, centered
+│                                                  │
+│  Für Ihre BU-Versicherung benötigen wir         │
+│  einige gesundheitliche Angaben.                │  ← subtitle, gray
+│                                                  │
+│  Rauchen Sie?                                   │  ← label
+│  ┌───────────────────────────────┐              │
+│  │  ○ Nein    ○ Ja              │              │  ← InlineRadio
+│  └───────────────────────────────┘              │
+│                                                  │
+│  Bestehen Vorerkrankungen?                      │  ← label
+│  ┌───────────────────────────────┐              │
+│  │  ○ Nein    ○ Ja              │              │  ← InlineRadio
+│  └───────────────────────────────┘              │
+│                                                  │
+│  [ℹ️  Hinweis] (shown only if any "Ja")         │
+│  Bei Risikofaktoren erfolgt im Antrag eine      │
+│  individuelle Risikoprüfung durch unsere Berater│
+│                                                  │
+│    ← Zurück          [ weiter → ]               │
+│                                                  │
 └─────────────────────────────────────────────────┘
 ```
 
 ## Files to Create/Modify
 
-### `demo/pages/DynamicAdjustmentPage.tsx`
-
-Key elements:
-1. **Plan summary bar**: Shows selected plan name + monthly price (from context)
-2. **"Mehr Details zeigen"**: Collapsible detail link
-3. **Heading**: "Soll sich die Absicherung der Zukunft anpassen?"
-4. **Sub-heading**: "Wählen Sie eine Dynamik:"
-5. **Beitragsdynamik card**: Explanation text + "auswählen und weiter" button
-6. **No-dynamic option**: "Ich möchte keine Beitragsdynamik." with "weiter →" link
-7. **"Angebot anfordern"**: Secondary link (non-functional for demo, or shows toast)
-8. **"Zurück"**: Navigate back to plan selection
-
-### `demo/pages/index.ts` (MODIFY)
-Export `DynamicAdjustmentPage` for step 2, sub-step 2.
-
-## Component Usage
+### `src/app/wizard/pages/HealthQuestionsPage.tsx`
 
 ```tsx
-import { Button } from "../../src/components/Button";
-import { Card } from "../../src/components/Card";
-import { Link } from "../../src/components/Link";
+"use client";
+import { useTariff } from "@/lib/wizard/TariffContext";
+import { InlineRadio } from "@/components/ui/InlineRadio/InlineRadio";
+import { Button } from "@/components/ui/Button/Button";
+
+export function HealthQuestionsPage() {
+  const { data, update, goNext, goPrev } = useTariff();
+
+  const hasRisk = data.smoker === "ja" || data.preExistingConditions === "ja";
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      <h1 style={{
+        fontFamily: "var(--font-family-heading, 'Source Serif 4', Georgia, serif)",
+        fontSize: 28, fontWeight: 700, color: "#333", textAlign: "center", margin: 0,
+      }}>
+        Gesundheitsfragen
+      </h1>
+
+      <p style={{ textAlign: "center", color: "#737373", fontSize: 14, margin: 0 }}>
+        Für Ihre BU-Versicherung benötigen wir einige gesundheitliche Angaben.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <label style={{ fontSize: 16, fontWeight: 600, color: "#333" }}>Rauchen Sie?</label>
+          <InlineRadio
+            options={[{ value: "nein", label: "Nein" }, { value: "ja", label: "Ja" }]}
+            value={data.smoker}
+            onChange={(val) => update({ smoker: val as "nein" | "ja" })}
+          />
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <label style={{ fontSize: 16, fontWeight: 600, color: "#333" }}>Bestehen Vorerkrankungen?</label>
+          <InlineRadio
+            options={[{ value: "nein", label: "Nein" }, { value: "ja", label: "Ja" }]}
+            value={data.preExistingConditions}
+            onChange={(val) => update({ preExistingConditions: val as "nein" | "ja" })}
+          />
+        </div>
+      </div>
+
+      {hasRisk && (
+        <div style={{
+          backgroundColor: "#fff9e6", border: "1px solid #f0c040",
+          borderRadius: 8, padding: 16,
+        }}>
+          <p style={{ margin: 0, fontSize: 14, color: "#555" }}>
+            <strong>Hinweis:</strong> Bei Risikofaktoren erfolgt im Antrag eine individuelle
+            Risikoprüfung. Unser Berater-Team meldet sich nach der Antragstellung bei Ihnen.
+          </p>
+        </div>
+      )}
+
+      <div style={{ display: "flex", justifyContent: "center", gap: 16, alignItems: "center" }}>
+        <button onClick={goPrev} style={{ background: "none", border: "none", color: "#8e0038", fontWeight: 700, cursor: "pointer", fontSize: 16 }}>
+          ← Zurück
+        </button>
+        <Button label="weiter" onClick={goNext} variant="primary" style={{ minWidth: 240 }} />
+      </div>
+    </div>
+  );
+}
 ```
 
+### `src/app/wizard/pages/index.ts` (MODIFY)
+Add: `export { HealthQuestionsPage } from "./HealthQuestionsPage";`
+
+## Component Usage
+```tsx
+import { InlineRadio } from "@/components/ui/InlineRadio/InlineRadio";
+import { Button } from "@/components/ui/Button/Button";
+```
+Read both source files before implementing.
+
 ## Interaction Logic
-
-- Plan summary reads from `tariffState.plan` + planData pricing
-- "auswählen und weiter" → sets `dynamicAdjustment: "standard"`, navigates to step 3
-- "weiter" (no dynamic) → sets `dynamicAdjustment: "none"`, navigates to step 3
-- "Angebot anfordern" → show info toast or no-op for demo
-- "Zurück" → step 2, sub-step 1
-
-## Styling Notes
-
-- Plan summary bar: background #f5f5f5, padding 16px, border-radius 8px
-- Price: font-size 24px, font-weight 700
-- Beitragsdynamik card: border 1px solid #e1e1e1, padding 24px, border-radius 8px
-- Explanation text: font-size 14px, color #555, line-height 1.6
-- "auswählen und weiter": primary button, centered within card
-- No-dynamic row: lighter card style, with "weiter →" as a link on the right
-- "Angebot anfordern": secondary link style, centered
+- Both questions default to "nein"
+- If either is "ja" → show yellow info notice (non-blocking)
+- "weiter" always enabled — no blocking validation
+- Both fields stored in state for summary + DB
 
 ---
 
-## Agent Execution (see tickets/agent-contracts.md for full role definitions)
-
-**This ticket is executed by a Page Agent (developer role) running in an isolated worktree.**
+## Agent Execution
 
 ### Page Agent Actions
-1. Read `screenshots/reference/Screenshot 2026-04-10 171544.png` carefully
-2. Read `demo/data/planData.ts` for plan pricing (created in ticket 05, may need to create if not present in worktree — copy the data from ticket 05 spec)
-3. Create `demo/pages/DynamicAdjustmentPage.tsx`
-4. Implement plan summary bar, explanation card, and no-dynamic alternative
-5. Wire both navigation paths to set `dynamicAdjustment` and advance to step 3
-6. Update `demo/pages/index.ts`
-7. Run quality gate loop (max 3 iterations):
-   - **compile-gate**: `npx tsc --noEmit` must exit 0
-   - **review-gate**: Spawn Reviewer subagent (opus) with this ticket + code files
-   - **browser-gate**: Spawn Tester subagent (opus) with navigation sequence below
-8. Escalate to orchestrator if any gate fails 3 times
+1. Read `src/components/ui/InlineRadio/` source
+2. Read `src/components/ui/Button/` source
+3. Create `src/app/wizard/pages/HealthQuestionsPage.tsx`
+4. Update `src/app/wizard/pages/index.ts`
+5. Run quality gate loop
 
-### Reviewer Focus (in addition to standard checks)
-- Plan summary bar shows selected plan name + price from context (not hardcoded)
-- Two distinct paths: "auswählen und weiter" sets `dynamicAdjustment: "standard"`, "weiter" (no dynamic) sets `"none"`
-- Both paths navigate to step 3
-- Explanation text matches Beitragsdynamik reference content
-- "Mehr Details zeigen" collapsible works
-
-### Tester: Navigation Sequence (playwright-cli)
+### Tester: Navigation Sequence
 ```bash
 playwright-cli open http://localhost:3000/wizard --headed
+# Navigate through steps 1-4 to reach step 5
 playwright-cli snapshot
-playwright-cli fill <day-ref> "23"
-playwright-cli fill <month-ref> "06"
-playwright-cli fill <year-ref> "1982"
-playwright-cli click <weiter-ref>
-playwright-cli snapshot
-playwright-cli click <middle-radio-ref>
-playwright-cli click <weiter-ref>
-playwright-cli snapshot
-playwright-cli click <weiter-ref>  # accept default slider
-playwright-cli snapshot
-playwright-cli click <weiter-ref>  # accept default plan (Komfort)
-playwright-cli snapshot
-# Now at page 2b (this page)
 ```
 
 ### Tester: Page-Specific Checks
 ```
-[CHECK] Plan summary shows "Komfort" with correct price from planData
-[CHECK] Heading "Soll sich die Absicherung der Zukunft anpassen?" visible
-[CHECK] Beitragsdynamik explanation card visible with descriptive text
-[CHECK] "auswählen und weiter" navigates to personal data page (step 3)
-[CHECK] Navigate back, select "Ich möchte keine Beitragsdynamik" + "weiter" also reaches step 3
-[CHECK] "Zurück" navigates back to plan selection page
+[CHECK] Heading "Gesundheitsfragen" visible
+[CHECK] Two InlineRadio groups: "Rauchen Sie?" and "Bestehen Vorerkrankungen?"
+[CHECK] Both default to "Nein"
+[CHECK] No warning shown when both "Nein"
+[CHECK] Selecting "Ja" for smoker shows yellow info notice
+[CHECK] Selecting "Ja" for Vorerkrankungen shows yellow info notice
+[CHECK] "weiter" always enabled — navigates to step 6 regardless
+[CHECK] "← Zurück" returns to step 4
 ```

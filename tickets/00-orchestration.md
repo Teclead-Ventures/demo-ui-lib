@@ -1,100 +1,108 @@
-# Orchestration Plan: Full-Stack Insurance Tariff Wizard
+# Orchestration Plan: Berufsunfähigkeitsversicherung Wizard
 
 ## Overview
 
-Build a fully functional full-stack insurance tariff wizard (Sterbegeldversicherung):
-- **Frontend**: Next.js App Router with multi-step wizard using the `demo-ui-lib` component library
-- **Backend**: Supabase database for storing submissions
-- **Dashboard**: Server-rendered analytics page showing submissions + stats
-- **Deployment**: Vercel production URL
-- **Validation**: playwright-cli browser interaction (headed, visible on desktop)
+Build a fully functional full-stack insurance tariff wizard (BU) with 7 pages across 5 wizard steps. The pipeline uses parallel agents for all page components, with a shared TariffContext for state management.
 
-## Architecture
+## Wizard Flow
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  ORCHESTRATOR                        │
-│  Reads EXECUTE.md, dispatches phases sequentially    │
-└──────────┬──────────────┬───────────────┬────────────┘
-           │              │               │
-   Phase 0+1          Phase 2          Phase 3+4
-   (Setup +           (8 parallel      (Merge +
-    Foundation)        agents)          Deploy)
-           │              │               │
-           │     ┌────────┴────────┐      │
-           │     │  Per-Agent Loop │      │
-           │     │                 │      │
-           │     │  Developer      │      │
-           │     │    ↓            │      │
-           │     │  compile-gate   │      │
-           │     │    ↓            │      │
-           │     │  Reviewer (opus)│      │
-           │     │    ↓            │      │
-           │     │  Tester         │      │
-           │     │  (playwright-cli│      │
-           │     │   --headed)     │      │
-           │     │    ↓            │      │
-           │     │  Loop or PASS   │      │
-           │     └─────────────────┘      │
+Step 1: Risikoprofil
+  1a → OccupationPage     — Berufsgruppe auswählen (4 radio options)
+  1b → BirthDatePage      — Geburtsdatum eingeben
+  1c → CoveragePage       — Einkommen + BU-Rente konfigurieren
+
+Step 2: Tarifauswahl
+  2a → PlanSelectionPage  — Grundschutz / Komfort / Premium wählen (live pricing)
+
+Step 3: Gesundheit
+  3a → HealthQuestionsPage — Raucher? + Vorerkrankungen? (inline radio)
+
+Step 4: Persönliches
+  4a → PersonalDataPage   — Name, Adresse
+
+Step 5: Zusammenfassung
+  5a → SummaryPage        — Review + Consent + Submit
 ```
 
-## Execution Order & Dependencies
+## File Structure
 
 ```
-Phase 0: Setup (~2 min)
-  - Copy base template, UI library, reference screenshots
-  - Create Supabase table via MCP
-  - Set environment variables
-
-Phase 1: Foundation (BLOCKING, ~3 min)
-  - TariffContext, planData, wizard page routing, API route
-
-Phase 2: Parallel development (~8 min)
-  - 8 agents in isolated worktrees:
-    - Agents A-G: 7 wizard pages (tickets 02-08)
-    - Agent H: Dashboard page (ticket 10)
-  - Each runs: develop → compile → review → playwright-cli → loop
-
-Phase 3: Integration (~5 min)
-  - Merge worktree files
-  - Full playwright-cli walkthrough (headed, visible)
-  - Submit form, verify on dashboard
-
-Phase 4: Deploy (~3 min)
-  - Vercel deploy via MCP
-  - Production playwright-cli walkthrough
+src/
+├── app/
+│   ├── wizard/
+│   │   ├── page.tsx              ← TariffProvider + step routing
+│   │   └── pages/
+│   │       ├── OccupationPage.tsx
+│   │       ├── BirthDatePage.tsx
+│   │       ├── CoveragePage.tsx
+│   │       ├── PlanSelectionPage.tsx
+│   │       ├── HealthQuestionsPage.tsx
+│   │       ├── PersonalDataPage.tsx
+│   │       ├── SummaryPage.tsx
+│   │       └── index.ts
+│   ├── dashboard/
+│   │   └── page.tsx
+│   └── api/
+│       ├── submit/route.ts
+│       └── track/route.ts
+└── lib/
+    ├── wizard/
+    │   └── TariffContext.tsx
+    └── data/
+        ├── pricing.ts
+        └── planData.ts
 ```
 
-## Key Files
+## Pricing Formula (Template A)
 
-| File | Purpose |
-|------|---------|
-| `EXECUTE.md` | Single entry point — paste into new session |
-| `agent-contracts.md` | Structured return formats for Reviewer, Tester, Verifier |
-| `quality-gates.md` | Gate sequence: compile → review → browser → integration → deploy → production |
-| `01-foundation.md` | Wizard state, routing, API |
-| `02-08` | Individual wizard pages |
-| `10-dashboard.md` | Dashboard with analytics |
+```
+units = coverageAmount / 100
+t = (age - 18) / (55 - 18)
+ageFactor = 0.70 + 0.50×t + (−0.15)×t²
+riskMult: buero=1.0, handwerk=1.4, koerperlich=1.8, gefahren=2.2
+netPremium = baseRate × units × ageFactor × riskMult
+gross = netPremium × 1.28
+```
 
-## Reference Screenshots Mapping
+Calibration: 30yo Bürotätigkeit, €2k/Monat, Komfort → ~€55/Monat ✓
 
-| Screenshot | Ticket | Description |
-|---|---|---|
-| `Screenshot 2026-04-10 111825.png` | 02 | Birth date entry (Step 1, Sub-step 1) |
-| `Screenshot 2026-04-10 111815.png` | 03 | Insurance start date (Step 1, Sub-step 2) |
-| `Screenshot 2026-04-10 111525.png` | 04 | Coverage amount slider (Step 1, Sub-step 3) |
-| `Screenshot 2026-04-10 171511.png` | 05 | Plan selection (Step 2, Sub-step 1) |
-| `Screenshot 2026-04-10 171544.png` | 06 | Dynamic adjustment (Step 2, Sub-step 2) |
-| `Screenshot 2026-04-10 171607.png` | 07 | Personal data form (Step 3) |
-| *(no reference)* | 08 | Summary page (Step 4) |
-| *(no reference)* | 10 | Dashboard |
+## Agent Assignments
 
-## Shared Conventions
+| Agent | Ticket file | Page component |
+|-------|-------------|----------------|
+| A | 02-page-1a-birth-date.md | OccupationPage |
+| B | 03-page-1b-start-date.md | BirthDatePage |
+| C | 04-page-1c-coverage-amount.md | CoveragePage |
+| D | 05-page-2a-plan-selection.md | PlanSelectionPage |
+| E | 06-page-2b-dynamic-adjustment.md | HealthQuestionsPage |
+| F | 07-page-3-personal-data.md | PersonalDataPage |
+| G | 08-page-4-summary.md | SummaryPage |
 
-- **UI Components**: Import from `@/components/ui/<ComponentName>/<ComponentName>`
-- **State**: Use `useWizard<TariffFormData>()` from `@/lib/wizard`
-- **Styling**: Inline styles for wizard pages (matching ERGO design), Tailwind for dashboard
-- **Theme**: primary: #8e0038, secondary: #bf1528
-- **Language**: All UI text in German, code comments in English
-- **Testing**: playwright-cli with `--headed` flag (visible on desktop)
-- **Base URL**: `http://localhost:3000` (Next.js default port)
+## TARIFF_STEPS (7 steps)
+
+```typescript
+export const TARIFF_STEPS = [
+  { label: "Risikoprofil" },     // steps 1-3 (substeps of Risikoprofil)
+  { label: "Tarifauswahl" },
+  { label: "Gesundheit" },
+  { label: "Persönliches" },
+  { label: "Zusammenfassung" },
+];
+// Note: The stepper shows 5 labels but the wizard has 7 internal steps.
+// Steps 1/2/3 all display under "Risikoprofil" in the stepper.
+// Internal step routing: 1=Occupation, 2=BirthDate, 3=Coverage, 4=PlanSelection,
+//                         5=HealthQuestions, 6=PersonalData, 7=Summary
+```
+
+## Design Reference
+
+- Background: #f8f8f8
+- Content maxWidth: 640px, padding: 48px 24px
+- Headings: Source Serif 4, 28px, #333, centered
+- Primary color: #8e0038 (ERGO red)
+- Stepper circles: active=red, completed=red+✓, inactive=gray
+- Buttons: primary variant, maxWidth 360px, centered
+- Back link: plain text "← Zurück", color #8e0038
+- Card border: 1px solid #e5e5e5, radius 8px, white bg
+- Benefit checkmarks: color #5de38e

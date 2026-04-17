@@ -1,121 +1,146 @@
-# Ticket 03: Page 1b — Insurance Start Date
+# Ticket 03: Page 1b — Geburtsdatum (Birth Date Entry)
 
-## Step: 1 (Tarifdaten) | Sub-step: 2
+## Step: 2 (Risikoprofil) | Sub-step: 2 | Agent: B
 
 ## Reference Screenshot
-`screenshots/reference/Screenshot 2026-04-10 111815.png`
+None available — same DateInput pattern as other wizard pages.
 
 ## Objective
 
-Build the insurance start date selection page. The user picks when their insurance policy should begin from three pre-defined date options using radio buttons.
+User enters their birth date (day/month/year). Validates that the resulting age is between 18 and 55. Price and payment duration (67 − age) are derived from this.
 
-## Visual Specification (from reference)
+## Visual Specification
 
 ```
-┌─────────────────────────────────────────────┐
-│  (1) Tarifdaten  (2) Beitrag  (3) ...       │
-├─────────────────────────────────────────────┤
-│                                             │
-│  Wann soll die Versicherung beginnen?       │  ← Bold heading, centered
-│                                             │
-│  ┌─────────────────────────────────────┐    │
-│  │  ○  01.05.2026                      │    │  ← RadioButton, card-style
-│  └─────────────────────────────────────┘    │
-│  ┌─────────────────────────────────────┐    │
-│  │  ◉  01.06.2026                      │    │  ← Selected, highlighted bg
-│  └─────────────────────────────────────┘    │
-│  ┌─────────────────────────────────────┐    │
-│  │  ○  01.07.2026                      │    │  ← RadioButton
-│  └─────────────────────────────────────┘    │
-│                                             │
-│         ┌───────────────────┐               │
-│         │      weiter       │               │
-│         └───────────────────┘               │
-│              Zurück                         │  ← Ghost link, centered
-│                                             │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│                                                  │
+│     Wann wurden Sie geboren?             [?]    │  ← H1 serif + Tooltip
+│                                                  │
+│  ┌────────────────────────────────────┐         │
+│  │  Tag    Monat    Jahr              │         │  ← DateInput spinbutton
+│  └────────────────────────────────────┘         │
+│                                                  │
+│  Das Alter bestimmt Ihren Beitrag und            │
+│  die Laufzeit bis Rentenalter 67.               │  ← hint text, gray, small
+│                                                  │
+│    ← Zurück          [ weiter → ]               │
+│                                                  │
+└─────────────────────────────────────────────────┘
 ```
 
 ## Files to Create/Modify
 
-### `demo/pages/StartDatePage.tsx`
-
-Key elements:
-- Heading: "Wann soll die Versicherung beginnen?"
-- Three RadioButton options with dates (dynamically generated: 1st of next 3 months)
-- Selected radio has light pink background highlight
-- "weiter" button → navigate to sub-step 3
-- "Zurück" link → navigate back to sub-step 1
-
-### `demo/pages/index.ts` (MODIFY)
-Export `StartDatePage` and wire it for step 1, sub-step 2.
-
-## Component Usage
+### `src/app/wizard/pages/BirthDatePage.tsx`
 
 ```tsx
-import { RadioButton } from "../../src/components/RadioButton";
-import { Button } from "../../src/components/Button";
+"use client";
+import { useState } from "react";
+import { useTariff } from "@/lib/wizard/TariffContext";
+import { DateInput } from "@/components/ui/DateInput/DateInput";
+import { Button } from "@/components/ui/Button/Button";
+import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
+import { calculateAge } from "@/lib/data/pricing";
+
+export function BirthDatePage() {
+  const { data, update, goNext, goPrev } = useTariff();
+  const [error, setError] = useState("");
+
+  const handleNext = () => {
+    const { day, month, year } = data.birthDate;
+    if (!day || !month || !year) {
+      setError("Bitte geben Sie Ihr vollständiges Geburtsdatum an.");
+      return;
+    }
+    const age = calculateAge(data.birthDate);
+    if (age < 18 || age > 55) {
+      setError("Wir versichern Personen zwischen 18 und 55 Jahren.");
+      return;
+    }
+    setError("");
+    goNext();
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <h1 style={{
+          fontFamily: "var(--font-family-heading, 'Source Serif 4', Georgia, serif)",
+          fontSize: 28, fontWeight: 700, color: "#333", margin: 0,
+        }}>
+          Wann wurden Sie geboren?
+        </h1>
+        <Tooltip content="Das Alter bestimmt Ihren monatlichen Beitrag und die Vertragslaufzeit bis Rentenalter 67." />
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+        <DateInput
+          value={data.birthDate}
+          onChange={(val) => { update({ birthDate: val }); setError(""); }}
+        />
+        {error && (
+          <p style={{ color: "#d32f2f", fontSize: 14, margin: 0 }}>{error}</p>
+        )}
+      </div>
+
+      <p style={{ textAlign: "center", color: "#737373", fontSize: 14, margin: 0 }}>
+        Das Alter bestimmt Ihren Beitrag und die Laufzeit bis Rentenalter 67.
+      </p>
+
+      <div style={{ display: "flex", justifyContent: "center", gap: 16, alignItems: "center" }}>
+        <button onClick={goPrev} style={{ background: "none", border: "none", color: "#8e0038", fontWeight: 700, cursor: "pointer", fontSize: 16 }}>
+          ← Zurück
+        </button>
+        <Button label="weiter" onClick={handleNext} variant="primary" style={{ minWidth: 240 }} />
+      </div>
+    </div>
+  );
+}
 ```
 
+### `src/app/wizard/pages/index.ts` (MODIFY)
+Add: `export { BirthDatePage } from "./BirthDatePage";`
+
+## Component Usage
+```tsx
+import { DateInput } from "@/components/ui/DateInput/DateInput";
+import { Button } from "@/components/ui/Button/Button";
+import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
+```
+Read all source files before implementing.
+
 ## Interaction Logic
-
-- Three date options: 1st of the next 3 upcoming months from today
-- Selected value stored in `tariffState.insuranceStart`
-- Default: middle option (2nd month)
-- "weiter" → step 1, sub-step 3
-- "Zurück" → step 1, sub-step 1
-
-## Styling Notes
-
-- Heading: same style as other pages (bold, centered, ~24px)
-- RadioButtons: full-width, card-style (the RadioButton component already renders as cards)
-- Gap between radio options: 8-12px
-- "weiter" button: max-width ~360px, centered
-- "Zurück": centered text link below button, color #333, font-size 14px
+- DateInput bound to `data.birthDate` ({day, month, year})
+- Validation on "weiter" click: all parts filled + age 18–55
+- Error shown inline below DateInput
+- "← Zurück" → step 1
 
 ---
 
-## Agent Execution (see tickets/agent-contracts.md for full role definitions)
-
-**This ticket is executed by a Page Agent (developer role) running in an isolated worktree.**
+## Agent Execution
 
 ### Page Agent Actions
-1. Read `screenshots/reference/Screenshot 2026-04-10 111815.png` for visual reference
-2. Read `src/components/RadioButton/RadioButton.tsx` for the API
-3. Read `demo/context/TariffContext.tsx` for state and navigation
-4. Create `demo/pages/StartDatePage.tsx`
-5. Generate date options dynamically (1st of next 3 months)
-6. Update `demo/pages/index.ts`
-7. Run quality gate loop (max 3 iterations):
-   - **compile-gate**: `npx tsc --noEmit` must exit 0
-   - **review-gate**: Spawn Reviewer subagent (opus) with this ticket + code files
-   - **browser-gate**: Spawn Tester subagent (opus) with navigation sequence below
-8. Escalate to orchestrator if any gate fails 3 times
+1. Read `src/components/ui/DateInput/` source
+2. Read `src/components/ui/Button/` source
+3. Read `src/components/ui/Tooltip/` source
+4. Read `src/lib/data/pricing.ts` for `calculateAge`
+5. Create `src/app/wizard/pages/BirthDatePage.tsx`
+6. Update `src/app/wizard/pages/index.ts`
+7. Run quality gate loop
 
-### Reviewer Focus (in addition to standard checks)
-- Dates dynamically calculated (not hardcoded to specific months)
-- Default selection is middle option
-- Radio selected state has pink highlight matching reference
-
-### Tester: Navigation Sequence (playwright-cli)
+### Tester: Navigation Sequence
 ```bash
 playwright-cli open http://localhost:3000/wizard --headed
+# Click weiter on step 1 to reach step 2
 playwright-cli snapshot
-# Fill birth date fields (use snapshot refs)
-playwright-cli fill <day-ref> "23"
-playwright-cli fill <month-ref> "06"
-playwright-cli fill <year-ref> "1982"
-playwright-cli click <weiter-ref>
-playwright-cli snapshot
-# Now at page 1b (this page)
 ```
 
 ### Tester: Page-Specific Checks
 ```
-[CHECK] Heading "Wann soll die Versicherung beginnen?" visible
-[CHECK] Three radio options visible with DD.MM.YYYY date labels
-[CHECK] Middle option selected by default
-[CHECK] Clicking different option changes selection
-[CHECK] "weiter" navigates to coverage amount page
-[CHECK] "Zurück" navigates back to birth date page
+[CHECK] Heading "Wann wurden Sie geboren?" visible with tooltip icon
+[CHECK] DateInput with three fields (Tag/Monat/Jahr) rendered
+[CHECK] Clicking "weiter" with empty fields shows error message
+[CHECK] Entering age <18 shows age range error
+[CHECK] Entering age >55 shows age range error
+[CHECK] Valid birth date (e.g. 15/03/1990) proceeds to step 3
+[CHECK] "← Zurück" returns to step 1
 ```

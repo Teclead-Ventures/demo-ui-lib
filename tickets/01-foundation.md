@@ -4,141 +4,333 @@
 
 ## Objective
 
-Create the multi-step wizard infrastructure: shared form state context, wizard shell with step navigation, page routing, and the updated demo entry point. This replaces the current component showcase with the tariff wizard.
+Create the complete wizard infrastructure for Berufsunfähigkeitsversicherung (BU): TariffContext, pricing engine, plan data, API routes, and page routing.
 
-## Reference
-
-The stepper bar visible in all reference screenshots (`screenshots/reference/`):
-- 4 steps: **Tarifdaten** → **Beitrag** → **Persönliches** → **Zusammenfassung**
-- Steps have sub-pages (Step 1 has 3, Step 2 has 2, Steps 3-4 have 1 each)
-- Navigation: "weiter" (forward) button + "Zurück" (back) link
-- Stepper component already exists in `src/components/Stepper/`
+---
 
 ## Files to Create
 
-### `demo/context/TariffContext.tsx`
-Shared form state using React Context + useReducer:
+### `src/lib/wizard/TariffContext.tsx`
 
 ```typescript
-interface TariffState {
-  // Step 1a: Birth date
-  birthDate: { day: string; month: string; year: string };
-  // Step 1b: Insurance start
-  insuranceStart: string; // e.g. "01.06.2026"
-  // Step 1c: Coverage
-  coverageAmount: number; // 1000–20000, default 8000
-  // Step 2a: Plan
-  plan: "grundschutz" | "komfort" | "premium";
-  // Step 2b: Dynamic
-  dynamicAdjustment: "none" | "standard";
-  // Step 3: Personal
+"use client";
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+
+export interface DateValue {
+  day: string;
+  month: string;
+  year: string;
+}
+
+export type OccupationType = "buero" | "handwerk" | "koerperlich" | "gefahren";
+export type PlanId = "grundschutz" | "komfort" | "premium";
+
+export interface TariffFormData {
+  occupation: OccupationType;
+  birthDate: DateValue;
+  monthlyIncome: number;
+  coverageAmount: number;
+  plan: PlanId;
+  smoker: "nein" | "ja";
+  preExistingConditions: "nein" | "ja";
   salutation: string;
   firstName: string;
   lastName: string;
   street: string;
-  zipCity: string;
-  birthPlace: string;
-  nationality: string;
+  zip: string;
+  city: string;
 }
 
-// Navigation state
-interface WizardNav {
-  step: number;      // 1-4 (maps to stepper)
-  subStep: number;   // 1-based within each step
+const INITIAL_DATA: TariffFormData = {
+  occupation: "buero",
+  birthDate: { day: "", month: "", year: "" },
+  monthlyIncome: 3000,
+  coverageAmount: 2000,
+  plan: "komfort",
+  smoker: "nein",
+  preExistingConditions: "nein",
+  salutation: "",
+  firstName: "",
+  lastName: "",
+  street: "",
+  zip: "",
+  city: "",
+};
+
+const DEMO_DEFAULTS: TariffFormData = {
+  occupation: "buero",
+  birthDate: { day: "15", month: "03", year: "1990" },
+  monthlyIncome: 3500,
+  coverageAmount: 2000,
+  plan: "komfort",
+  smoker: "nein",
+  preExistingConditions: "nein",
+  salutation: "herr",
+  firstName: "Markus",
+  lastName: "Weber",
+  street: "Friedrichstraße 22",
+  zip: "10117",
+  city: "Berlin",
+};
+
+// 7 internal wizard steps
+export const TOTAL_STEPS = 7;
+
+// Stepper label mapping (which internal step belongs to which stepper label)
+// Stepper: 1=Risikoprofil (steps 1-3), 2=Tarifauswahl (4), 3=Gesundheit (5),
+//          4=Persönliches (6), 5=Zusammenfassung (7)
+export const TARIFF_STEPS = [
+  { label: "Risikoprofil" },
+  { label: "Tarifauswahl" },
+  { label: "Gesundheit" },
+  { label: "Persönliches" },
+  { label: "Zusammenfassung" },
+];
+
+export function getStepperIndex(internalStep: number): number {
+  if (internalStep <= 3) return 0;
+  if (internalStep === 4) return 1;
+  if (internalStep === 5) return 2;
+  if (internalStep === 6) return 3;
+  return 4;
 }
-```
 
-Provide `TariffProvider`, `useTariff()` for state, and `useWizardNav()` for navigation.
+interface TariffContextValue {
+  data: TariffFormData;
+  update: (patch: Partial<TariffFormData>) => void;
+  currentStep: number;
+  goTo: (step: number) => void;
+  goNext: () => void;
+  goPrev: () => void;
+  isDemo: boolean;
+}
 
-### `demo/TariffWizard.tsx`
-Main wizard shell:
-- Renders `<Stepper>` at top with 4 steps
-- Conditionally renders the active page component based on step/subStep
-- Centered layout (max-width ~560px, centered, padding 48px 24px)
-- Font: "FS Me", Arial, Helvetica, sans-serif
-- Page components are lazy-placeholders initially (just showing "Page X" text) — each ticket fills them in
+const TariffContext = createContext<TariffContextValue | null>(null);
 
-### `demo/pages/index.ts`
-Barrel export for all page components. Initially exports placeholder components.
+export function TariffProvider({ children }: { children: React.ReactNode }) {
+  const searchParams = useSearchParams();
+  const isDemo = searchParams?.get("demo") === "true";
 
-### `demo/main.tsx` (MODIFY)
-Replace the component showcase App with the TariffWizard wrapped in providers:
-```tsx
-import { TariffProvider } from "./context/TariffContext";
-import { TariffWizard } from "./TariffWizard";
-import { ToastProvider } from "../src/components/Toast";
+  const [data, setData] = useState<TariffFormData>(isDemo ? DEMO_DEFAULTS : INITIAL_DATA);
+  const [currentStep, setCurrentStep] = useState(1);
 
-initTheme({ primary: "#8e0038", secondary: "#bf1528" });
+  const update = useCallback((patch: Partial<TariffFormData>) => {
+    setData((prev) => ({ ...prev, ...patch }));
+  }, []);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ToastProvider>
-    <TariffProvider>
-      <TariffWizard />
-    </TariffProvider>
-  </ToastProvider>
-);
-```
+  const goTo = useCallback((step: number) => {
+    setCurrentStep(Math.max(1, Math.min(TOTAL_STEPS, step)));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-## Layout Specifications (from reference screenshots)
+  const goNext = useCallback(() => {
+    setCurrentStep((s) => Math.min(TOTAL_STEPS, s + 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-- Stepper bar: full width at top, with subtle bottom border
-- Content area: centered, max-width ~560px
-- Heading: bold, large, centered
-- "weiter" button: full-width, primary, ~max-width 360px, centered
-- "Zurück" link: centered below button, ghost style
-- Consistent vertical spacing: 32px between sections
+  const goPrev = useCallback(() => {
+    setCurrentStep((s) => Math.max(1, s - 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-## Sub-step Map
+  return (
+    <TariffContext.Provider value={{ data, update, currentStep, goTo, goNext, goPrev, isDemo }}>
+      {children}
+    </TariffContext.Provider>
+  );
+}
 
-```
-Step 1 (Tarifdaten):    subStep 1 = BirthDate, 2 = StartDate, 3 = CoverageAmount
-Step 2 (Beitrag):       subStep 1 = PlanSelection, 2 = DynamicAdjustment
-Step 3 (Persönliches):  subStep 1 = PersonalData
-Step 4 (Zusammenfassung): subStep 1 = Summary
+export function useTariff(): TariffContextValue {
+  const ctx = useContext(TariffContext);
+  if (!ctx) throw new Error("useTariff must be used within TariffProvider");
+  return ctx;
+}
 ```
 
 ---
 
-## Agent Sub-Team Instructions
+### `src/lib/data/pricing.ts`
 
-### Developer Agent
-1. Read the existing `demo/main.tsx` to understand current structure
-2. Read `src/components/Stepper/Stepper.tsx` for the Stepper API
-3. Create `demo/context/TariffContext.tsx` with full state management
-4. Create `demo/TariffWizard.tsx` with wizard shell
-5. Create `demo/pages/index.ts` with placeholder page components
-6. Modify `demo/main.tsx` to use the wizard
-7. Run `npx tsc --noEmit` to verify TypeScript compiles
-8. Run `npm run demo` briefly to verify it starts
+```typescript
+// Berufsunfähigkeitsversicherung — Template A (polynomial age curve)
+// Calibration: 30yo Bürotätigkeit, €2k/Monat, Komfort → ~€55/Monat ✓
 
-### Reviewer Agent
-Review the developer's code for:
-- [ ] Context state shape covers all form fields from all tickets
-- [ ] Navigation logic handles forward/back correctly, including sub-step transitions
-- [ ] Stepper `currentStep` maps correctly (sub-steps within step 1 all show step 1 active)
-- [ ] No TypeScript errors
-- [ ] Layout matches the centered, clean style from reference screenshots
-- [ ] Placeholder pages are properly exported and renderable
-- [ ] Provider wrapping order is correct (ToastProvider > TariffProvider > Wizard)
+const BASE_RATES: Record<"grundschutz" | "komfort" | "premium", number> = {
+  grundschutz: 2.08,
+  komfort: 2.54,
+  premium: 3.12,
+};
 
-### Tester Agent
-```bash
-# 1. Verify TypeScript compiles
-npx tsc --noEmit
+const AGE_CURVE = { base: 0.70, linear: 0.50, quadratic: -0.15 };
+const MIN_AGE = 18;
+const MAX_AGE = 55;
+const COVERAGE_UNIT = 100; // per €100/month
+const LOADING = 0.28;
 
-# 2. Start dev server and take screenshot
-# Start the vite dev server, navigate to localhost, verify:
-#   - Stepper is visible with 4 steps
-#   - "Tarifdaten" is highlighted as active
-#   - A placeholder page is shown
-#   - No console errors
+export const RISK_MULTIPLIERS: Record<string, number> = {
+  buero: 1.0,
+  handwerk: 1.4,
+  koerperlich: 1.8,
+  gefahren: 2.2,
+};
 
-# 3. Playwright smoke test (create e2e/foundation.spec.ts):
-npx playwright test e2e/foundation.spec.ts
+function calculateAgeFactor(age: number): number {
+  const t = Math.max(0, Math.min(1, (age - MIN_AGE) / (MAX_AGE - MIN_AGE)));
+  return AGE_CURVE.base + AGE_CURVE.linear * t + AGE_CURVE.quadratic * t * t;
+}
+
+export function calculateAge(birthDate: { day: string; month: string; year: string }): number {
+  const today = new Date();
+  const birth = new Date(parseInt(birthDate.year), parseInt(birthDate.month) - 1, parseInt(birthDate.day));
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  return age;
+}
+
+export function calculatePaymentDuration(age: number): number {
+  return Math.max(1, 67 - age);
+}
+
+export function calculateMonthlyPrice(
+  age: number,
+  coverageAmount: number,
+  plan: "grundschutz" | "komfort" | "premium",
+  occupation: string = "buero"
+): number {
+  const clampedAge = Math.max(MIN_AGE, Math.min(MAX_AGE, age));
+  const units = coverageAmount / COVERAGE_UNIT;
+  const ageFactor = calculateAgeFactor(clampedAge);
+  const riskMult = RISK_MULTIPLIERS[occupation] ?? 1.0;
+  const netPremium = BASE_RATES[plan] * units * ageFactor * riskMult;
+  return Math.round(netPremium * (1 + LOADING) * 100) / 100;
+}
+
+export function formatPrice(price: number): string {
+  return price.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+export function formatCoverage(amount: number): string {
+  return amount.toLocaleString("de-DE") + " €/Monat";
+}
 ```
 
-Write a Playwright test that:
-- Loads the page
-- Verifies the stepper is visible with 4 step labels
-- Verifies "Tarifdaten" step is active
-- Verifies a placeholder page renders
+---
+
+### `src/lib/data/planData.ts`
+
+```typescript
+export type PlanId = "grundschutz" | "komfort" | "premium";
+
+export interface Benefit { label: string; value: string; }
+
+export interface PlanInfo {
+  id: PlanId;
+  name: string;
+  highlight?: string;
+  benefits: Benefit[];
+  extendedBenefits: Benefit[];
+}
+
+export const PLANS: PlanInfo[] = [
+  {
+    id: "grundschutz",
+    name: "Grundschutz",
+    benefits: [
+      { label: "BU-Definition",            value: "≥ 50 % arbeitsunfähig" },
+      { label: "Leistungsdauer",            value: "bis Endalter 67" },
+      { label: "Karenzzeit",                value: "6 Monate" },
+      { label: "Nachversicherungsgarantie", value: "–" },
+    ],
+    extendedBenefits: [
+      { label: "Infektionsklausel",          value: "–" },
+      { label: "Dienstunfähigkeitsklausel",  value: "–" },
+      { label: "Weltweiter Schutz",          value: "–" },
+    ],
+  },
+  {
+    id: "komfort",
+    name: "Komfort",
+    highlight: "Beliebtester Tarif",
+    benefits: [
+      { label: "BU-Definition",            value: "≥ 50 % arbeitsunfähig" },
+      { label: "Leistungsdauer",            value: "bis Endalter 67" },
+      { label: "Karenzzeit",                value: "3 Monate" },
+      { label: "Nachversicherungsgarantie", value: "✓" },
+    ],
+    extendedBenefits: [
+      { label: "Infektionsklausel",          value: "✓" },
+      { label: "Dienstunfähigkeitsklausel",  value: "–" },
+      { label: "Weltweiter Schutz",          value: "–" },
+    ],
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    benefits: [
+      { label: "BU-Definition",            value: "≥ 50 % arbeitsunfähig" },
+      { label: "Leistungsdauer",            value: "bis Endalter 67" },
+      { label: "Karenzzeit",                value: "keine" },
+      { label: "Nachversicherungsgarantie", value: "✓" },
+    ],
+    extendedBenefits: [
+      { label: "Infektionsklausel",          value: "✓" },
+      { label: "Dienstunfähigkeitsklausel",  value: "✓" },
+      { label: "Umorganisationsverzicht",    value: "✓" },
+      { label: "Weltweiter Schutz",          value: "✓" },
+    ],
+  },
+];
+
+export const OCCUPATION_LABELS: Record<string, string> = {
+  buero: "Bürotätigkeit / kaufmännisch",
+  handwerk: "Handwerk / Techniker",
+  koerperlich: "Schwere körperliche Arbeit",
+  gefahren: "Gefahrenberufe",
+};
+
+export function getPlan(id: PlanId): PlanInfo {
+  return PLANS.find((p) => p.id === id)!;
+}
+```
+
+---
+
+### `src/app/wizard/page.tsx`
+
+Wraps `TariffProvider` (with Suspense for useSearchParams), renders stepper + routes to the correct page component based on `currentStep`.
+
+- Steps 1 → OccupationPage
+- Step 2 → BirthDatePage
+- Step 3 → CoveragePage
+- Step 4 → PlanSelectionPage
+- Step 5 → HealthQuestionsPage
+- Step 6 → PersonalDataPage
+- Step 7 → SummaryPage
+- Stepper: 5 circles (Risikoprofil/Tarifauswahl/Gesundheit/Persönliches/Zusammenfassung)
+- Active stepper index: `getStepperIndex(currentStep)`
+- Full page background: #f8f8f8
+- Content centered, maxWidth 640px, padding 48px 24px
+
+---
+
+### `src/app/api/submit/route.ts`
+
+POST → inserts body into `${PREFIX}_bu_applications`.
+Use `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_TABLE_PREFIX` from env.
+
+Fields to insert (snake_case):
+occupation, birth_date, monthly_income, coverage_amount, plan, monthly_price,
+payment_duration_years, smoker, pre_existing_conditions, salutation,
+first_name, last_name, street, zip, city
+
+---
+
+## Gate
+
+```bash
+npx tsc --noEmit   # 0 errors
+npm run dev        # starts without crash
+# http://localhost:3000/wizard → stepper visible, OccupationPage renders (step 1)
+```

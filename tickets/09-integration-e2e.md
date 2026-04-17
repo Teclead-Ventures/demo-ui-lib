@@ -4,149 +4,122 @@
 
 ## Objective
 
-Verify the complete wizard works end-to-end. Run full integration tests, fix any cross-page issues, and create a comprehensive Playwright E2E test suite that validates the entire user journey.
+Verify the complete wizard flow end-to-end using playwright-cli. Two test profiles (localhost + production). Confirm Supabase submissions appear on dashboard.
 
-## Prerequisites
+---
 
-- All tickets 01-08 must be completed and merged
-- Dev server must start without errors: `npm run demo`
-- No TypeScript compilation errors: `npx tsc --noEmit`
+## Test Profile 1 — Integration (localhost)
 
-## Playwright Setup
+**Scenario**: 35-year-old software developer, Bürotätigkeit, Komfort plan
 
-### `playwright.config.ts` (CREATE at project root)
+| Field | Value |
+|-------|-------|
+| Beruf | Bürotätigkeit / kaufmännisch |
+| Geburtsdatum | 15.03.1990 |
+| Einkommen | 3.500 € |
+| BU-Rente | 2.000 €/Monat |
+| Plan | Komfort |
+| Raucher | Nein |
+| Vorerkrankungen | Nein |
+| Anrede | Herr |
+| Vorname | Markus |
+| Nachname | Weber |
+| Straße | Friedrichstraße 22 |
+| PLZ | 10117 |
+| Stadt | Berlin |
+| **Erw. Preis** | **~58,37 €/Monat** |
+| **Laufzeit** | **32 Jahre** |
 
-```typescript
-import { defineConfig } from "@playwright/test";
+```bash
+playwright-cli open http://localhost:3000/wizard --headed
 
-export default defineConfig({
-  testDir: "./e2e",
-  timeout: 30_000,
-  use: {
-    baseURL: "http://localhost:5173",
-    screenshot: "only-on-failure",
-  },
-  webServer: {
-    command: "npm run demo",
-    port: 5173,
-    reuseExistingServer: true,
-  },
-});
+# Step 1: Occupation
+# Select "Bürotätigkeit / kaufmännisch" → click "weiter"
+
+# Step 2: Birth Date
+# Enter Tag=15, Monat=03, Jahr=1990 → click "weiter"
+
+# Step 3: Coverage
+# Set income to 3500, slider to 2000 → click "weiter"
+
+# Step 4: Plan Selection
+# Verify "Komfort" pre-selected, price ~58,37 € → click "weiter zum Online-Antrag"
+
+# Step 5: Health Questions
+# Both "Nein" selected → click "weiter"
+
+# Step 6: Personal Data
+# Fill: Herr / Markus / Weber / Friedrichstraße 22 / 10117 / Berlin → click "weiter"
+
+# Step 7: Summary
+# Verify all 4 sections show correct data
+# Check both checkboxes
+# Click "Jetzt verbindlich abschließen"
+# [CHECK] Success toast appears
+
+playwright-cli open http://localhost:3000/dashboard --headed
+# [CHECK] New submission from Markus Weber appears in table
 ```
 
-### `e2e/full-flow.spec.ts` (CREATE)
+---
 
-Complete user journey test:
+## Test Profile 2 — Production (Vercel)
 
-```typescript
-// Full flow: Fill out the entire insurance application
+**Scenario**: 47-year-old electrician (Handwerk), Premium plan, higher risk
 
-// 1. PAGE 1a — Birth Date
-//    - Verify stepper shows "Tarifdaten" as active
-//    - Enter birth date: 23 / 06 / 1982
-//    - Click "weiter"
+| Field | Value |
+|-------|-------|
+| Beruf | Handwerk / Techniker |
+| Geburtsdatum | 22.07.1978 |
+| Einkommen | 2.800 € |
+| BU-Rente | 1.800 €/Monat |
+| Plan | Premium |
+| Raucher | Nein |
+| Vorerkrankungen | Nein |
+| Anrede | Frau |
+| Vorname | Sandra |
+| Nachname | Hoffmann |
+| Straße | Karlsplatz 7 |
+| PLZ | 80335 |
+| Stadt | München |
+| **Erw. Preis** | **~100,63 €/Monat** |
+| **Laufzeit** | **20 Jahre** |
 
-// 2. PAGE 1b — Insurance Start Date
-//    - Verify three radio options visible
-//    - Select middle option
-//    - Click "weiter"
-
-// 3. PAGE 1c — Coverage Amount
-//    - Verify slider is visible
-//    - Adjust slider to 10,000 €
-//    - Verify benefit bullets visible
-//    - Click "weiter"
-
-// 4. PAGE 2a — Plan Selection
-//    - Verify stepper now shows "Beitrag" as active
-//    - Verify SegmentedControl with 3 options
-//    - Select "Premium"
-//    - Verify price updates
-//    - Click "weiter zum Online-Antrag"
-
-// 5. PAGE 2b — Dynamic Adjustment
-//    - Verify plan summary bar shows "Premium" with correct price
-//    - Click "auswählen und weiter" (accept dynamic adjustment)
-
-// 6. PAGE 3 — Personal Data
-//    - Verify stepper shows "Persönliches" as active
-//    - Fill: Anrede=Herr, Vorname=Max, Nachname=Mustermann
-//    - Fill: Straße=Musterstraße 1, PLZ=10115, Ort=Berlin
-//    - Fill: Geburtsort=Hamburg
-//    - Select: Staatsangehörigkeit=deutsch
-//    - Click "weiter"
-
-// 7. PAGE 4 — Summary
-//    - Verify stepper shows "Zusammenfassung" as active
-//    - Verify all entered data is displayed correctly
-//    - Verify coverage amount shows "10.000 €"
-//    - Verify plan shows "Premium"
-//    - Check both consent checkboxes
-//    - Click "Jetzt verbindlich abschließen"
-//    - Verify success toast appears
+```bash
+playwright-cli open https://[project].vercel.app/wizard --headed
+# Complete full walkthrough with above data
+# [CHECK] Success toast appears
+# [CHECK] Dashboard shows both submissions (Test 1 + Test 2)
 ```
 
-### `e2e/navigation.spec.ts` (CREATE)
+---
 
-Navigation-specific tests:
+## Demo Mode Test
 
-```typescript
-// Test back navigation through all steps
-// Test edit links on summary page (jump to specific steps)
-// Test that data persists when navigating back and forth
-// Test stepper state at each step
+```bash
+playwright-cli open http://localhost:3000/wizard?demo=true --headed
+# All fields pre-filled with Markus Weber data
+# Click "weiter" through all 7 steps without typing
+# [CHECK] Summary shows pre-filled data
+# [CHECK] Submit works
 ```
 
-### `e2e/visual-regression.spec.ts` (CREATE)
+---
 
-Screenshot comparison tests:
+## Price Verification
 
-```typescript
-// Take full-page screenshots at each step
-// Compare against reference screenshots in screenshots/reference/
-// Allow threshold for minor differences (fonts, anti-aliasing)
-// Save actual screenshots to screenshots/e2e-actual/ for manual review
-```
-
-## Agent Execution (see tickets/agent-contracts.md → Integration Verifier)
-
-**This ticket is executed by the orchestrator directly (not in a worktree).**
-
-The orchestrator:
-1. Merges all worktree branches from page agents
-2. Resolves any merge conflicts (primarily in `demo/pages/index.ts`)
-3. Runs the integration gate (see `tickets/quality-gates.md` → Gate: Integration)
-
-### Integration Gate Loop (max 3 iterations)
+Verify pricing formula at runtime (Console or test):
 
 ```
-1. npx tsc --noEmit — fix any import/type errors from merge
-2. npm run demo — verify dev server starts
-3. Spawn Integration Verifier subagent (opus)
-   → Provides: list of all page files, context state shape, wizard step mapping
-   → Expects: structured GATE_RESULT (see agent-contracts.md)
-4. If GATE_RESULT: FAIL → fix BLOCKING_ISSUES, re-run
-5. If GATE_RESULT: PASS → done
-6. After 3 failures → present ESCALATION_REPORT to user
+Set 1: age=35, coverage=2000, plan=komfort, occupation=buero
+  t = (35-18)/(55-18) = 0.459
+  ageFactor = 0.70 + 0.50×0.459 - 0.15×0.459² = 0.898
+  netPremium = 2.54 × 20 × 0.898 × 1.0 = 45.63
+  gross = 45.63 × 1.28 = 58.41 → ~58,37-58,41 €/Monat ✓
+
+Set 2: age=47, coverage=1800, plan=premium, occupation=handwerk
+  t = (47-18)/(55-18) = 0.784
+  ageFactor = 0.70 + 0.50×0.784 - 0.15×0.784² = 0.998
+  netPremium = 3.12 × 18 × 0.998 × 1.4 = 78.62
+  gross = 78.62 × 1.28 = 100.63 → ~100,63 €/Monat ✓
 ```
-
-### Common Merge Issues to Watch For
-- `demo/pages/index.ts` — all pages need to be exported (each worktree only added its own)
-- `demo/data/planData.ts` — tickets 05, 06, and 08 all reference this file, ensure it exists once
-- `demo/TariffWizard.tsx` — page imports may need updating if worktree agents added imports
-- Navigation step/subStep mapping — verify all pages are reachable via the wizard's routing logic
-
-### Full E2E Test Suite
-The Integration Verifier creates and runs `e2e/full-flow.spec.ts` covering:
-- Complete wizard flow (all 7 pages, realistic data entry)
-- Back navigation preserving data
-- Edit links from summary
-- Stepper state at each step
-- Final submit with success toast
-
-### Escalation
-If integration fails 3 times, present to user:
-- Which pages cause issues
-- Merge conflicts encountered
-- Test failures with screenshots
-- Recommended manual fixes

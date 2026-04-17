@@ -14,7 +14,28 @@
       "WebFetch(domain:brandfetch.com)",
       "Bash(node:*)",
       "Bash(npx tsc:*)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh auth:*)",
+      "Bash(./setup-demo.sh zahnzusatz:*)",
+      "Bash(gh --version)",
+      "Bash(xargs grep:*)",
+      "Bash(npx create-next-app@latest tlv-tariff-wizard --typescript --app --src-dir --no-tailwind --no-eslint --import-alias \"@/*\" --yes)",
+      "Bash(mkdir -p /c/Users/charli/coding/tlv-tariff-wizard/src/components/ui)",
+      "Bash(cp -r /c/Users/charli/coding/demo-ui-lib/src/components/* /c/Users/charli/coding/tlv-tariff-wizard/src/components/ui/)",
+      "Bash(mkdir -p /c/Users/charli/coding/tlv-tariff-wizard/src/lib/theme)",
+      "Bash(cp -r /c/Users/charli/coding/demo-ui-lib/src/theme/* /c/Users/charli/coding/tlv-tariff-wizard/src/lib/theme/)",
+      "Bash(curl -s http://localhost:3000/wizard)",
+      "Bash(git config *)",
+      "Read(//c/Users/charli/coding//**)",
+      "Read(//c/Users/charli/coding/**)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(bash *)",
+      "Bash(cat /c/Users/charli/coding/next-demo-base/.env.local)",
+      "Bash(echo \"\")",
+      "Bash(echo NEXT_PUBLIC_TABLE_PREFIX=run_20260417_1021)",
+      "Bash(mkdir -p /c/Users/charli/coding/berufsunfaehigkeit/src/components/ui)",
+      "Bash(cp -r '/c/Users/charli/coding/demo-ui-lib/src/components/*' /c/Users/charli/coding/berufsunfaehigkeit/src/components/ui/)",
+      "Bash(ls /c/Users/charli/coding/demo-ui-lib/src/components/*.ts /c/Users/charli/coding/demo-ui-lib/src/components/*.tsx)"
     ]
   }
 }

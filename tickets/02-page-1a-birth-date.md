@@ -1,123 +1,126 @@
-# Ticket 02: Page 1a — Birth Date Entry
+# Ticket 02: Page 1a — Berufsgruppe (Occupation Selection)
 
-## Step: 1 (Tarifdaten) | Sub-step: 1
+## Step: 1 (Risikoprofil) | Sub-step: 1 | Agent: A
 
 ## Reference Screenshot
-`screenshots/reference/Screenshot 2026-04-10 111825.png`
+None available — design from spec below.
 
 ## Objective
 
-Build the birth date entry page — the first page of the tariff wizard. The user enters their date of birth using day/month/year spinner inputs.
+User selects their occupation group. This determines the risk class multiplier for pricing. 4 options presented as radio card buttons.
 
-## Visual Specification (from reference)
+## Visual Specification
 
 ```
-┌─────────────────────────────────────────────┐
-│  (1) Tarifdaten  (2) Beitrag  (3) ...       │  ← Stepper (handled by wizard shell)
-├─────────────────────────────────────────────┤
-│                                             │
-│     Geben Sie Ihr Geburtsdatum ein          │  ← Bold heading, centered
-│                   ⓘ                         │  ← Info tooltip
-│                                             │
-│         ┌──────┐ ┌──────┐ ┌────────┐        │
-│         │  23  │ │  06  │ │  1982  │        │  ← DateInput (day/month/year)
-│         └──────┘ └──────┘ └────────┘        │
-│                                             │
-│  Die versicherte Person muss zwischen       │  ← Hint text, small, gray, centered
-│  40 und 85 Jahre alt sein. Das Alter        │
-│  berechnet sich so: Jahr des gewünschten    │
-│  Versicherungsbeginns (z. B. 2026) -        │
-│  Geburtsjahr.                               │
-│                                             │
-│         ┌───────────────────┐               │
-│         │      weiter       │               │  ← Primary button, full-width (max ~360px)
-│         └───────────────────┘               │
-│                                             │
-└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│                                                  │
+│     Was ist Ihr Beruf?                          │  ← H1, serif, centered
+│                                                  │
+│  ┌─────────────────────────────────────────┐   │
+│  │ ○  Bürotätigkeit / kaufmännisch         │   │  ← RadioButton card
+│  └─────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────┐   │
+│  │ ○  Handwerk / Techniker                 │   │
+│  └─────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────┐   │
+│  │ ○  Schwere körperliche Arbeit           │   │
+│  └─────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────┐   │
+│  │ ○  Gefahrenberufe                       │   │
+│  └─────────────────────────────────────────┘   │
+│                                                  │
+│              [ weiter → ]                       │  ← Button, primary
+│                                                  │
+└─────────────────────────────────────────────────┘
 ```
-
-**Note:** This is the FIRST page — no "Zurück" (back) button.
 
 ## Files to Create/Modify
 
-### `demo/pages/BirthDatePage.tsx`
+### `src/app/wizard/pages/OccupationPage.tsx`
 
 ```tsx
-// Key elements:
-// - Heading: "Geben Sie Ihr Geburtsdatum ein"
-// - Tooltip icon (ⓘ) below heading with info about age calculation
-// - DateInput component from src/components/DateInput
-// - Hint text about age range (40-85 years)
-// - "weiter" button → navigates to sub-step 2
-// - Uses useTariff() to read/write birthDate
-// - Uses useWizardNav() to navigate
+"use client";
+import { useTariff, type OccupationType } from "@/lib/wizard/TariffContext";
+import { RadioButton } from "@/components/ui/RadioButton/RadioButton";
+import { Button } from "@/components/ui/Button/Button";
+
+const OPTIONS: Array<{ value: OccupationType; label: string }> = [
+  { value: "buero",       label: "Bürotätigkeit / kaufmännisch" },
+  { value: "handwerk",    label: "Handwerk / Techniker" },
+  { value: "koerperlich", label: "Schwere körperliche Arbeit" },
+  { value: "gefahren",    label: "Gefahrenberufe" },
+];
+
+export function OccupationPage() {
+  const { data, update, goNext } = useTariff();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      <h1 style={{
+        fontFamily: "var(--font-family-heading, 'Source Serif 4', Georgia, serif)",
+        fontSize: 28, fontWeight: 700, color: "#333", textAlign: "center", margin: 0,
+      }}>
+        Was ist Ihr Beruf?
+      </h1>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {OPTIONS.map((opt) => (
+          <RadioButton
+            key={opt.value}
+            label={opt.label}
+            checked={data.occupation === opt.value}
+            onChange={() => update({ occupation: opt.value })}
+          />
+        ))}
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button label="weiter" onClick={goNext} variant="primary" style={{ minWidth: 240 }} />
+      </div>
+    </div>
+  );
+}
 ```
 
-### `demo/pages/index.ts` (MODIFY)
-Export `BirthDatePage` and wire it into the wizard for step 1, sub-step 1.
+### `src/app/wizard/pages/index.ts` (MODIFY)
+Add: `export { OccupationPage } from "./OccupationPage";`
 
 ## Component Usage
-
 ```tsx
-import { DateInput } from "../../src/components/DateInput";
-import { Button } from "../../src/components/Button";
-import { Tooltip } from "../../src/components/Tooltip";
+import { RadioButton } from "@/components/ui/RadioButton/RadioButton";
+import { Button } from "@/components/ui/Button/Button";
 ```
+Read both source files before implementing.
 
 ## Interaction Logic
-
-- DateInput value comes from `tariffState.birthDate`
-- onChange updates context via `dispatch({ type: "SET_BIRTH_DATE", payload })`
-- "weiter" button calls `wizardNav.next()` → moves to step 1, sub-step 2
-- Optional: basic validation (all 3 fields filled) before enabling "weiter"
-
-## Styling Notes
-
-- Heading: font-size ~24px, font-weight 700, text-align center, font-family: "Fedra Serif", Georgia, serif
-- Tooltip icon: centered below heading, margin 8px
-- DateInput: centered in page
-- Hint text: font-size ~12px, color #737373, text-align center, max-width ~400px
-- "weiter" button: max-width ~360px, centered, margin-top 32px
-- Overall content: centered flex column, gap 24px
+- One option selected at a time, default: "buero"
+- Selecting an option immediately updates `data.occupation`
+- No validation needed — always has a value
+- "weiter" always enabled
 
 ---
 
-## Agent Execution (see tickets/agent-contracts.md for full role definitions)
-
-**This ticket is executed by a Page Agent (developer role) running in an isolated worktree.**
+## Agent Execution
 
 ### Page Agent Actions
-1. Read `screenshots/reference/Screenshot 2026-04-10 111825.png` for visual reference
-2. Read `src/components/DateInput/DateInput.tsx` for the DateInput API
-3. Read `src/components/Tooltip/Tooltip.tsx` for the Tooltip API
-4. Read `demo/context/TariffContext.tsx` for state shape and dispatch actions
-5. Create `demo/pages/BirthDatePage.tsx` matching the visual spec
-6. Update `demo/pages/index.ts` to export it
-7. Run quality gate loop (max 3 iterations):
-   - **compile-gate**: `npx tsc --noEmit` must exit 0
-   - **review-gate**: Spawn Reviewer subagent (opus) with this ticket + code files
-   - **browser-gate**: Spawn Tester subagent (opus) with navigation sequence: page loads at step 1, subStep 1 (first page, no prior navigation needed)
-8. Escalate to orchestrator if any gate fails 3 times
+1. Read `src/components/ui/RadioButton/` source
+2. Read `src/components/ui/Button/` source
+3. Read `src/lib/wizard/TariffContext.tsx` for OccupationType
+4. Create `src/app/wizard/pages/OccupationPage.tsx`
+5. Update `src/app/wizard/pages/index.ts`
+6. Run quality gate loop
 
-### Reviewer Focus (in addition to standard checks)
-- No "Zurück" button on this first page
-- DateInput wired to `tariffState.birthDate`
-- Hint text matches reference: "40 und 85 Jahre alt" with age calculation formula
-- Tooltip present below heading
-
-### Tester: Navigation Sequence (playwright-cli)
+### Tester: Navigation Sequence
 ```bash
 playwright-cli open http://localhost:3000/wizard --headed
 playwright-cli snapshot
-# Page 1a is the default/first page — no prior navigation needed
 ```
 
 ### Tester: Page-Specific Checks
 ```
-[CHECK] Heading "Geben Sie Ihr Geburtsdatum ein" visible
-[CHECK] DateInput renders with day/month/year fields
-[CHECK] Can enter birth date (23/06/1982)
-[CHECK] Hint text about age range (40-85) visible
-[CHECK] "weiter" button visible, no "Zurück" button
-[CHECK] Clicking "weiter" navigates to insurance start date page
+[CHECK] Heading "Was ist Ihr Beruf?" visible
+[CHECK] 4 radio options rendered as cards
+[CHECK] "Bürotätigkeit / kaufmännisch" pre-selected
+[CHECK] Clicking another option selects it and deselects previous
+[CHECK] "weiter" button navigates to step 2 (Geburtsdatum)
 ```

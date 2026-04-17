@@ -1,143 +1,167 @@
-# Ticket 10: Dashboard Page
+# Ticket 10: Dashboard — Berufsunfähigkeitsversicherung
 
 ## Priority: Phase 2 (parallel with wizard pages)
 
 ## Objective
 
-Build the dashboard page that displays submitted insurance applications from Supabase. Shows summary statistics (total submissions, average coverage, most popular plan) and a table of recent submissions.
+Build an analytics dashboard at `/dashboard` that reads all BU applications from Supabase and displays stats + submissions table.
 
 ## Visual Specification
 
 ```
-┌──────────────────────────────────────────────────────┐
-│  Antragsübersicht                                     │  ← Bold heading
-│  Alle eingegangenen Versicherungsanträge              │  ← Subtitle, gray
-│                                                       │
-│  ┌────────────┐  ┌──────────────┐  ┌────────────────┐│
-│  │    12      │  │   8.450 €    │  │  Komfort (67%) ││  ← Stat cards
-│  │  Anträge   │  │ Ø Deckung    │  │beliebtester    ││
-│  │            │  │              │  │    Tarif       ││
-│  └────────────┘  └──────────────┘  └────────────────┘│
-│                                                       │
-│  Tarif-Verteilung                                     │
-│  ┌────────────────────────────────────────────────┐  │
-│  │ Grundschutz  ████████░░░░░░░░░░░░░  25%       │  │  ← CSS bar chart
-│  │ Komfort      ████████████████░░░░░  50%       │  │
-│  │ Premium      ████████░░░░░░░░░░░░░  25%       │  │
-│  └────────────────────────────────────────────────┘  │
-│                                                       │
-│  Letzte Anträge                                       │
-│  ┌────┬──────────────┬─────────┬────────┬──────────┐ │
-│  │ #  │ Name         │ Tarif   │ Summe  │ Datum    │ │  ← Table
-│  ├────┼──────────────┼─────────┼────────┼──────────┤ │
-│  │ 1  │ Max Muster.. │ Komfort │ 8.000€ │ 11.04.  │ │
-│  │ 2  │ ...          │ ...     │ ...    │ ...      │ │
-│  └────┴──────────────┴─────────┴────────┴──────────┘ │
-└──────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│  BU-Versicherung — Antrags-Dashboard            │  ← page title
+│                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────────┐│
+│  │ Gesamt   │ │ Ø Rente  │ │ Beliebtester     ││
+│  │    12    │ │ 1.850 €  │ │ Tarif: Komfort   ││
+│  └──────────┘ └──────────┘ └──────────────────┘│
+│                                                  │
+│  Tarifverteilung                                 │
+│  Grundschutz ████░░░░░░░░  25 %                 │
+│  Komfort     ████████░░░░  58 %                 │
+│  Premium     ████░░░░░░░░  17 %                 │
+│                                                  │
+│  Letzte Anträge                                  │
+│  # │ Name           │ Tarif   │ BU-Rente │ Datum│
+│  1 │ Weber, Markus  │ Komfort │ 2.000 €  │ ...  │
+│  2 │ Hoffmann, Sand.│ Premium │ 1.800 €  │ ...  │
+└─────────────────────────────────────────────────┘
 ```
 
-## Files to Create/Modify
+## Files to Create
 
-### `src/app/dashboard/page.tsx` (REPLACE placeholder)
+### `src/app/dashboard/page.tsx`
 
-A **server component** that:
-1. Queries Supabase `insurance_applications` table
-2. Computes aggregations (count, avg coverage, plan distribution)
-3. Renders stat cards, plan distribution bars, and submissions table
+```tsx
+import { supabase, tableName, isSupabaseConfigured } from "@/lib/supabase";
 
-### Components Used
+export const dynamic = "force-dynamic";
 
-Use Tailwind CSS for styling (no UI library components needed for the dashboard — it's a different context than the wizard).
+interface BUApplication {
+  id: string;
+  created_at: string;
+  occupation: string;
+  birth_date: string;
+  monthly_income: string;
+  coverage_amount: string;
+  plan: string;
+  monthly_price: string;
+  payment_duration_years: number;
+  smoker: string;
+  pre_existing_conditions: string;
+  salutation: string;
+  first_name: string;
+  last_name: string;
+  zip: string;
+  city: string;
+}
 
-## Data Schema
+const PLAN_LABELS: Record<string, string> = {
+  grundschutz: "Grundschutz",
+  komfort: "Komfort",
+  premium: "Premium",
+};
 
-The dashboard reads from the Supabase table using the `tableName()` helper from `@/lib/supabase`:
-```typescript
-import { supabase, tableName } from "@/lib/supabase";
-const { data } = await supabase.from(tableName("insurance_applications")).select("*");
+export default async function DashboardPage() {
+  let rows: BUApplication[] = [];
+
+  if (isSupabaseConfigured()) {
+    const { data } = await supabase
+      .from(tableName("bu_applications"))
+      .select("*")
+      .order("created_at", { ascending: false });
+    rows = (data as BUApplication[]) ?? [];
+  }
+
+  const total = rows.length;
+  const avgCoverage = total > 0
+    ? Math.round(rows.reduce((s, r) => s + parseInt(r.coverage_amount), 0) / total)
+    : 0;
+
+  const planCounts = rows.reduce((acc, r) => {
+    acc[r.plan] = (acc[r.plan] ?? 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const topPlan = Object.entries(planCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "–";
+
+  return (
+    <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px", fontFamily: "sans-serif" }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700, color: "#333", marginBottom: 32 }}>
+        BU-Versicherung — Antrags-Dashboard
+      </h1>
+
+      {/* Stat cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 32 }}>
+        {[
+          { label: "Gesamte Anträge", value: String(total) },
+          { label: "Ø BU-Rente", value: total > 0 ? `${avgCoverage.toLocaleString("de-DE")} €/Mo.` : "–" },
+          { label: "Beliebtester Tarif", value: PLAN_LABELS[topPlan] ?? topPlan },
+        ].map((s) => (
+          <div key={s.label} style={{ backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: 8, padding: 20, textAlign: "center" }}>
+            <p style={{ fontSize: 32, fontWeight: 700, color: "#8e0038", margin: "0 0 4px" }}>{s.value}</p>
+            <p style={{ fontSize: 14, color: "#737373", margin: 0 }}>{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Plan distribution */}
+      <div style={{ backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: 8, padding: 24, marginBottom: 32 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "#333", marginBottom: 16 }}>Tarifverteilung</h2>
+        {["grundschutz", "komfort", "premium"].map((plan) => {
+          const count = planCounts[plan] ?? 0;
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          return (
+            <div key={plan} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+              <span style={{ width: 120, fontSize: 14, color: "#333" }}>{PLAN_LABELS[plan]}</span>
+              <div style={{ flex: 1, backgroundColor: "#f0f0f0", borderRadius: 4, height: 12 }}>
+                <div style={{ width: `${pct}%`, backgroundColor: "#8e0038", borderRadius: 4, height: "100%" }} />
+              </div>
+              <span style={{ width: 40, fontSize: 14, color: "#737373", textAlign: "right" }}>{pct}%</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Submissions table */}
+      <div style={{ backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: 8, overflow: "hidden" }}>
+        <div style={{ padding: "16px 24px", borderBottom: "1px solid #e5e5e5" }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#333", margin: 0 }}>Letzte Anträge</h2>
+        </div>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr style={{ backgroundColor: "#f8f8f8" }}>
+              {["#","Name","Tarif","BU-Rente","Datum"].map((h) => (
+                <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#737373", borderBottom: "1px solid #e5e5e5" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={row.id} style={{ borderBottom: "1px solid #f0f0f0" }}>
+                <td style={{ padding: "12px 16px", fontSize: 14, color: "#737373" }}>{i + 1}</td>
+                <td style={{ padding: "12px 16px", fontSize: 14, color: "#333" }}>{row.last_name}, {row.first_name}</td>
+                <td style={{ padding: "12px 16px", fontSize: 14, color: "#333" }}>{PLAN_LABELS[row.plan] ?? row.plan}</td>
+                <td style={{ padding: "12px 16px", fontSize: 14, color: "#333" }}>{parseInt(row.coverage_amount).toLocaleString("de-DE")} €/Mo.</td>
+                <td style={{ padding: "12px 16px", fontSize: 14, color: "#737373" }}>{new Date(row.created_at).toLocaleDateString("de-DE")}</td>
+              </tr>
+            ))}
+            {rows.length === 0 && (
+              <tr><td colSpan={5} style={{ padding: "24px 16px", textAlign: "center", color: "#737373", fontSize: 14 }}>Noch keine Anträge vorhanden.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  );
+}
 ```
 
-This resolves to e.g. `run_20260411_1530_insurance_applications` — unique per demo run but sharing one Supabase instance.
+## Gate
 
-Columns:
-```
-id, created_at, birth_date, insurance_start, coverage_amount,
-plan, dynamic_adjustment, salutation, first_name, last_name,
-street, zip, city, birth_place, nationality
-```
-
-## Aggregations
-
-```typescript
-// Total submissions
-const total = submissions.length;
-
-// Average coverage
-const avgCoverage = submissions.reduce((sum, s) => sum + s.coverage_amount, 0) / total;
-
-// Plan distribution
-const planCounts = { grundschutz: 0, komfort: 0, premium: 0 };
-submissions.forEach(s => planCounts[s.plan]++);
-const mostPopular = Object.entries(planCounts).sort((a, b) => b[1] - a[1])[0];
-
-// Plan distribution as percentages for bar chart
-const planPercent = Object.fromEntries(
-  Object.entries(planCounts).map(([k, v]) => [k, Math.round((v / total) * 100)])
-);
-```
-
-## Styling Notes
-
-- Max-width: 1024px, centered
-- Stat cards: grid 3 columns, bg-gray-50, rounded-lg, centered text
-- Big number: text-3xl font-bold
-- Label: text-sm text-gray-500
-- Plan bars: simple div with percentage width, bg-[#8e0038], rounded
-- Table: bordered, striped rows on hover
-- German locale for numbers and dates
-
----
-
-## Agent Execution (see tickets/agent-contracts.md for full role definitions)
-
-**This ticket is executed by a Page Agent (developer role) running in an isolated worktree.**
-
-### Page Agent Actions
-1. Read the dashboard placeholder at `src/app/dashboard/page.tsx`
-2. Read `tickets/13-wizard-step-tracking.md` section "Dashboard: Funnel Analytics Section" — the dashboard MUST include the wizard funnel visualization
-3. Replace it with a full server component that queries BOTH Supabase tables (`insurance_applications` AND `wizard_tracking_events`) using `Promise.all`
-4. Compute aggregations from query results (submissions stats + funnel analytics)
-5. Render stat cards + plan distribution bars + **wizard funnel section** + submissions table
-6. Handle empty state gracefully (no submissions yet)
-6. Run quality gate loop (max 3 iterations):
-   - **compile-gate**: `npx tsc --noEmit` must exit 0
-   - **review-gate**: Spawn Reviewer subagent (opus)
-   - **browser-gate**: Spawn Tester subagent (opus) with playwright-cli
-7. Escalate to orchestrator if any gate fails 3 times
-
-### Reviewer Focus (in addition to standard checks)
-- Server component (no "use client") — Supabase query runs on server
-- Handles empty state (0 submissions) without errors
-- German locale for numbers (8.450 €) and dates (11.04.2026)
-- Plan distribution bars use correct percentage widths
-- `force-dynamic` export to prevent static rendering
-
-### Tester: Navigation Sequence (playwright-cli)
 ```bash
-playwright-cli open http://localhost:3000/dashboard --headed
-playwright-cli snapshot
-# Dashboard loads directly — no wizard navigation needed
-```
-
-### Tester: Page-Specific Checks
-```
-[CHECK] Heading "Antragsübersicht" visible
-[CHECK] Three stat cards render (even with 0 data — shows "0" or "—")
-[CHECK] Plan distribution section renders
-[CHECK] Wizard-Funnel section renders (if tracking data exists)
-[CHECK] Funnel shows 3 summary cards (Sessions gestartet, Abgeschlossen, Abschlussrate)
-[CHECK] Funnel shows step-by-step bars with dwell times
-[CHECK] Submissions table renders (empty state if no data)
-[CHECK] No console errors
-[CHECK] Page loads within 3 seconds
+npm run dev
+# http://localhost:3000/dashboard → renders without crash
+# After submitting via wizard → new row appears in table
 ```
