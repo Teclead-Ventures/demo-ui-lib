@@ -40,3 +40,7 @@
   /* Layout */
   --max-width: 1440px;
 }
+
+body {
+  margin: 0;
+}

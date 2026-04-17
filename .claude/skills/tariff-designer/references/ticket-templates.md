@@ -322,6 +322,29 @@ const RISK_CLASSES: Record<string, number> = {
 
 Plan benefit descriptions for each tier — copy directly from the tariff spec `plans` section.
 
+### `buildSubmitPayload.ts` — DB schema contract
+
+The foundation MUST create a typed helper that maps `TariffFormData` to the exact DB column names. This prevents page agents from hand-building payloads with wrong field names.
+
+```typescript
+// src/lib/products/{{product.id}}/buildSubmitPayload.ts
+import type { TariffFormData } from "./TariffContext";
+import { calculateAge, calculateMonthlyPrice } from "./pricing";
+
+export function buildSubmitPayload(data: TariffFormData): Record<string, unknown> {
+  const age = calculateAge(data.birthDate) ?? 30;
+  const price = calculateMonthlyPrice(age, data.coverageAmount, data.plan, ...);
+  return {
+    // Map EVERY column from the SQL CREATE TABLE exactly:
+    {{#each database.columns}}
+    {{name}}: /* mapped from data.X */,
+    {{/each}}
+  };
+}
+```
+
+The summary page imports `buildSubmitPayload(data)` and sends the result to `/api/submit`. It does NOT hand-build the payload.
+
 ### Other foundation files
 
 Same as the existing pipeline:
@@ -332,6 +355,7 @@ Same as the existing pipeline:
 - `src/app/wizard/page.tsx` — providers + page routing + demo mode detection
 - `src/app/wizard/pages/index.ts` — barrel exports
 - `src/app/globals.css` — theme CSS import
+- `src/components/ThemeInit.tsx` — calls `initTheme({ primary: "#8e0038", secondary: "#bf1528" })` on mount (already in base template)
 
 ### Demo mode implementation
 
@@ -671,3 +695,39 @@ When the user confirms the tariff spec, generate tickets in this order:
 6. **Copy static tickets** unchanged.
 
 7. **Write tariff-spec.json** as the canonical reference.
+
+---
+
+## Design Conventions
+
+All page tickets must follow these conventions. Include this section in the generated `00-orchestration.md`:
+
+### Button variants
+- **"Weiter"** / **"Weiter zum Online-Antrag"** — `variant="primary"` (default, no variant prop needed)
+- **"Zurück"** — always `variant="ghost"` (text-only, no border)
+- **"Jetzt verbindlich abschließen"** — `variant="primary"`
+- Navigation layout: `display: flex; justifyContent: space-between`
+
+### Typography
+- Page headings: `fontFamily: "'Source Serif 4', Georgia, serif"`, `fontSize: 28`, `fontWeight: 700`, `color: "#1a1a1a"`
+- Subtitle/descriptions: `fontSize: 15`, `color: "#737373"`, `lineHeight: 1.5`
+- Price displays: `color: "#8e0038"`, `fontFamily: "'Source Serif 4', Georgia, serif"`
+
+### Theme
+- `ThemeInit` component is included in the base template layout — it calls `initTheme({ primary: "#8e0038", secondary: "#bf1528" })`
+- Components use CSS custom properties set by `initTheme` — do NOT hardcode colors in component usage if the component supports theming
+
+### Slider component
+- Always pass `unit="€"` (or appropriate unit) when displaying currency values
+- Always pass `formatLabel` for German number formatting: `formatLabel={(v) => v.toLocaleString("de-DE") + " €"}`
+
+### Submit payload
+- The summary page MUST use `buildSubmitPayload(data)` from the foundation, never hand-build the POST body
+- Field names in the payload must match DB column names exactly (snake_case)
+- `product: "<product-id>"` is added to the payload but is NOT a DB column — the API strips it
+
+### Supabase table setup
+- Use the Supabase MCP (`mcp__claude_ai_Supabase__apply_migration`) when available
+- Fall back to browser SQL editor if MCP is not connected
+- Always enable RLS and add anonymous insert/select policies for the demo
+- Verify the MCP is connected to org `bkoigzxrbqpfnijqzgdw` (Teclead Ventures) — NEVER use org `xupjcdtlnvwyenprocuj`

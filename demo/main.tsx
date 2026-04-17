@@ -20,6 +20,11 @@ import { SegmentedControl } from "../src/components/SegmentedControl";
 import { Card } from "../src/components/Card";
 import { Alert } from "../src/components/Alert";
 import { InlineRadio } from "../src/components/InlineRadio";
+import { ErgoAccordion } from "../src/components/ergo/ErgoAccordion";
+import { ErgoExpansionPanel } from "../src/components/ergo/ErgoExpansionPanel";
+import "../src/components/ergo/ErgoStickyFooter/ErgoStickyFooter.css";
+import { ErgoDownloadLink } from "../src/components/ergo/ErgoDownloadLink";
+import { ErgoCompanyLogos } from "../src/components/ergo/ErgoCompanyLogos";
 
 initTheme({ primary: "#8e0038", secondary: "#bf1528" });
 
@@ -168,9 +173,67 @@ function App() {
       >
         Komponentenübersicht
       </h1>
-      <p style={{ color: "#737373", marginBottom: 48, fontSize: 14 }}>
+      <p style={{ color: "#737373", marginBottom: 16, fontSize: 14 }}>
         ERGO Design System — Versicherungsantrags-UI
       </p>
+      <div style={{ marginBottom: 48, display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <a
+          href="/ergo-site.html"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "8px 16px",
+            background: "#8e0038",
+            color: "#fff",
+            borderRadius: 4,
+            fontSize: 13,
+            fontWeight: 700,
+            textDecoration: "none",
+            fontFamily: '"FS Me", Arial, Helvetica, sans-serif',
+          }}
+        >
+          ERGO Site Demo →
+        </a>
+        <a
+          href="/ergo-produkte.html"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "8px 16px",
+            background: "#fff",
+            color: "#8e0038",
+            border: "1px solid #8e0038",
+            borderRadius: 4,
+            fontSize: 13,
+            fontWeight: 700,
+            textDecoration: "none",
+            fontFamily: '"FS Me", Arial, Helvetica, sans-serif',
+          }}
+        >
+          ERGO Produkte
+        </a>
+        <a
+          href="/ergo-zahnzusatz.html"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "8px 16px",
+            background: "#fff",
+            color: "#8e0038",
+            border: "1px solid #8e0038",
+            borderRadius: 4,
+            fontSize: 13,
+            fontWeight: 700,
+            textDecoration: "none",
+            fontFamily: '"FS Me", Arial, Helvetica, sans-serif',
+          }}
+        >
+          ERGO Zahnzusatz
+        </a>
+      </div>
 
       {/* Theme */}
       <section
@@ -646,6 +709,144 @@ function App() {
 
       <Section title="Toast">
         <ToastDemo />
+      </Section>
+
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 700,
+          marginTop: 64,
+          marginBottom: 8,
+          fontFamily: '"Fedra Serif", Georgia, serif',
+        }}
+      >
+        ERGO Site-Komponenten
+      </h2>
+      <p style={{ color: "#737373", marginBottom: 48, fontSize: 14 }}>
+        Komponenten für ERGO-Produktseiten und -Landingpages
+      </p>
+
+      <Section title="ErgoAccordion — FAQ / Produktdetails">
+        <div style={{ maxWidth: 600 }}>
+          <ErgoAccordion
+            items={[
+              {
+                title: "Was ist in der Versicherung enthalten?",
+                content:
+                  "Unsere Versicherung bietet umfassenden Schutz für Ihre Familie, einschließlich Todesfallleistung, Beitragsbefreiung bei Berufsunfähigkeit und flexible Laufzeiten.",
+              },
+              {
+                title: "Wie kann ich meinen Beitrag berechnen?",
+                content:
+                  "Nutzen Sie unseren Online-Rechner, um Ihren individuellen Beitrag in wenigen Schritten zu ermitteln. Sie benötigen lediglich Ihr Geburtsdatum und die gewünschte Versicherungssumme.",
+              },
+              {
+                title: "Kann ich den Vertrag vorzeitig kündigen?",
+                content:
+                  "Ja, eine Kündigung ist jederzeit zum Ende der Versicherungsperiode möglich. Bitte beachten Sie die Kündigungsfrist von einem Monat.",
+              },
+            ]}
+          />
+        </div>
+      </Section>
+
+      <Section title="ErgoExpansionPanel — Mehr anzeigen">
+        <div style={{ maxWidth: 600 }}>
+          <ErgoExpansionPanel buttonText="Weitere Informationen anzeigen">
+            <p>
+              Die ERGO Risikolebensversicherung sichert Ihre Familie finanziell
+              ab — mit flexiblen Laufzeiten von 5 bis 40 Jahren und
+              Versicherungssummen bis zu 5 Mio. Euro. Profitieren Sie von
+              günstigen Beiträgen für Nichtraucher und optionaler
+              Nachversicherungsgarantie.
+            </p>
+          </ErgoExpansionPanel>
+        </div>
+      </Section>
+
+      <Section title="ErgoDownloadLink — Dokumente">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            maxWidth: 400,
+          }}
+        >
+          <ErgoDownloadLink
+            title="Produktinformationsblatt"
+            href="#"
+            fileType="PDF"
+            fileSize="245 KB"
+          />
+          <ErgoDownloadLink
+            title="Allgemeine Versicherungsbedingungen"
+            href="#"
+            fileType="PDF"
+            fileSize="1,2 MB"
+          />
+          <ErgoDownloadLink title="Tarifübersicht" href="#" fileType="PDF" />
+        </div>
+      </Section>
+
+      <Section title="ErgoCompanyLogos — Partnerlogos">
+        <ErgoCompanyLogos
+          logos={[
+            {
+              src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' fill='%23999'%3E%3Crect width='120' height='40' rx='4' fill='%23f0f0f0'/%3E%3Ctext x='60' y='24' text-anchor='middle' font-size='12' font-family='Arial'%3EMUNICH RE%3C/text%3E%3C/svg%3E",
+              alt: "Munich RE",
+            },
+            {
+              src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' fill='%23999'%3E%3Crect width='120' height='40' rx='4' fill='%23f0f0f0'/%3E%3Ctext x='60' y='24' text-anchor='middle' font-size='12' font-family='Arial'%3EDKV%3C/text%3E%3C/svg%3E",
+              alt: "DKV",
+            },
+            {
+              src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' fill='%23999'%3E%3Crect width='120' height='40' rx='4' fill='%23f0f0f0'/%3E%3Ctext x='60' y='24' text-anchor='middle' font-size='12' font-family='Arial'%3ED.A.S.%3C/text%3E%3C/svg%3E",
+              alt: "D.A.S.",
+            },
+            {
+              src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' fill='%23999'%3E%3Crect width='120' height='40' rx='4' fill='%23f0f0f0'/%3E%3Ctext x='60' y='24' text-anchor='middle' font-size='12' font-family='Arial'%3EERGO Direkt%3C/text%3E%3C/svg%3E",
+              alt: "ERGO Direkt",
+            },
+          ]}
+        />
+      </Section>
+
+      <Section title="ErgoStickyFooter — Sticky CTA-Leiste">
+        <p style={{ fontSize: 13, color: "#737373", marginBottom: 12 }}>
+          Die Sticky-Footer-Leiste wird sichtbar, sobald der Hero-Bereich aus
+          dem Viewport scrollt. Im folgenden Beispiel ist sie statisch
+          eingebettet:
+        </p>
+        <div
+          style={{
+            position: "relative",
+            border: "1px solid #e1e1e1",
+            borderRadius: 8,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            className="ergo-sticky-footer ergo-sticky-footer--visible"
+            style={{ position: "relative" }}
+          >
+            <div className="ergo-sticky-footer__container">
+              <div className="ergo-sticky-footer__left">
+                <span className="ergo-sticky-footer__product">
+                  Risikolebensversicherung
+                </span>
+                <span className="ergo-sticky-footer__tariff">
+                  Tarif Komfort
+                </span>
+              </div>
+              <div className="ergo-sticky-footer__right">
+                <Button size="sm" onClick={() => {}}>
+                  Jetzt berechnen
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </Section>
     </div>
   );

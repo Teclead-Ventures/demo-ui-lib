@@ -43,12 +43,12 @@ export const ErgoMegaMenu: React.FC<ErgoMegaMenuProps> = ({
             type="button"
             className="ergo-mega__close"
             onClick={onClose}
-            aria-label="Schlie\u00DFen"
+            aria-label="Schließen"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            <span>Schlie\u00DFen</span>
+            <span>Schließen</span>
           </button>
         </div>
 

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import "./Toast.css";
 
@@ -47,6 +47,11 @@ let nextId = 0;
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const dismiss = useCallback((id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -61,7 +66,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ show }}>
       {children}
-      {createPortal(
+      {mounted && createPortal(
         <div className="toast-container" aria-live="polite">
           {toasts.map((toast) => (
             <div key={toast.id} className="toast" data-variant={toast.variant} role="alert">

@@ -39,33 +39,35 @@ export const ErgoHeroBanner: React.FC<ErgoHeroBannerProps> = ({
         .join(" ")}
       style={bgColor ? { backgroundColor: bgColor } : undefined}
     >
-      <div className="ergo-hero__image">
-        <img src={image} alt={imageAlt} loading="eager" />
-      </div>
-      <div className="ergo-hero__teaser">
-        {title && <div className="ergo-hero__title">{title}</div>}
-        {headline && <h1 className="ergo-hero__headline">{headline}</h1>}
-        {description && (
-          <p className="ergo-hero__description">{description}</p>
-        )}
-        {price && (
-          <div className="ergo-hero__price">
-            <ErgoPriceDisplay {...price} size="auto" />
-          </div>
-        )}
-        {ctas.length > 0 && (
-          <div className="ergo-hero__actions">
-            {ctas.map((cta, i) => (
-              <ErgoCtaButton key={i} {...cta} />
-            ))}
-          </div>
-        )}
-      </div>
-      {storerImage && (
-        <div className="ergo-hero__storer">
-          <img src={storerImage} alt="" loading="lazy" />
+      <div className="ergo-hero__grid">
+        <div className="ergo-hero__image">
+          <img src={image} alt={imageAlt} loading="eager" />
         </div>
-      )}
+        <div className="ergo-hero__teaser">
+          {title && <div className="ergo-hero__title">{title}</div>}
+          {headline && <h1 className="ergo-hero__headline">{headline}</h1>}
+          {description && (
+            <p className="ergo-hero__description">{description}</p>
+          )}
+          {price && (
+            <div className="ergo-hero__price">
+              <ErgoPriceDisplay {...price} size="auto" />
+            </div>
+          )}
+          {ctas.length > 0 && (
+            <div className="ergo-hero__actions">
+              {ctas.map((cta, i) => (
+                <ErgoCtaButton key={i} {...cta} />
+              ))}
+            </div>
+          )}
+        </div>
+        {storerImage && (
+          <div className="ergo-hero__storer">
+            <img src={storerImage} alt="" loading="lazy" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

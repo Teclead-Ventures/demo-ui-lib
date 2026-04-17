@@ -91,7 +91,7 @@ Also write `tariff-spec.json` as the canonical machine-readable reference.
 2. Create `src/app/wizard/[product]/pages/<product-id>/` with wizard page components
 3. Update `src/lib/products/registry.ts` — add the new product entry
 4. Update `src/app/wizard/[product]/page.tsx` — add import case for this product
-5. Create Supabase tables for this product
+5. Create Supabase tables — prefer `mcp__claude_ai_Supabase__apply_migration` (project `xlenpuyvarsvojgtgwkx`). Verify with `list_projects` that the MCP is connected to org `bkoigzxrbqpfnijqzgdw`. Always enable RLS + anonymous insert/select policies.
 6. Commit: `git commit -m "feat: add <product-name> tariff"`
 7. Redeploy: `vercel deploy --yes --scope teclead-ventures --prod`
 
