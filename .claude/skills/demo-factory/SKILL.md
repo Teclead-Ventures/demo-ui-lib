@@ -203,7 +203,7 @@ Agent(
 
 The team member works within the existing `ergo-tarife` project. It:
 - Reads the tariff-designer's product knowledge directly
-- Creates product files at `src/lib/products/<product-id>/` and `src/app/wizard/[product]/pages/<product-id>/`
+- Creates product files at `src/lib/products/<product-id>/` and `src/app/(app)/wizard/[product]/pages/<product-id>/`
 - Updates the product registry
 - Builds wizard pages (spawning its own page agents if needed)
 - Redeploys to Vercel
@@ -269,7 +269,7 @@ Agent(
 )
 ```
 
-Pass 2 works in the same project — it deletes and replaces the product's files (`src/lib/products/<product-id>/` and `src/app/wizard/[product]/pages/<product-id>/`), then rebuilds them with improvements. The registry entry is updated if needed. Other products in the project are NOT touched.
+Pass 2 works in the same project — it deletes and replaces the product's files (`src/lib/products/<product-id>/` and `src/app/(app)/wizard/[product]/pages/<product-id>/`), then rebuilds them with improvements. The registry entry is updated if needed. Other products in the project are NOT touched.
 
 #### 3f. Pass 2 Review (team lead, quick check)
 

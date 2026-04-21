@@ -71,9 +71,9 @@ Create your product's files:
 1. `src/lib/products/{{PRODUCT_ID}}/TariffContext.tsx` — product-specific form data + step map + demo defaults
 2. `src/lib/products/{{PRODUCT_ID}}/pricing.ts` — product-specific pricing engine
 3. `src/lib/products/{{PRODUCT_ID}}/planData.ts` — product-specific tier benefits
-4. `src/app/wizard/[product]/pages/{{PRODUCT_ID}}/` — product-specific wizard page components
+4. `src/app/(app)/wizard/[product]/pages/{{PRODUCT_ID}}/` — product-specific wizard page components
 5. Update `src/lib/products/registry.ts` — add your product entry to the PRODUCTS array
-6. Update `src/app/wizard/[product]/page.tsx` — add your product's import case
+6. Update `src/app/(app)/wizard/[product]/page.tsx` — add your product's import case
 7. Create Supabase tables for this product (insurance_applications + wizard_tracking_events with product-specific prefix)
 
 The shared infrastructure already exists:
@@ -100,11 +100,11 @@ You are now building the pages for {{PRODUCT_NAME}}. This is similar to EXECUTE.
 - Create `src/lib/products/{{PRODUCT_ID}}/pricing.ts` with calibrated base rates, age curve, risk classes
 - Create `src/lib/products/{{PRODUCT_ID}}/planData.ts` with tier benefits
 - Update `src/lib/products/registry.ts` — add the new product entry
-- Update `src/app/wizard/[product]/page.tsx` — add import case for this product
+- Update `src/app/(app)/wizard/[product]/page.tsx` — add import case for this product
 - Gate: `node_modules/typescript/bin/tsc --noEmit` must pass
 
 **Build wizard pages:**
-- Create page components at `src/app/wizard/[product]/pages/{{PRODUCT_ID}}/`
+- Create page components at `src/app/(app)/wizard/[product]/pages/{{PRODUCT_ID}}/`
 - Build pages one by one or dispatch parallel agents with `isolation: "worktree"` and `model: "opus"`
 - Each must pass tsc
 - Use @/ path aliases for all imports
