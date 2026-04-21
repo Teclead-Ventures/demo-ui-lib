@@ -1,58 +1,102 @@
-# Ticket 13: Wizard Step Tracking — Zahnzusatzversicherung
+# Ticket 13: Wizard Step Tracking
 
-## Priority: Optional (post-launch)
+## Priority: Phase 1 (Foundation) — build BEFORE wizard pages
 
-## Problem
-
-No visibility into where users drop off in the 6-step wizard.
-
-## Objective
-
-Track step transitions in `TariffContext.tsx` so analytics events can be fired on each `goTo()` / `nextStep()` call.
+Tracking is not optional. Without it, the dashboard has no funnel data and the demo
+loses half its value. Every wizard must track step transitions to Supabase so the
+dashboard can show where users drop off.
 
 ## Implementation
 
-### In `TariffContext.tsx`
-
-Add an optional `onStepChange` callback to the context:
+### 1. Create `src/app/(app)/api/track/route.ts` (shared, created once per project)
 
 ```typescript
-// Called whenever step changes — wire up to analytics if needed
-const handleStepChange = (from: number, to: number) => {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", "wizard_step", {
-      event_category: "zahnzusatz_wizard",
-      event_label: `step_${to}`,
-      value: to,
-    });
+import { NextResponse } from "next/server";
+import { supabase, isSupabaseConfigured, tableName } from "@/lib/supabase";
+
+export async function POST(request: Request) {
+  if (!isSupabaseConfigured) {
+    return NextResponse.json({ ok: true }); // silent no-op when Supabase not configured
   }
-};
+  try {
+    const body = await request.json();
+    await supabase.from(tableName(`${body.product}_tracking`)).insert([{
+      session_id: body.sessionId,
+      product: body.product,
+      step: body.step,
+      step_label: body.stepLabel,
+      timestamp: new Date().toISOString(),
+    }]);
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ ok: true }); // tracking failures must not block the wizard
+  }
+}
 ```
 
-Call `handleStepChange(currentStep, newStep)` inside `nextStep()` and `goTo()` before updating state.
+### 2. Add tracking call in each wizard wrapper
 
-### Step Labels
+In each product's main wizard component (e.g., `PrivathaftpflichtWizard.tsx`), track step changes:
 
-| Step | Label |
-|------|-------|
-| 1 | versicherte_person |
-| 2 | geburtsdatum |
-| 3 | versicherungsbeginn |
-| 4 | tarifauswahl |
-| 5 | persoenliche_daten |
-| 6 | zusammenfassung |
+```typescript
+import { useEffect, useRef } from "react";
 
-### Drop-off Signal
+// Generate a session ID once per wizard mount
+const sessionId = useRef(crypto.randomUUID());
 
-Track `wizard_abandoned` event when user navigates away from `/wizard` without completing step 6.
-Use `beforeunload` or Next.js `useRouter` navigation events — only if analytics are configured.
+// Track step changes
+useEffect(() => {
+  fetch("/api/track", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sessionId: sessionId.current,
+      product: PRODUCT_ID, // e.g., "privathaftpflicht"
+      step: state.step,
+      stepLabel: STEP_LABELS[state.step - 1]?.label ?? `step_${state.step}`,
+    }),
+  }).catch(() => {}); // never block on tracking
+}, [state.step]);
+```
 
-## Demo Mode
+### 3. Supabase table schema
 
-In demo mode (`isDemo=true`), suppress analytics events to avoid polluting real data.
+Create `{TABLE_PREFIX}_{PRODUCT_ID}_tracking` with:
 
-## Dependencies
+```sql
+create table {TABLE_PREFIX}_{PRODUCT_ID}_tracking (
+  id uuid default gen_random_uuid() primary key,
+  session_id text not null,
+  product text not null,
+  step integer not null,
+  step_label text,
+  timestamp timestamptz,
+  created_at timestamptz default now()
+);
+alter table {TABLE_PREFIX}_{PRODUCT_ID}_tracking enable row level security;
+create policy "Allow anonymous inserts" on {TABLE_PREFIX}_{PRODUCT_ID}_tracking
+  for insert with check (true);
+create policy "Allow anonymous reads" on {TABLE_PREFIX}_{PRODUCT_ID}_tracking
+  for select using (true);
+```
 
-- No external analytics package needed — hooks into existing `gtag` if present
-- If no analytics configured: function is a no-op
-- Add `NEXT_PUBLIC_GA_ID` to `.env.local` if Google Analytics is used
+### 4. Dashboard funnel section
+
+The product dashboard MUST read from the tracking table and render a funnel:
+
+```typescript
+// Count distinct sessions that reached each step
+const { data: funnelData } = await supabase
+  .from(tableName(`${productId}_tracking`))
+  .select("session_id, step, step_label");
+
+// Group: for each step, count distinct session_ids
+// Display as horizontal bars with conversion percentages
+```
+
+## Verification checklist
+
+- [ ] `/api/track` POST returns 200
+- [ ] Tracking table has rows after stepping through the wizard
+- [ ] Dashboard shows funnel with per-step counts and conversion rates
+- [ ] Tracking failures never block the wizard UX

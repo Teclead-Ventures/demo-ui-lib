@@ -47,21 +47,22 @@ Present a human-readable summary covering:
 
 Read `references/pricing-model.md` for the pricing formula and calibration data. The sample price should be in the right ballpark for the German market.
 
-### Step 3: Detect mode
+### Step 3: Determine mode — ask, don't assume
 
-Check if you're adding to an existing project or starting fresh:
+There are two modes, but you must never auto-detect silently. Always confirm with the user.
 
-**Multi-product mode** (adding to existing project):
-- The project directory already exists with `src/lib/products/registry.ts`
-- Add the new product: create `src/lib/products/<product-id>/`, update the registry, add wizard pages
-- The landing page automatically picks up the new product
+**Multi-product mode** (adding to an existing, active project):
+- The user explicitly says to add a product to a specific existing project
 - Shared infrastructure (WizardContext, validation, tracking, API routes) already exists
+- When called by demo-factory, always use multi-product mode
 
-**Single-product mode** (new repo):
-- No existing project — generate full ticket set + scaffold from scratch
-- Simpler flat structure (no dynamic route, no registry)
+**Single-product / new repo mode** (fresh start):
+- The user says "new repo", "fresh", or names a repo that should be created
+- Even if a directory with that name already exists, if the user said "new", scaffold fresh (wipe and recreate)
 
-When called by demo-factory, always use **multi-product mode** — all products go into one repo.
+**If ambiguous, ask.** For example: "I see `/Users/malte/Desktop/Repositories/tlv/ergo-tarife` already exists with Unfallversicherung. Should I add Zahnzusatz to it, or wipe it and start fresh?" Never silently reuse an existing directory when the user asked for something new — that was a painful lesson.
+
+**Important**: When the user says "new multi-product repo with just one tariff for now", that means single-product mode (scaffold fresh) with the multi-product architecture flag in tariff-spec.json so the build session sets up registry + dynamic routes from the start.
 
 ### Step 4: Generate ticket files
 
@@ -84,48 +85,58 @@ When the user confirms (or says "looks good"), read `references/ticket-templates
 
 Also write `tariff-spec.json` as the canonical machine-readable reference.
 
-### Step 5: Scaffold or add to project
+### Step 5: Scaffold the project
 
-**If multi-product mode** (adding to an existing project):
-1. Create `src/lib/products/<product-id>/` with TariffContext.tsx, pricing.ts, planData.ts
-2. Create `src/app/wizard/[product]/pages/<product-id>/` with wizard page components
-3. Update `src/lib/products/registry.ts` — add the new product entry
-4. Update `src/app/wizard/[product]/page.tsx` — add import case for this product
-5. Create Supabase tables — prefer `mcp__claude_ai_Supabase__apply_migration` (project `xlenpuyvarsvojgtgwkx`). Verify with `list_projects` that the MCP is connected to org `bkoigzxrbqpfnijqzgdw`. Always enable RLS + anonymous insert/select policies.
-6. Commit: `git commit -m "feat: add <product-name> tariff"`
-7. Redeploy: `vercel deploy --yes --scope teclead-ventures --prod`
+**Do NOT build the app.** This skill designs the tariff and prepares the project for a build session. Writing wizard page components, TariffContext, pricing engines — that's the build session's job, driven by the tickets you generated in Step 4. If you find yourself writing `.tsx` page components, you've gone too far.
 
-**If single-product mode** (new repo from scratch):
+**If single-product / new repo mode:**
 ```bash
 cd /Users/malte/Desktop/Repositories/tlv/demo-ui-lib
-./setup-demo.sh <product-id>
+./setup-demo.sh <project-name>
 ```
-Then copy generated tickets into the project and proceed to Step 6.
+This creates the project with a new table prefix. Then:
+1. Replace the generic `tickets/tariff-spec.json` with the product-specific one from Step 4
+2. Write all generated ticket files into `tickets/`
+3. Note the table prefix from `setup-demo.sh` output (e.g., `run_20260420_1915`) — this determines the Supabase table names
 
-### Step 6: Create GitHub repo (single-product only)
+**If multi-product mode** (adding to an existing, confirmed project):
+1. Write the product-specific tariff-spec.json into `tickets/<product-id>/tariff-spec.json`
+2. Write product-specific ticket files into `tickets/<product-id>/`
+3. Note the existing table prefix from `.env.local`
 
-Only needed for single-product mode. Multi-product repos already exist.
+**Do not create Supabase tables yet.** The table prefix depends on the scaffold, and the build session needs to create tables with the correct prefix. Include the SQL in `EXECUTE.md` so the build session handles it.
+
+### Step 6: Set up GitHub and Vercel env vars
 
 ```bash
-cd /Users/malte/Desktop/Repositories/tlv/<product-id>
-gh repo create teclead-ventures/<product-id> --private --source=. --push
+cd /Users/malte/Desktop/Repositories/tlv/<project-name>
+gh repo create teclead-ventures/<project-name> --private --source=. --push
 ```
+
+**Vercel env vars** — `setup-demo.sh` puts Supabase credentials in `.env.local` but Vercel deployments need them too. After the build session deploys, it must add these env vars to Vercel (include this reminder in EXECUTE.md):
+```
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY)
+NEXT_PUBLIC_TABLE_PREFIX
+```
+Read the values from `.env.local` and add them via `vercel env add <name> production --scope teclead-ventures`.
 
 ### Step 7: Hand off
 
-**Multi-product**: "Product added to the project. Visit the landing page to see it: `<vercel-url>`"
+Tell the user:
 
-**Single-product**: Tell the user:
-
-> Project ready at `/Users/malte/Desktop/Repositories/tlv/<product-id>/`
-> GitHub: `https://github.com/teclead-ventures/<product-id>`
+> Project ready at `/Users/malte/Desktop/Repositories/tlv/<project-name>/`
+> GitHub: `https://github.com/teclead-ventures/<project-name>`
 >
 > To build the demo, open a new Claude Code session in the project directory and say:
 >
 > ```
-> Read tickets/EXECUTE.md and execute it. Read all tickets in tickets/ for full context.
-> Use parallel agents with worktrees for Phase 2. Use the playwright-cli skill for all
-> browser validation (always --headed). Use opus for all subagents.
+> Read tickets/EXECUTE.md and tickets/tariff-spec.json. The tariff-spec.json is the
+> canonical product spec — it overrides the generic ticket templates where they conflict.
+> Build the zahnzusatz product. Use multi-product architecture (registry + dynamic
+> [product] route). Use parallel agents with worktrees for Phase 2. Use the playwright-cli
+> skill for all browser validation (always --headed). Use opus for all subagents.
+> After deploying, add the Supabase env vars to Vercel (see EXECUTE.md).
 > ```
 
 ---

@@ -16,7 +16,7 @@ Every product gets built TWICE:
 
 **Pass 1**: Build the demo from scratch. Review it critically. Identify UX problems, pricing inaccuracies, missing components, visual issues.
 
-**Pass 2**: Apply all improvements from Pass 1's review. Rebuild from scratch (fresh `setup-demo.sh`). The second build inherits everything the first build taught you — fixed pricing, new components in the UI library, better ticket specs.
+**Pass 2**: Apply targeted improvements from Pass 1's review. Do NOT rebuild from scratch — make minimal edits to fix specific issues. This is much faster (~8 min vs ~25 min). The second pass inherits new components and fixed pricing from the UI library.
 
 Only after Pass 2 is deployed and verified do you move to the next product.
 
@@ -44,6 +44,26 @@ Examples of components you might need to create:
 4. Commit to demo-ui-lib with a descriptive message
 5. The next `setup-demo.sh` run automatically copies it to the new project
 
+## Known issues from previous runs
+
+These are real problems discovered across builds. Apply them proactively:
+
+1. **PasswordGate**: All deployed demos are behind a password gate (password: `ergo2026`). When doing Playwright reviews, authenticate FIRST: fill `input[type="password"]` with `ergo2026`, click the "Zugang" button, wait 1 second.
+
+2. **Table prefix**: `setup-demo.sh` generates a timestamp-based table prefix (e.g., `run_20260420_1929`). Capture this from the script output and pass it to the team member as `{{TABLE_PREFIX}}`.
+
+3. **Stepper label truncation**: With 6+ wizard steps, the Stepper component truncates labels. Use SHORT labels (max 6 chars): "Für wen?", "Alter", "Beginn", "Tarif", "Daten", "Prüfen" — not "Versicherung", "Geburtsdatum", etc.
+
+4. **Landing page always generic**: The base template has a generic English landing page ("Demo Application"). The team member MUST replace it with a German product-specific hero page.
+
+5. **Playwright can't reliably fill React controlled inputs**: `page.fill()` doesn't always trigger React's synthetic `onChange`. For the review phase, rely on visual screenshot review rather than automated form completion. If automated filling fails, that's a Playwright limitation, not a product bug.
+
+6. **Pass 2 is targeted, not a full rebuild**: Pass 2 should make minimal edits to fix specific issues from the Pass 1 review. Do NOT rewrite files that don't need changes. This is much faster (~8 min vs ~25 min).
+
+7. **Field validation is mandatory**: Every wizard must validate user inputs before allowing progression. At minimum: required field checks, PLZ format (5 digits), age range bounds, date validity. Show inline German error messages beneath invalid fields.
+
+8. **Demo data toggle**: Every wizard must include a toggleable "Demo-Daten laden" button (visible in the demo banner or as a floating action) that pre-fills the form with realistic sample data. This lets clients see the full flow without manual typing. The demo defaults should be defined in TariffContext alongside INITIAL_DATA.
+
 ## Your process
 
 ### Step 1: Determine the build queue
@@ -67,27 +87,44 @@ Use the user's list, or default to the full catalog:
 13. `wohngebaeude` — building details, construction risk
 14. `cyber` — flat pricing, digital product
 
-### Step 2: Scaffold the shared project + initialize the manifest
+### Step 2: Scaffold the project + initialize the manifest
 
-Create ONE project for all products. This is the multi-product architecture:
+Use the user-provided project name, or default to `ergo-tarife`. The project name is used for the directory, GitHub repo, and Vercel deployment.
 
 ```bash
 cd /Users/malte/Desktop/Repositories/tlv/demo-ui-lib
-./setup-demo.sh ergo-tarife
+./setup-demo.sh <PROJECT_NAME>
 ```
 
-This creates `/Users/malte/Desktop/Repositories/tlv/ergo-tarife/`. Then set up the multi-product structure:
+**Capture the table prefix** from the script output (e.g., `run_20260420_1929`). You'll need this for the team member prompt.
 
+This creates `/Users/malte/Desktop/Repositories/tlv/<PROJECT_NAME>/`.
+
+**IMPORTANT: The base template includes ERGO content pages** in the `(site)/` route group (homepage at `/`, `/produkte`, `/produkte/zahnzusatz`). Do NOT delete the `(site)/` route group — it provides the marketing content pages. The tariff grid goes at `/tarife`, not `/`, to avoid a route conflict.
+
+**If building multiple products**, set up multi-product architecture:
 1. Create `src/lib/products/registry.ts` with an empty `PRODUCTS` array
-2. Create a landing page at `src/app/page.tsx` that reads the registry and shows a product grid
-3. Create the dynamic wizard route at `src/app/wizard/[product]/page.tsx`
-4. Create a dashboard overview at `src/app/dashboard/page.tsx` (shows all products)
-5. Create per-product dashboard route at `src/app/dashboard/[product]/page.tsx`
-6. The shared infrastructure (WizardContext, WizardShell, validation, tracking, API routes) comes from the base template
-7. Create GitHub repo: `gh repo create teclead-ventures/ergo-tarife --private --source=. --push`
+2. Update the tariff grid at `src/app/(app)/tarife/page.tsx` to read the registry and show a product grid (a placeholder already exists from the base template)
+3. Create the dynamic wizard route at `src/app/(app)/wizard/[product]/page.tsx`
+4. Create a dashboard overview at `src/app/(app)/dashboard/page.tsx` (shows all products)
+5. Create per-product dashboard route at `src/app/(app)/dashboard/[product]/page.tsx`
+
+**If building a single product**, skip the registry — build directly into the base template's `/wizard` and `/dashboard` routes.
+
+**Navigation structure** (all projects):
+- `/` → ERGO homepage (content page, links to `/tarife` and `/produkte`)
+- `/produkte` → ERGO product catalog (content page)
+- `/tarife` → Tariff calculator grid (pick a product → `/wizard/{product}`)
+- `/wizard/{product}` → Product wizard
+- `/dashboard` → Dashboard overview (links back to `/tarife`)
+- `/dashboard/{product}` → Per-product dashboard with funnel analytics
+
+Then:
+6. The shared infrastructure (WizardContext, WizardShell, validation) comes from the base template. The team member MUST create `/api/track/route.ts`, step tracking in the wizard, and a dashboard with funnel analytics — these are NOT in the base template.
+7. Create GitHub repo: `gh repo create teclead-ventures/<PROJECT_NAME> --private --source=. --push`
 8. Deploy the initial shell to Vercel: `vercel deploy --yes --scope teclead-ventures`
 
-Each team member then ADDS their product to this project (doesn't create a new one).
+For multi-product builds, each team member ADDS their product to this project (doesn't create a new one).
 
 Initialize the manifest:
 
@@ -109,10 +146,11 @@ The manifest tracks the single project and all products within it:
   "current": null,
   "failed": [],
   "project": {
-    "name": "ergo-tarife",
-    "local_dir": "/Users/malte/Desktop/Repositories/tlv/ergo-tarife",
-    "github_repo": "teclead-ventures/ergo-tarife",
-    "vercel_url": "https://ergo-tarife.vercel.app",
+    "name": "<PROJECT_NAME>",
+    "local_dir": "/Users/malte/Desktop/Repositories/tlv/<PROJECT_NAME>",
+    "github_repo": "teclead-ventures/<PROJECT_NAME>",
+    "vercel_url": "https://<PROJECT_NAME>.vercel.app",
+    "table_prefix": "<TABLE_PREFIX from setup-demo.sh output>",
     "supabase_tables": []
   }
 }
@@ -194,6 +232,12 @@ Open the Pass 1 production URL with playwright-cli. Critically review:
 - Spacing and alignment consistent?
 - All German text with proper Unicode?
 - Dashboard columns appropriate for this product?
+
+**Tracking & Dashboard Check:**
+- Does the dashboard show a funnel visualization with per-step conversion rates?
+- Are step tracking events being written to Supabase? (Check the tracking table has rows after the Playwright walkthrough)
+- Does the dashboard show meaningful stats (total submissions, avg price, popular tier, completion rate)?
+- Does `/api/track` return 200 when POSTed to?
 
 **Document all issues.** Write them into the build log. Categorize:
 - **Pricing**: Base rates off, age curve wrong shape, risk class multipliers need adjustment
@@ -334,8 +378,10 @@ For 14 products: ~13 hours total.
 - **Never ask the user**: You make all decisions. Log them for transparency.
 - **Components go in demo-ui-lib**: Not inline. Commit before `setup-demo.sh`.
 - **Working directory**: `/Users/malte/Desktop/Repositories/tlv/demo-ui-lib/`
-- **Single shared project**: All products go into `/Users/malte/Desktop/Repositories/tlv/ergo-tarife/` — ONE repo, ONE Vercel deployment, ONE URL
-- **Two passes per product**: Always. No shortcuts. Pass 1 adds the product, Pass 2 improves it. Both passes work in the same project.
+- **Single shared project**: All products go into `/Users/malte/Desktop/Repositories/tlv/<PROJECT_NAME>/` — ONE repo, ONE Vercel deployment, ONE URL. The user provides the project name, or default to `ergo-tarife`.
+- **Two passes per product**: Always. No shortcuts. Pass 1 builds the product, Pass 2 applies targeted improvements. Both passes work in the same project.
 - **Vercel team**: Deploy to `teclead-ventures` (team_HTk74i0O8LynDSrXif5CzlCm) — use `--scope teclead-ventures`
 - **Redeploy after each product**: After each product (Pass 2) is done, redeploy to Vercel so the landing page shows the new product immediately.
-- **GitHub**: Single repo `teclead-ventures/ergo-tarife` — commit after each product is added.
+- **GitHub**: Single repo `teclead-ventures/<PROJECT_NAME>` — commit after each product is added.
+- **Supabase project**: Verify the correct project ID via `list_projects` MCP tool before executing SQL. Do not hardcode IDs.
+- **PasswordGate**: All Playwright reviews must authenticate with password `ergo2026` first.
