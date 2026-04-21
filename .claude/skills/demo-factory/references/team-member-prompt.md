@@ -107,7 +107,7 @@ You are now building the pages for {{PRODUCT_NAME}}. This is similar to EXECUTE.
 
 **Build wizard pages:**
 - Create page components at `src/app/(app)/wizard/[product]/pages/{{PRODUCT_ID}}/`
-- Build pages one by one or dispatch parallel agents with `isolation: "worktree"` and `model: "opus"`
+- For 5+ pages, dispatch parallel agents with `isolation: "worktree"` and `model: "opus"` — this saves ~10 min vs sequential. Each agent builds one page component. Sequential is OK for 4 or fewer pages.
 - Each must pass tsc
 - Use @/ path aliases for all imports
 - Use ACTUAL Unicode characters (ü ä ö ß €) — never escapes or entities
@@ -117,7 +117,7 @@ You are now building the pages for {{PRODUCT_NAME}}. This is similar to EXECUTE.
 - Create `src/app/(app)/api/track/route.ts` if it doesn't exist — POST endpoint writing to `{{TABLE_PREFIX}}_{{PRODUCT_ID}}_tracking` Supabase table
 - Create Supabase table `{{TABLE_PREFIX}}_{{PRODUCT_ID}}_tracking` with columns: id (uuid), session_id (text), product (text), step (integer), step_label (text), timestamp (timestamptz), created_at (timestamptz default now())
 - In your product's main wizard component, generate a `sessionId` via `crypto.randomUUID()` on mount and POST to `/api/track` on each step change (useEffect watching state.step)
-- The product dashboard at `/dashboard/[product]` MUST include:
+- The product dashboard at `/dashboard/[product]` MUST be an **async server component** (NOT `"use client"`). The Supabase `sb_publishable_` key does not work with `@supabase/supabase-js` `createClient()` in the browser — client-side Supabase queries hang forever. Server components query Supabase on the server where it works correctly. The dashboard MUST include:
   1. **Funnel section**: for each wizard step, count distinct sessions that reached that step, render horizontal bars with conversion rates (e.g., "Für wen? — 100% → Beginn — 85% → ... → Submitted — 42%"). Read from the `_tracking` table.
   2. **Submissions table**: name, tier, price, date (read from `_applications` table)
   3. **Stats cards**: total submissions, average monthly price, most popular tier, wizard completion rate
