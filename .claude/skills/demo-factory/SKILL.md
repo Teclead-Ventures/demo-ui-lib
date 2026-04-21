@@ -54,7 +54,7 @@ These are real problems discovered across builds. Apply them proactively:
 
 3. **Stepper label truncation**: With 6+ wizard steps, the Stepper component truncates labels. Use SHORT labels (max 6 chars): "Für wen?", "Alter", "Beginn", "Tarif", "Daten", "Prüfen" — not "Versicherung", "Geburtsdatum", etc.
 
-4. **Landing page always generic**: The base template has a generic English landing page ("Demo Application"). The team member MUST replace it with a German product-specific hero page.
+4. **Portal is the TLV Demo Launcher**: The root `/` is a neutral portal page that auto-populates from the product and ERGO page registries. No manual landing page editing needed — adding a product to the registry makes it appear on the portal automatically.
 
 5. **Playwright can't reliably fill React controlled inputs**: `page.fill()` doesn't always trigger React's synthetic `onChange`. For the review phase, rely on visual screenshot review rather than automated form completion. If automated filling fails, that's a Playwright limitation, not a product bug.
 
@@ -392,7 +392,7 @@ For 14 products: ~13 hours total.
 - **Single shared project**: All products go into `/Users/malte/Desktop/Repositories/tlv/<PROJECT_NAME>/` — ONE repo, ONE Vercel deployment, ONE URL. The user provides the project name, or default to `ergo-tarife`.
 - **Two passes per product**: Always. No shortcuts. Pass 1 builds the product, Pass 2 applies targeted improvements. Both passes work in the same project.
 - **Vercel team**: Deploy to `teclead-ventures` (team_HTk74i0O8LynDSrXif5CzlCm) — use `--scope teclead-ventures`
-- **Redeploy after each product**: After each product (Pass 2) is done, redeploy to Vercel so the landing page shows the new product immediately.
+- **Redeploy after each product**: After each product (Pass 2) is done, redeploy to Vercel so the portal and tariff grid show the new product immediately.
 - **GitHub**: Single repo `teclead-ventures/<PROJECT_NAME>` — commit after each product is added.
 - **Supabase project**: Verify the correct project ID via `list_projects` MCP tool before executing SQL. Do not hardcode IDs.
 - **PasswordGate**: All Playwright reviews must authenticate with password `ergo2026` first.

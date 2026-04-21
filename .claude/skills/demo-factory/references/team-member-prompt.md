@@ -155,7 +155,7 @@ You are now building the pages for {{PRODUCT_NAME}}. This is similar to EXECUTE.
 **Deploy:**
 - Redeploy with `vercel deploy --yes --scope teclead-ventures --prod` (updates the single deployment)
 - Production playwright walkthrough with test data set 2 (different from set 1)
-- Navigate to production landing page — verify product card is visible
+- Navigate to production portal (root `/`) — verify product card is visible in Tarifrechner section
 - Click through to the wizard, submit with test data
 - Verify on production dashboard
 
@@ -308,4 +308,4 @@ The team lead reads this template file, fills in the placeholders, and passes th
 - **Vercel**: Deployed at `{{PROJECT_NAME}}.vercel.app` (redeployed after each product)
 - **Pass 1**: Add the product, test it, identify issues
 - **Pass 2**: Apply targeted fixes to specific files. Do NOT rewrite files that don't need changes.
-- **Landing page**: Must be German and product-specific (NEVER leave the generic English template).
+- **Portal**: The root `/` is the TLV Demo Launcher — it auto-populates from both registries. No manual landing page editing needed.
