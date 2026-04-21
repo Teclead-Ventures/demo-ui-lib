@@ -10,7 +10,7 @@
   border: none;
   cursor: pointer;
   font-family: var(--font-family);
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-primary);
   padding: var(--space-s) 0;
@@ -46,7 +46,7 @@
 
 .ergo-expansion__content {
   overflow: hidden;
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   color: var(--color-text);
   line-height: 1.5;
 }

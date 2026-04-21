@@ -3,7 +3,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #ffffff;
+  background: var(--color-bg-white);
   border-top: 1px solid var(--color-border);
   box-shadow: var(--box-shadow-medium);
   font-family: var(--font-family);
@@ -26,7 +26,7 @@
 }
 
 .ergo-mega__title {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text);
 }
@@ -39,7 +39,7 @@
   border: none;
   cursor: pointer;
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: var(--font-size-base);
   color: var(--color-text-muted);
   padding: 4px 8px;
   border-radius: var(--border-radius);
@@ -67,20 +67,20 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 16px;
+  padding: var(--space-xs) var(--space-s);
   background: none;
   border: none;
   border-left: 3px solid transparent;
   cursor: pointer;
   font-family: var(--font-family);
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   color: var(--color-text);
   text-align: left;
   transition: background-color var(--transition), border-color var(--transition);
 }
 
 .ergo-mega__cat-btn:hover {
-  background-color: #fbf4f4;
+  background-color: var(--color-bg-warm);
 }
 
 .ergo-mega__cat-btn--active {
@@ -102,7 +102,7 @@
   padding: 10px 0;
   color: var(--color-text);
   text-decoration: none;
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   transition: color var(--transition);
 }
 
@@ -118,17 +118,17 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 12px;
+  gap: var(--space-xs);
 }
 
 .ergo-mega__promo-title {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text);
 }
 
 .ergo-mega__promo-price {
-  font-size: 14px;
+  font-size: var(--font-size-base);
   color: var(--color-text-muted);
 }
 

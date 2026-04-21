@@ -8,7 +8,7 @@
 }
 
 .ergo-logos__item {
-  height: 48px;
+  height: var(--space-l);
   width: auto;
   object-fit: contain;
 }
