@@ -64,6 +64,18 @@ These are real problems discovered across builds. Apply them proactively:
 
 8. **Demo data toggle**: Every wizard must include a toggleable "Demo-Daten laden" button (visible in the demo banner or as a floating action) that pre-fills the form with realistic sample data. This lets clients see the full flow without manual typing. The demo defaults should be defined in TariffContext alongside INITIAL_DATA.
 
+9. **ToastProvider required in app layout**: The `(app)/layout.tsx` MUST wrap children in `<ToastProvider>` (from `@/components/ui/Toast/Toast`). Without it, any wizard step calling `useToast()` (typically the summary/submit page) crashes the entire page with "useToast must be used inside <ToastProvider>". The base template may not include this — verify after scaffolding and add it if missing.
+
+10. **Vercel env vars must be pushed after first deploy**: `setup-demo.sh` creates `.env.local` for local dev, but Vercel has no env vars by default. After the initial `vercel deploy`, push the three required env vars or the `/api/submit` and `/api/track` endpoints will return 503:
+    ```bash
+    echo "<SUPABASE_URL>" | vercel env add NEXT_PUBLIC_SUPABASE_URL production --scope teclead-ventures
+    echo "<SUPABASE_KEY>" | vercel env add NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY production --scope teclead-ventures
+    echo "<TABLE_PREFIX>" | vercel env add NEXT_PUBLIC_TABLE_PREFIX production --scope teclead-ventures
+    ```
+    Read the values from the project's `.env.local`. Then redeploy for the env vars to take effect.
+
+11. **Pricing recalibration**: The base rates in `products.md` may not produce the correct calibration price when combined with the polynomial age curve and loading factor. Always verify the calibration point (e.g., 35yo Komfort → €21.70 for zahnzusatz) after implementing `pricing.ts`. If the price is off, recalibrate the base rates by working backwards from the target price: `baseRate = targetPrice / (ageFactor × (1 + loading))`.
+
 ## Your process
 
 ### Step 1: Determine the build queue
@@ -134,6 +146,14 @@ Then:
 6. The shared infrastructure (WizardContext, WizardShell, validation) comes from the base template. The team member MUST create `/api/track/route.ts`, step tracking in the wizard, and a dashboard with funnel analytics — these are NOT in the base template.
 7. Create GitHub repo: `gh repo create teclead-ventures/<PROJECT_NAME> --private --source=. --push`
 8. Deploy the initial shell to Vercel: `vercel deploy --yes --scope teclead-ventures`
+9. Push Supabase env vars to Vercel (read values from the project's `.env.local`):
+   ```bash
+   cd /Users/malte/Desktop/Repositories/tlv/<PROJECT_NAME>
+   echo "$(grep NEXT_PUBLIC_SUPABASE_URL .env.local | cut -d= -f2)" | vercel env add NEXT_PUBLIC_SUPABASE_URL production --scope teclead-ventures
+   echo "$(grep NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY .env.local | cut -d= -f2)" | vercel env add NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY production --scope teclead-ventures
+   echo "$(grep NEXT_PUBLIC_TABLE_PREFIX .env.local | cut -d= -f2)" | vercel env add NEXT_PUBLIC_TABLE_PREFIX production --scope teclead-ventures
+   ```
+   Then redeploy: `vercel deploy --yes --scope teclead-ventures --prod`
 
 For multi-product builds, each team member ADDS their product to this project (doesn't create a new one).
 
