@@ -120,23 +120,15 @@ const TOKEN_MAP: Record<keyof ThemeConfig, string> = {
 };
 
 export function initTheme(config: ThemeConfig = {}): void {
-  const id = "demo-ui-lib-theme";
-  let el = document.getElementById(id) as HTMLStyleElement | null;
+  const root = document.documentElement;
 
-  const entries = Object.entries(config)
+  // Clear all previous overrides
+  Object.values(TOKEN_MAP).forEach((v) => root.style.removeProperty(v));
+
+  // Apply new overrides via setProperty (injection-safe)
+  Object.entries(config)
     .filter(([_, v]) => v !== undefined)
-    .map(([k, v]) => `${TOKEN_MAP[k as keyof ThemeConfig]}:${v}`);
-
-  if (entries.length === 0) {
-    el?.remove();
-    return;
-  }
-
-  const css = `:root{${entries.join(";")}}`;
-  if (!el) {
-    el = document.createElement("style");
-    el.id = id;
-    document.head.appendChild(el);
-  }
-  el.textContent = css;
+    .forEach(([k, v]) =>
+      root.style.setProperty(TOKEN_MAP[k as keyof ThemeConfig], v as string)
+    );
 }

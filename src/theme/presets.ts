@@ -1,5 +1,6 @@
 import type { ThemeConfig } from "./index";
 
+// ERGO defaults come from theme.css :root — this preset clears any overrides
 export const ergoTheme: ThemeConfig = {};
 
 export const modernBlueTheme: ThemeConfig = {
