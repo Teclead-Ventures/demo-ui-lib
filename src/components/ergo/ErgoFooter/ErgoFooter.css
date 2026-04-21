@@ -18,7 +18,7 @@
 }
 
 .ergo-footer__group-title {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text);
   margin: 0 0 var(--space-s);
@@ -34,7 +34,7 @@
 }
 
 .ergo-footer__link {
-  font-size: 14px;
+  font-size: var(--font-size-base);
   color: var(--color-text);
   text-decoration: none;
   transition: color var(--transition);
@@ -53,13 +53,13 @@
 }
 
 .ergo-footer__legal {
-  font-size: 14px;
+  font-size: var(--font-size-base);
   color: var(--color-text-muted);
 }
 
 .ergo-footer__social {
   display: flex;
-  gap: 16px;
+  gap: var(--space-s);
 }
 
 .ergo-footer__social-link {

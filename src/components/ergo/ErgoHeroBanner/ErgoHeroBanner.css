@@ -58,15 +58,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-xs);
   position: relative;
   z-index: 1;
   max-width: 720px;
-  background-color: #fff;
+  background-color: var(--color-bg-cream);
 }
 
 .ergo-hero__title {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text);
   letter-spacing: 0.5px;
@@ -74,7 +74,7 @@
 
 .ergo-hero__headline {
   font-family: var(--font-family-heading);
-  font-size: 32px;
+  font-size: var(--font-size-5xl);
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.2;
@@ -82,7 +82,7 @@
 }
 
 .ergo-hero__description {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   color: var(--color-text);
   line-height: 1.5;
   margin: 0;
@@ -95,16 +95,16 @@
 .ergo-hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-xs);
   margin-top: 8px;
 }
 
 .ergo-hero__storer {
   position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 96px;
-  height: 96px;
+  top: var(--space-base);
+  right: var(--space-base);
+  width: var(--space-xxl);
+  height: var(--space-xxl);
   z-index: 2;
 }
 
@@ -132,13 +132,13 @@
   }
 
   .ergo-hero__headline {
-    font-size: 24px;
+    font-size: var(--font-size-3xl);
   }
 
   .ergo-hero__storer {
-    width: 64px;
-    height: 64px;
-    top: 12px;
-    right: 12px;
+    width: var(--space-xl);
+    height: var(--space-xl);
+    top: var(--space-xs);
+    right: var(--space-xs);
   }
 }
