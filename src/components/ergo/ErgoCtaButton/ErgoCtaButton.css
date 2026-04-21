@@ -3,7 +3,7 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-family);
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
@@ -22,7 +22,7 @@
 
 .ergo-cta--pill:hover {
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-bg-white);
 }
 
 .ergo-cta--pill:focus-visible {
@@ -56,7 +56,7 @@
 /* Filled variant (solid button) */
 .ergo-cta--filled {
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-bg-white);
   border: 1px solid transparent;
   border-radius: var(--border-radius-button);
   padding: 10px 20px;

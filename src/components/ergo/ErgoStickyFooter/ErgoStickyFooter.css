@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   z-index: 90;
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   font-family: var(--font-family);
   transform: translateY(100%);
@@ -32,13 +32,13 @@
 }
 
 .ergo-sticky-footer__product {
-  font-size: 18px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: var(--color-text);
 }
 
 .ergo-sticky-footer__tariff {
-  font-size: 14px;
+  font-size: var(--font-size-base);
   color: var(--color-text-muted);
 }
 

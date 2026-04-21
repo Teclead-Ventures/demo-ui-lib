@@ -16,7 +16,7 @@
   border: none;
   cursor: pointer;
   text-align: left;
-  gap: 16px;
+  gap: var(--space-s);
   font-family: var(--font-family);
   transition: background-color var(--transition);
 }
@@ -32,7 +32,7 @@
 }
 
 .ergo-accordion__title {
-  font-size: 18px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.3;
@@ -67,10 +67,10 @@
 }
 
 .ergo-accordion__content p {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   color: var(--color-text);
   line-height: 1.5;
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-xs);
 }
 
 .ergo-accordion__content p:last-child {
