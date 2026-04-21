@@ -100,23 +100,34 @@ cd /Users/malte/Desktop/Repositories/tlv/demo-ui-lib
 
 This creates `/Users/malte/Desktop/Repositories/tlv/<PROJECT_NAME>/`.
 
-**IMPORTANT: The base template includes ERGO content pages** in the `(site)/` route group (homepage at `/`, `/produkte`, `/produkte/zahnzusatz`). Do NOT delete the `(site)/` route group — it provides the marketing content pages. The tariff grid goes at `/tarife`, not `/`, to avoid a route conflict.
+**IMPORTANT: The base template includes three route groups:**
+- `(portal)/` — TLV Demo Launcher at `/` (neutral branding, links to everything)
+- `(site)/` — ERGO content pages at `/ergo`, `/ergo/produkte`, `/ergo/produkte/zahnzusatz` (ERGO branding + demo banner)
+- `(app)/` — Tariff wizards, dashboards, API routes (ERGO header/footer)
+
+Do NOT delete any route group. The ERGO content pages live under `/ergo/...`, NOT at the root.
+
+**Two registries** exist in the base template:
+- `src/lib/products/registry.ts` — Products (tariff calculators). Starts empty, team members add entries.
+- `src/lib/ergo/registry.ts` — ERGO website pages. Starts with 3 entries (Homepage, Produkte, Zahnzusatz). The portal reads both.
 
 **If building multiple products**, set up multi-product architecture:
-1. Create `src/lib/products/registry.ts` with an empty `PRODUCTS` array
-2. Update the tariff grid at `src/app/(app)/tarife/page.tsx` to read the registry and show a product grid (a placeholder already exists from the base template)
+1. The product registry already exists at `src/lib/products/registry.ts` — team members add entries
+2. The tariff grid at `src/app/(app)/tarife/page.tsx` reads the registry (placeholder exists in template)
 3. Create the dynamic wizard route at `src/app/(app)/wizard/[product]/page.tsx`
-4. Create a dashboard overview at `src/app/(app)/dashboard/page.tsx` (shows all products)
+4. The dashboard overview at `src/app/(app)/dashboard/page.tsx` reads the registry (placeholder exists in template)
 5. Create per-product dashboard route at `src/app/(app)/dashboard/[product]/page.tsx`
 
 **If building a single product**, skip the registry — build directly into the base template's `/wizard` and `/dashboard` routes.
 
 **Navigation structure** (all projects):
-- `/` → ERGO homepage (content page, links to `/tarife` and `/produkte`)
-- `/produkte` → ERGO product catalog (content page)
+- `/` → TLV Demo Launcher (portal — links to everything below)
+- `/ergo` → ERGO homepage (content page clone)
+- `/ergo/produkte` → ERGO product catalog (content page clone)
+- `/ergo/produkte/zahnzusatz` → ERGO Zahnzusatz detail page (content page clone)
 - `/tarife` → Tariff calculator grid (pick a product → `/wizard/{product}`)
 - `/wizard/{product}` → Product wizard
-- `/dashboard` → Dashboard overview (links back to `/tarife`)
+- `/dashboard` → Dashboard overview (product grid, links to per-product dashboards)
 - `/dashboard/{product}` → Per-product dashboard with funnel analytics
 
 Then:

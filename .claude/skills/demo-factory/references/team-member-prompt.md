@@ -79,7 +79,9 @@ Create your product's files:
 The shared infrastructure already exists:
 - WizardContext, WizardShell — in `src/lib/wizard/`
 - API route `/api/submit` — shared, product distinguished by table name
-- ERGO content pages at `(site)/` — homepage (`/`), `/produkte`, `/produkte/zahnzusatz` — do NOT delete these
+- ERGO content pages at `(site)/ergo/` — `/ergo`, `/ergo/produkte`, `/ergo/produkte/zahnzusatz` — do NOT delete these
+- ERGO pages registry at `src/lib/ergo/registry.ts` — lists all cloned ERGO pages (portal reads this)
+- TLV Demo Launcher portal at `(portal)/` — the root `/` page, reads from both product and ERGO registries
 - Tariff grid at `(app)/tarife/page.tsx` — reads registry, your product appears automatically
 - Theme CSS, ToastProvider, layout — already set up
 
@@ -138,7 +140,8 @@ You are now building the pages for {{PRODUCT_NAME}}. This is similar to EXECUTE.
 - Run tsc --noEmit
 - Commit: `git commit -m "feat: add {{PRODUCT_ID}} wizard"`
 - Start dev server, full playwright-cli walkthrough (--headed):
-  - Open http://localhost:3000 — verify ERGO homepage loads (content page)
+  - Open http://localhost:3000 — verify TLV Demo Launcher portal loads
+  - Verify ERGO homepage at http://localhost:3000/ergo loads (content page)
   - Navigate to http://localhost:3000/tarife — verify product appears in the tariff grid
   - Click into the product → http://localhost:3000/wizard/{{PRODUCT_ID}}
   - Fill entire form with test data set 1
@@ -231,9 +234,10 @@ Apply ALL of these — they come from real failures in earlier builds:
 - Kill the dev server when done (port 3000)
 - Supabase project ID: Verify via `list_projects` MCP tool — do NOT hardcode
 - Import UI components from `@/components/ui/<Name>/<Name>`
-- **Content pages**: Do NOT delete the `(site)/` route group — it contains ERGO homepage and product content pages
-- **Tariff grid**: Lives at `/tarife` (not `/`) — update `src/app/(app)/tarife/page.tsx` to read the product registry
-- **No route conflicts**: The homepage at `/` is the ERGO content page from `(site)/`. The tariff grid at `/tarife` is in `(app)/`. They must coexist.
+- **Content pages**: Do NOT delete the `(site)/` route group — it contains ERGO content pages at `/ergo/...`
+- **Portal**: The root `/` is the TLV Demo Launcher from `(portal)/` — reads from both product and ERGO registries
+- **Tariff grid**: Lives at `/tarife` — update `src/app/(app)/tarife/page.tsx` to read the product registry
+- **ERGO pages registry**: When adding new ERGO content pages, also add an entry to `src/lib/ergo/registry.ts`
 - **Stepper labels**: Keep labels SHORT (max 6 chars) when there are 6+ steps — e.g., "Für wen?", "Alter", "Tarif", not "Versicherung", "Geburtsdatum"
 - **Supabase table prefix**: Use `{{TABLE_PREFIX}}` for table names (e.g., `{{TABLE_PREFIX}}_insurance_applications`)
 - **PasswordGate**: Deployed demos use password `ergo2026` — handle this in Playwright walkthroughs
