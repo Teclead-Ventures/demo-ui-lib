@@ -112,3 +112,5 @@ export type { ErgoMegaMenuProps, ErgoMegaMenuCategory, ErgoMegaMenuSubItem, Ergo
 
 export { ErgoFooter } from "./components/ergo/ErgoFooter";
 export type { ErgoFooterProps, ErgoFooterLinkGroup } from "./components/ergo/ErgoFooter";
+
+export { ergoTheme, modernBlueTheme, warmNeutralTheme } from "./theme/presets";
